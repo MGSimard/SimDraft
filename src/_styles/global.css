@@ -58,7 +58,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* outline: 1px solid red; */
+  outline: 1px solid red;
 }
 html {
   font-family: var(--fontSpiegel);
@@ -184,6 +184,11 @@ a.btn-primary-action {
   grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   gap: 1.6rem;
 }
+.ban-row img {
+  width: 3.2rem;
+  height: 3.2rem;
+  border: 1px solid red;
+}
 .pick-row {
   display: flex;
   align-items: center;
@@ -217,7 +222,7 @@ a.btn-primary-action {
 .pick-separator {
   position: relative;
   display: block;
-  width: calc(100% - 3.2rem);
+  width: calc(100% - 1.6rem);
   height: 0.1rem;
   background-color: var(--clrTextMuted);
   &::after {

@@ -5,6 +5,32 @@
 - LATEST_PATCH = versionsJson[0];
 - BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/`;
 
+### Action Order:
+
+1. Blue ban #1
+2. Red ban #1
+3. Blue ban #2
+4. Red ban #2
+5. Blue ban #3
+6. Red ban #3
+
+7. Blue pick #1
+8. Red pick #1
+9. Red pick #2
+10. Blue pick #2
+11. Blue pick #3
+12. Red pick #3
+
+13. Red ban #4
+14. Blue ban #4
+15. Red ban #5
+16. Blue ban #5
+
+17. Red pick #4
+18. Blue pick #4
+19. Blue pick #5
+20. Red pick #5
+
 ## Task List
 
 - [x] Init
