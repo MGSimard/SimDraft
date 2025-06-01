@@ -1,12 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ButtonPrimaryAction } from "@/_components/ButtonPrimaryAction";
-import championDataset from "@/_datasets/champion.json";
-
-// Preprocess champion dataset into only necessary data
-const championsMap = Object.values(championDataset.data).map((champInfo) => ({
-  key: champInfo.key,
-  name: champInfo.name,
-}));
+import { championsMap } from "@/_datasets/championPreprocessed";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
