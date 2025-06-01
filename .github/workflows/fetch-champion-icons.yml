@@ -1,0 +1,34 @@
+name: Fetch Champion Icons
+
+on:
+  schedule:
+    - cron: "0 */12 * * *" # Every 12 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-icons:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install wget
+        run: sudo apt-get update && sudo apt-get install -y wget
+
+      - name: Fetch Champion Icons
+        run: |
+          mkdir -p public/assets/champions
+          cd public/assets/champions
+          wget -r -np -nd -A png -N https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git add public/assets/champions/*.png
+          git commit -m "GHA: Update champion icons" || echo "No changes to commit"
+          git push
