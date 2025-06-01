@@ -1,0 +1,46 @@
+name: Fetch and Update Datasets
+
+on:
+  schedule:
+    - cron: "0 */12 * * *" # Runs every 12 hours
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Fetch Datasets
+        run: |
+          mkdir -p src/_datasets  # Create the datasets directory if it doesn't exist
+          set -e  # Exit immediately if a command exits with a non-zero status
+
+          echo "Fetching versions..."
+          curl -fs "https://ddragon.leagueoflegends.com/api/versions.json" | jq '.' > src/_datasets/versions.json
+          patchVer=$(jq -r '.[0]' src/_datasets/versions.json)  # Extract the latest version
+          echo "patchVer=$patchVer" >> $GITHUB_ENV # Export patchVer for subsequent steps
+
+          if [ -z "$patchVer" ]; then
+            echo "ERROR: Failed to fetch DataDragon version."
+            exit 1
+          fi
+
+          echo "Fetching champion dataset..."
+          curl -fs "https://ddragon.leagueoflegends.com/cdn/${patchVer}/data/en_US/champion.json" | jq '.' > src/_datasets/champion.json
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git add src/_datasets/*.json  # Add all JSON files
+          git commit -m "GHA: Update datasets (v${{ env.patchVer }})" || echo "No changes to commit"
+          git push
