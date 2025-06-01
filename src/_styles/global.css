@@ -228,7 +228,7 @@ header span {
   position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid;
+  border: 1px solid var(--clrTextMuted);
 }
 #champion-list button img {
   width: 100%;
