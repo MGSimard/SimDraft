@@ -1,0 +1,46 @@
+/* https://aka.ms/tsconfig */
+{
+  "include": ["eslint.config.mjs", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.js"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    /* Projects */
+    "incremental": true /* Save .tsbuildinfo files to allow for incremental compilation of projects. */,
+
+    /* Language and Environment */
+    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext"
+    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
+    "jsx": "preserve" /* Specify what JSX code is generated. */,
+    "moduleDetection": "force" /* Control what method is used to detect module-format JS files. */,
+
+    /* Modules */
+    "module": "ESNext" /* Specify what module code is generated. */,
+    "moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
+    "paths": { "@/*": ["./src/*"] } /* Specify a set of entries that re-map imports to additional lookup locations. */,
+    "resolveJsonModule": true /* Enable importing .json files. */,
+
+    /* JavaScript Support */
+    "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
+    "checkJs": true /* Enable error reporting in type-checked JavaScript files. */,
+
+    /* Emit */
+    "noEmit": true /* Disable emitting files from a compilation. */,
+
+    /* Interop Constraints */
+    "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
+
+    /* Type Checking */
+    "strict": true /* Enable all strict type-checking options. */,
+    "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
+    "useUnknownInCatchVariables": true /* Default catch clause variables as 'unknown' instead of 'any'. */,
+    "noUncheckedIndexedAccess": true /* Add 'undefined' to a type when accessed using an index. */,
+
+    /* Completeness */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  }
+}

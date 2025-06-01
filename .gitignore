@@ -1,0 +1,28 @@
+# Node.js dependencies
+/node_modules
+
+# Build output
+/build
+/dist
+/.vinxi
+
+# Package manager files
+/.pnp
+.pnp.js
+
+# Logs
+npm-debug.log*
+.pnpm-debug.log*
+
+# Environment files
+.env
+.env*.local
+
+# OS files
+.DS_Store
+
+# Certificates
+*.pem
+
+# TypeScript
+*.tsbuildinfo
