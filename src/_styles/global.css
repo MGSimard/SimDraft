@@ -184,6 +184,58 @@ a.btn-primary-action {
   grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   gap: 1.6rem;
 }
+.pick-row {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.6rem;
+}
+.pick-row img {
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 999rem;
+  overflow: hidden;
+  object-fit: contain;
+  object-position: center;
+  border: 1px solid red;
+}
+.pick-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+#team-blue .pick-row {
+  border-left: 0.8rem solid transparent;
+}
+#team-red .pick-row {
+  justify-content: flex-end;
+  border-right: 0.8rem solid transparent;
+}
+.pick-separator {
+  position: relative;
+  display: block;
+  width: calc(100% - 3.2rem);
+  height: 0.1rem;
+  background-color: var(--clrTextMuted);
+  &::after {
+    content: "";
+    position: absolute;
+    transform: translate(-100%, -50%) rotate(45deg);
+    top: 0.5px;
+    left: 0;
+    width: 0.4rem;
+    height: 0.4rem;
+    border: 1px solid var(--clrTextMuted);
+  }
+}
+#team-blue .pick-separator {
+  margin-left: auto;
+}
+#team-red .pick-separator::after {
+  left: unset;
+  transform: translate(100%, -50%) rotate(45deg);
+  right: 0;
+}
 #center {
   display: flex;
   flex-direction: column;

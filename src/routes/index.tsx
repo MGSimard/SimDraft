@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ButtonPrimaryAction } from "@/_components/ButtonPrimaryAction";
 import { championsMap } from "@/_datasets/championPreprocessed";
 import { ScrollContainer } from "@/_components/ScrollContainer";
+import { PickRow } from "@/_components/PickRow";
+import { PickSeparator } from "@/_components/PickSeparator";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -10,7 +12,20 @@ export const Route = createFileRoute("/")({
 function PageHome() {
   return (
     <main id="draft">
-      <div id="team-blue">Blue Team</div>
+      <div id="team-blue">
+        Blue Team
+        <PickSeparator />
+        <PickRow team={0} order="B1" />
+        <PickSeparator />
+        <PickRow team={0} order="B2" />
+        <PickSeparator />
+        <PickRow team={0} order="B3" />
+        <PickSeparator />
+        <PickRow team={0} order="B4" />
+        <PickSeparator />
+        <PickRow team={0} order="B5" />
+        <PickSeparator />
+      </div>
       <div id="center">
         <header>
           <h2>BAN A CHAMPION!</h2>
@@ -34,7 +49,19 @@ function PageHome() {
         </ScrollContainer>
         <ButtonPrimaryAction label="LOCK IN" />
       </div>
-      <div id="team-red">Red Team</div>
+      <div id="team-red">
+        <PickSeparator />
+        <PickRow team={1} order="R1" />
+        <PickSeparator />
+        <PickRow team={1} order="R2" />
+        <PickSeparator />
+        <PickRow team={1} order="R3" />
+        <PickSeparator />
+        <PickRow team={1} order="R4" />
+        <PickSeparator />
+        <PickRow team={1} order="R5" />
+        <PickSeparator />
+      </div>
     </main>
   );
 }
