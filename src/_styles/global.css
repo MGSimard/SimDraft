@@ -266,6 +266,3 @@ header span {
   background: var(--clrGold5);
   border-radius: 999rem;
 }
-*:focus-visible {
-  outline: 1px solid var(--clrBorderGoldActive);
-}

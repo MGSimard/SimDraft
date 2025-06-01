@@ -212,10 +212,6 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       const thumbRect = thumb.getBoundingClientRect();
       initialOffset = e.clientY - thumbRect.top;
 
-      // Prevent text selection
-      document.body.style.userSelect = "none";
-      document.body.style.webkitUserSelect = "none";
-
       // Use capture to ensure we get all pointer events
       document.addEventListener("pointermove", handlePointerMove, pointerEventOptions);
       document.addEventListener("pointerup", handlePointerUp, pointerEventOptions);
