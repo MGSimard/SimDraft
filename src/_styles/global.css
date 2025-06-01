@@ -210,6 +210,9 @@ a.btn-primary-action {
 #team-red .pick-row {
   justify-content: flex-end;
   border-right: 0.8rem solid transparent;
+  & span {
+    text-align: right;
+  }
 }
 .pick-separator {
   position: relative;
