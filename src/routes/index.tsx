@@ -27,7 +27,7 @@ function PageHome() {
         <ScrollContainer>
           {championsMap.map((champ) => (
             <button key={champ.key} type="button">
-              <img src={`/assets/champions/${champ.key}.png`} alt={champ.name} />
+              <img src={`/assets/champions/${champ.key}.png`} alt="" />
               <span>{champ.name}</span>
             </button>
           ))}
