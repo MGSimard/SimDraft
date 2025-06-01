@@ -70,7 +70,13 @@ html {
   }
 }
 body {
+  height: 100dvh;
   font-size: 1.6rem;
+  overflow: hidden;
+}
+main {
+  height: 100%;
+  overflow: hidden;
 }
 /**/
 /* NORMALIZE */
@@ -168,3 +174,60 @@ a.btn-primary-action {
   align-self: unset;
 }
 /**/
+/* DRAFT */
+#draft {
+  display: grid;
+  grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
+  gap: 1.6rem;
+}
+#center {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+header {
+  flex-shrink: 0;
+  font-family: var(--fontBeaufort);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--clrHeading);
+  text-align: center;
+}
+header h2 {
+  font-size: 3.2rem;
+}
+header span {
+  font-size: 4.8rem;
+}
+#champion-controls {
+  display: flex;
+  align-items: stretch;
+  gap: 1.6rem;
+}
+#champion-controls input {
+  margin-left: auto;
+}
+#champion-list {
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  gap: 3.2rem;
+  padding: 1.6rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden auto;
+  scrollbar-color: var(--clrGold5) transparent;
+}
+#champion-list button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+#champion-list button img {
+}
+#champion-list button span {
+  position: absolute;
+  bottom: -1.5em;
+  left: 50%;
+  transform: translateX(-50%);
+}

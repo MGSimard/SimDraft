@@ -52,7 +52,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        <main>{children}</main>
+        {children}
         <Scripts />
       </body>
     </html>

@@ -8,16 +8,31 @@ export const Route = createFileRoute("/")({
 
 function PageHome() {
   return (
-    <div>
-      <h1>vsdraft</h1>
-      <ButtonPrimaryAction label="Start" />
-      hellohtrhrt
-      {championsMap.map((champ) => (
-        <div key={champ.key}>
-          <img src={`/assets/champions/${champ.key}.png`} alt={champ.name} />
-          <p>{champ.name}</p>
+    <main id="draft">
+      <div id="team-blue">Blue Team</div>
+      <div id="center">
+        <header>
+          <h2>BAN A CHAMPION!</h2>
+          <span>28</span>
+        </header>
+        <div id="champion-controls">
+          <button type="button">X</button>
+          <button type="button">X</button>
+          <button type="button">X</button>
+          <button type="button">X</button>
+          <button type="button">X</button>
+          <input type="text" placeholder="Search" />
         </div>
-      ))}
-    </div>
+        <div id="champion-list">
+          {championsMap.map((champ) => (
+            <button key={champ.key} type="button">
+              <img src={`/assets/champions/${champ.key}.png`} alt={champ.name} />
+              <span>{champ.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div id="team-red">Red Team</div>
+    </main>
   );
 }
