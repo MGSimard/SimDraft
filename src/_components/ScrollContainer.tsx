@@ -248,10 +248,6 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
 
       isDragging = false;
 
-      // Restore text selection
-      document.body.style.userSelect = "";
-      document.body.style.webkitUserSelect = "";
-
       // Remove capture listeners
       document.removeEventListener("pointermove", handlePointerMove, pointerEventOptions);
       document.removeEventListener("pointerup", handlePointerUp, pointerEventOptions);
