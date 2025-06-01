@@ -12,9 +12,18 @@ BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/${LATEST_PATCH}/img/ch
 - [ ] Set up datasets (game versions, champions) fetching GitHub Action
 - [ ] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [ ] ...
+- [ ] Initial layout
+- [ ] Functionalities
+  - [ ] Turn-based
+  - [ ] Timers
+  - [ ] Pause/Resume
+  - [ ] Clear
+  - [ ] Undo
+  - [ ] Pick override
 - [ ] ...
-- [ ] ...
-- [ ] ...
+- [ ] Find real app name
+- [ ] Metadata
+- [ ] Deploy
 
 ### Later potentially
 
