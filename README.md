@@ -7,8 +7,8 @@ BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/${LATEST_PATCH}/img/ch
 
 ## Task List
 
-- [ ] Init
-- [ ] Port palette & fonts from CBL
+- [x] Init
+- [x] Port palette & fonts from CBL
 - [ ] Set up datasets (game versions, champions) fetching GitHub Action
 - [ ] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [ ] ...
