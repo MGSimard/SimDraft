@@ -58,7 +58,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  outline: 1px solid red;
+  /* outline: 1px solid red; */
 }
 html {
   font-family: var(--fontSpiegel);
@@ -71,6 +71,7 @@ html {
 }
 body {
   height: 100dvh;
+  padding: 1.6rem;
   font-size: 1.6rem;
   overflow: hidden;
 }
@@ -204,6 +205,10 @@ header span {
   align-items: stretch;
   gap: 1.6rem;
 }
+#champion-controls button {
+  width: 3.2rem;
+  height: 3.2rem;
+}
 #champion-controls input {
   margin-left: auto;
 }
@@ -212,11 +217,12 @@ header span {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
   gap: 3.2rem;
-  padding: 1.6rem;
   text-align: center;
   white-space: nowrap;
   overflow: hidden auto;
   scrollbar-color: var(--clrGold5) transparent;
+  border-top: 1px solid var(--clrBorderGoldIdle);
+  border-bottom: 1px solid var(--clrBorderGoldIdle);
 }
 #champion-list button {
   position: relative;
