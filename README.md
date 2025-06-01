@@ -14,6 +14,10 @@ BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/${LATEST_PATCH}/img/ch
 - [ ] ...
 - [ ] Initial layout
 - [ ] Functionalities
+  - [ ] Preprocess champion dataset with id, name, frame file name, position
+  - [ ] Full champion list
+  - [ ] Sorted by name
+  - [ ] Filter by position
   - [ ] Turn-based
   - [ ] Timers
   - [ ] Pause/Resume
