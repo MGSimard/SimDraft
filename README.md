@@ -2,8 +2,8 @@
 
 ## Notes
 
-LATEST_PATCH = versionsJson[0];
-BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/${LATEST_PATCH}/img/champion/`;
+- LATEST_PATCH = versionsJson[0];
+- BASE_CHAMP_URL = `https://ddragon.leagueoflegends.com/cdn/${LATEST_PATCH}/img/champion/`;
 
 ## Task List
 
