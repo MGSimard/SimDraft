@@ -114,7 +114,8 @@ button {
 /* HELPERS */
 .btn-primary-action {
   position: relative;
-  align-self: stretch;
+  width: fit-content;
+  margin: 0 auto;
   padding: 0.2rem;
   font-family: var(--fontBeaufort);
   font-weight: 700;
@@ -142,7 +143,7 @@ button {
   position: absolute;
   inset: 0;
   background: var(--clrMainActionBorder);
-  clip-path: polygon(0 0, calc(100% - 2rem) 0, 100% calc(50%), calc(100% - 2rem) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   transition: background 0.2s ease;
 }
 .btn-primary-action:not(:disabled):hover::before,
@@ -156,10 +157,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4rem 0 3.2rem;
+  padding: 1.2rem 3.2rem;
   height: 100%;
   background: var(--clrMainActionBg);
-  clip-path: polygon(0 0, calc(100% - 1.9rem) 0, 100% calc(50%), calc(100% - 1.9rem) 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   transition: box-shadow 0.2s ease;
 }
 .btn-primary-action:not(:disabled):hover span,

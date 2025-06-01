@@ -32,6 +32,7 @@ function PageHome() {
             </button>
           ))}
         </ScrollContainer>
+        <ButtonPrimaryAction label="LOCK IN" />
       </div>
       <div id="team-red">Red Team</div>
     </main>

@@ -10,13 +10,14 @@
 - [x] Init
 - [x] Port palette & fonts from CBL
 - [x] Set up datasets (game versions, champions) fetching GitHub Action
-- [ ] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
+- [x] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [ ] ...
 - [ ] Initial layout
+- [ ] Restyle primary button
 - [ ] Functionalities
-  - [ ] Preprocess champion dataset with id, name, frame file name, position
-  - [ ] Full champion list
-  - [ ] Sorted by name
+  - [x] Preprocess champion dataset with id, name, frame file name, position
+  - [x] Full champion list
+  - [x] Sorted by name
   - [ ] Filter by position
   - [ ] Turn-based
   - [ ] Timers
