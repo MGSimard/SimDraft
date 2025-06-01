@@ -32,6 +32,7 @@
 ### Later potentially
 
 - [ ] Set up DB, Redis, Auth, tRPC
+- [ ] Allow setting summoner icon (Set gh action for icon set)
 - [ ] Edit draft title
 - [ ] Save draft, export/import draft
 - [ ] Co-op draft
