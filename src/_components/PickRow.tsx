@@ -41,7 +41,6 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const shouldShowIntroVideo = isPendingAction; // Both teams
   const [showOutro, setShowOutro] = useState(false);
   const wasPendingRef = useRef(false);
-  const bans = useDraftStore((state) => state.bans);
   const teamColor = team === 0 ? "blue" : "red";
 
   const displayImageSrc = showSelectedChampion
@@ -74,7 +73,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     }
 
     wasPendingRef.current = isPendingAction;
-  }, [isPendingAction, team, pickIndex, teamColor]);
+  }, [isPendingAction, pickIndex, teamColor]);
 
   // Handle outro playback when showOutro becomes true
   useEffect(() => {

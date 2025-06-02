@@ -247,7 +247,6 @@ a.btn-primary-action {
     animation: glowIn 1s ease-out;
   }
 }
-
 @keyframes glowIn {
   0% {
     border-color: #ffffff;
@@ -360,6 +359,7 @@ header span {
 #champion-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(6rem, 1fr));
   gap: 3.2rem;
   height: 100%;
   padding: 1.6rem 0;
