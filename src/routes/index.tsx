@@ -7,7 +7,7 @@ import { ChampionList } from "@/_components/ChampionList";
 import { BanRow } from "@/_components/BanRow";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
 import { ACTION_TYPE } from "@/_store/constants";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
