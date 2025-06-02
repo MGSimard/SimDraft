@@ -45,7 +45,7 @@ function PageHome() {
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const [search, setSearch] = useState("");
   const [activeRoleFilters, setActiveRoleFilters] = useState<string[]>([]);
-  const debouncedSearch = useDebounce(search, 200);
+  const debouncedSearch = useDebounce(search, 100);
 
   const mainThemeClass =
     actionType === ACTION_TYPE.PICK ? "theme-picking" : actionType === ACTION_TYPE.BAN ? "theme-banning" : "";

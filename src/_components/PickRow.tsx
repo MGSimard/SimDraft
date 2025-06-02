@@ -66,7 +66,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     }
 
     wasPendingRef.current = isPendingAction;
-  }, [isPendingAction, pickIndex, teamColor]);
+  }, [isPendingAction]);
 
   // Handle outro playback when showOutro becomes true
   useEffect(() => {
@@ -83,7 +83,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
         }
       });
     }
-  }, [showOutro, teamColor]);
+  }, [showOutro]);
 
   const renderContent = () => (
     <>
