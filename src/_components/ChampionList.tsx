@@ -1,12 +1,12 @@
 import { useDraftStore } from "@/_store/DraftStoreProvider";
 import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 interface ChampionListProps {
   searchQuery: string;
 }
 
-export const ChampionList = React.memo(function ChampionList({ searchQuery }: ChampionListProps) {
+export function ChampionList({ searchQuery }: ChampionListProps) {
   const selectChampion = useDraftStore((state) => state.selectChampion);
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
@@ -66,4 +66,4 @@ export const ChampionList = React.memo(function ChampionList({ searchQuery }: Ch
       })}
     </>
   );
-});
+}

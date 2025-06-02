@@ -1,8 +1,7 @@
-import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import { championByKey } from "@/_datasets/championPreprocessed";
+import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import type { TeamIndex, ActionIndex, PickLabel } from "@/_store/types";
-import React from "react";
+import { championByKey } from "@/_datasets/championPreprocessed";
 
 interface PickRowProps {
   team: TeamIndex;

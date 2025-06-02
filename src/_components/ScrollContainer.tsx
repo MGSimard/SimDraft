@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
-import React from "react";
 
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -44,7 +43,7 @@ interface ScrollState {
   isScrolling: boolean;
 }
 
-export const ScrollContainer = React.memo(function ScrollContainer({ children }: ScrollContainerProps) {
+export function ScrollContainer({ children }: ScrollContainerProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -345,4 +344,4 @@ export const ScrollContainer = React.memo(function ScrollContainer({ children }:
       )}
     </div>
   );
-});
+}

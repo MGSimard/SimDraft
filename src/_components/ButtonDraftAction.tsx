@@ -1,8 +1,8 @@
-import { ACTION_TYPE } from "@/_store/constants";
+import { useCallback } from "react";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import React, { useCallback } from "react";
+import { ACTION_TYPE } from "@/_store/constants";
 
-export const ButtonDraftAction = React.memo(function ButtonDraftAction() {
+export function ButtonDraftAction() {
   const actionType = useDraftStore((state) => state.getCurrentActionType());
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const lockIn = useDraftStore((state) => state.lockIn);
@@ -41,4 +41,4 @@ export const ButtonDraftAction = React.memo(function ButtonDraftAction() {
       <span>{buttonLabel}</span>
     </button>
   );
-});
+}

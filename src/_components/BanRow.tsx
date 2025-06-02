@@ -1,12 +1,11 @@
 import { useDraftStore } from "@/_store/DraftStoreProvider";
 import type { TeamIndex } from "@/_store/types";
-import React from "react";
 
 interface BanRowProps {
   team: TeamIndex;
 }
 
-export const BanRow = React.memo(function BanRow({ team }: BanRowProps) {
+export function BanRow({ team }: BanRowProps) {
   const bans = useDraftStore((state) => state.bans);
   const teamBans = bans[team];
   const banOrder = team === 0 ? teamBans : [...teamBans].reverse();
@@ -28,4 +27,4 @@ export const BanRow = React.memo(function BanRow({ team }: BanRowProps) {
       ))}
     </div>
   );
-});
+}
