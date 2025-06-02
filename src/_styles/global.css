@@ -215,6 +215,12 @@ a.btn-primary-action {
   border-radius: 999rem;
   overflow: hidden;
 }
+#team-blue .pick-row-image {
+  border-color: var(--clrBlue3);
+}
+#team-red .pick-row-image {
+  border-color: var(--clrRed1);
+}
 .pick-row img {
   width: 100%;
   height: 100%;
@@ -228,15 +234,20 @@ a.btn-primary-action {
   gap: 0.4rem;
 }
 #team-blue .pick-row {
+  color: var(--clrBlue3);
   border-left: 0.8rem solid transparent;
   &.pending-action {
     color: var(--clrGold4);
     border-color: var(--clrBlue3);
     animation: glowIn 1s ease-out;
+    & .pick-row-image {
+      border-color: var(--clrGold4);
+    }
   }
 }
 #team-red .pick-row {
   justify-content: flex-end;
+  color: var(--clrRed1);
   border-right: 0.8rem solid transparent;
   & span {
     text-align: right;
@@ -245,6 +256,9 @@ a.btn-primary-action {
     border-color: var(--clrRed1);
     color: var(--clrGold4);
     animation: glowIn 1s ease-out;
+    & .pick-row-image {
+      border-color: var(--clrGold4);
+    }
   }
 }
 @keyframes glowIn {
@@ -359,7 +373,6 @@ header span {
 #champion-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(6rem, 1fr));
   gap: 3.2rem;
   height: 100%;
   padding: 1.6rem 0;
@@ -374,6 +387,7 @@ header span {
 #champion-list button {
   position: relative;
   border: 1px solid var(--clrTextMuted);
+  aspect-ratio: 1;
   &:disabled {
     /* TODO Add a little thing on the bottom later */
     filter: grayscale(1) brightness(0.5);
