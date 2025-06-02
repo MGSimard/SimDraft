@@ -11,11 +11,9 @@ interface PickRowProps {
 }
 
 export function PickRow({ team, pickIndex, label }: PickRowProps) {
-  const getCurrentStepInfo = useDraftStore((state) => state.getCurrentStepInfo);
+  const stepDetails = useDraftStore((state) => state.getCurrentStepDetails());
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const picks = useDraftStore((state) => state.picks);
-
-  const { stepDetails } = getCurrentStepInfo();
   const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
   const pick = picks[team][pickIndex];
 

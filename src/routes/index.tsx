@@ -7,7 +7,7 @@ import { ChampionList } from "@/_components/ChampionList";
 import { BanRow } from "@/_components/BanRow";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
 import { ACTION_TYPE } from "@/_store/constants";
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -30,34 +30,27 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 function PageHome() {
-  const getCurrentStepInfo = useDraftStore((state) => state.getCurrentStepInfo);
+  const actionType = useDraftStore((state) => state.getCurrentActionType());
+  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 200);
-  const { actionType, isDraftComplete } = getCurrentStepInfo();
 
-  const mainThemeClass = useMemo(() => {
-    if (actionType === ACTION_TYPE.PICK) return "theme-picking";
-    if (actionType === ACTION_TYPE.BAN) return "theme-banning";
-    return "";
-  }, [actionType]);
+  const mainThemeClass =
+    actionType === ACTION_TYPE.PICK ? "theme-picking" : actionType === ACTION_TYPE.BAN ? "theme-banning" : "";
 
-  const headerContent = useMemo(() => {
-    const actionText = isDraftComplete
-      ? "DRAFT COMPLETE"
-      : actionType === ACTION_TYPE.BAN
-      ? "BAN A CHAMPION!"
-      : actionType === ACTION_TYPE.PICK
-      ? "PICK A CHAMPION!"
-      : "DRAFT COMPLETE";
+  const actionText = isDraftComplete
+    ? "DRAFT COMPLETE"
+    : actionType === ACTION_TYPE.BAN
+    ? "BAN A CHAMPION!"
+    : actionType === ACTION_TYPE.PICK
+    ? "PICK A CHAMPION!"
+    : "DRAFT COMPLETE";
 
-    const timeRemaining = "28";
+  const timeRemaining = "28";
 
-    return { actionText, timeRemaining };
-  }, [actionType, isDraftComplete]);
-
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-  }, []);
+  };
 
   return (
     <main id="draft" className={mainThemeClass}>
@@ -78,8 +71,8 @@ function PageHome() {
 
       <div id="center">
         <header>
-          <h2>{headerContent.actionText}</h2>
-          <span>{headerContent.timeRemaining}</span>
+          <h2>{actionText}</h2>
+          <span>{timeRemaining}</span>
         </header>
 
         <div id="champion-controls">

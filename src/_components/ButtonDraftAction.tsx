@@ -1,28 +1,24 @@
 import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import React, { useMemo, useCallback } from "react";
+import React, { useCallback } from "react";
 
 export const ButtonDraftAction = React.memo(function ButtonDraftAction() {
-  const getCurrentStepInfo = useDraftStore((state) => state.getCurrentStepInfo);
+  const actionType = useDraftStore((state) => state.getCurrentActionType());
+  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const lockIn = useDraftStore((state) => state.lockIn);
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
   const reset = useDraftStore((state) => state.reset);
 
-  const { actionType, isDraftComplete } = getCurrentStepInfo();
+  const buttonLabel = isDraftComplete
+    ? "RESET"
+    : actionType === ACTION_TYPE.PICK
+    ? "LOCK IN"
+    : actionType === ACTION_TYPE.BAN
+    ? "BAN"
+    : "ERROR";
 
-  const buttonLabel = useMemo(() => {
-    if (isDraftComplete) return "RESET";
-    if (actionType === ACTION_TYPE.PICK) return "LOCK IN";
-    if (actionType === ACTION_TYPE.BAN) return "BAN";
-    return "ERROR";
-  }, [actionType, isDraftComplete]);
-
-  const isDisabled = useMemo(() => {
-    if (isDraftComplete) return false;
-    if (!selectedChampion) return true;
-    return !isChampionAvailable(selectedChampion);
-  }, [isDraftComplete, selectedChampion, isChampionAvailable]);
+  const isDisabled = isDraftComplete ? false : !selectedChampion ? true : !isChampionAvailable(selectedChampion);
 
   const handleClick = useCallback(() => {
     if (isDraftComplete) {

@@ -8,7 +8,6 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Port palette & fonts from CBL
 - [x] Set up datasets (game versions, champions) fetching GitHub Action
 - [x] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
-- [ ] ...
 - [x] Initial layout
 - [ ] Restyle primary button
 - [ ] Functionalities
