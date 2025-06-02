@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ButtonPrimaryAction } from "@/_components/ButtonPrimaryAction";
 import { championsMap } from "@/_datasets/championPreprocessed";
 import { ScrollContainer } from "@/_components/ScrollContainer";
 import { PickRow } from "@/_components/PickRow";
 import { PickSeparator } from "@/_components/PickSeparator";
-import { BanRow } from "@/_components/BanRow";
+import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -14,7 +13,6 @@ function PageHome() {
   return (
     <main id="draft">
       <div id="team-blue">
-        <BanRow team={0} bans={[null, null, null, null, null]} />
         <PickSeparator />
         <PickRow team={0} label="B1" />
         <PickSeparator />
@@ -48,7 +46,7 @@ function PageHome() {
             </button>
           ))}
         </ScrollContainer>
-        <ButtonPrimaryAction label="LOCK IN" />
+        <ButtonDraftAction />
       </div>
       <div id="team-red">
         <PickSeparator />

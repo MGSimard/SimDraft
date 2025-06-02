@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { PageError } from "@/_components/Error";
 import { PageNotFound } from "@/_components/NotFound";
+import { DraftStoreProvider } from "@/_store/DraftStoreProvider";
 import globalCss from "@/_styles/global.css?url";
 import fontsCss from "@/_styles/fonts.css?url";
 
@@ -52,7 +53,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <DraftStoreProvider>{children}</DraftStoreProvider>
         <Scripts />
       </body>
     </html>

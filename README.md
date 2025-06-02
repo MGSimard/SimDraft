@@ -45,6 +45,7 @@
   - [x] Full champion list
   - [x] Sorted by name
   - [ ] Filter by position
+  - [ ] Filter by search
   - [ ] Turn-based
   - [ ] Timers
   - [ ] Pause/Resume
