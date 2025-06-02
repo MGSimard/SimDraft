@@ -46,8 +46,6 @@ function PageHome() {
     ? "PICK A CHAMPION!"
     : "DRAFT COMPLETE";
 
-  const timeRemaining = "28";
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -72,7 +70,6 @@ function PageHome() {
       <div id="center">
         <header>
           <h2>{actionText}</h2>
-          <span>{timeRemaining}</span>
         </header>
         <div id="champion-controls">
           <button type="button" aria-label="Filter option 1">
@@ -98,11 +95,9 @@ function PageHome() {
             aria-label="Search champions"
           />
         </div>
-
         <ScrollContainer>
           <ChampionList searchQuery={debouncedSearch} />
         </ScrollContainer>
-
         <ButtonDraftAction />
       </div>
 
