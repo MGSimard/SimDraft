@@ -35,12 +35,10 @@ jobs:
           fi
 
           echo "Extracting JSON data from JS file..."
-          # The regex JSON\.parse\(\'\K\[^']+(?=\'\)) looks for JSON.parse('CONTENT_HERE') 
-          # and extracts CONTENT_HERE.
-          # \K discards the match up to that point.
-          # \[^']_ matches any character not a single quote, one or more times.
-          # (?=\'\)) is a positive lookahead for the closing single quote and parenthesis.
-          json_data=$(echo "$js_content" | grep -oP "JSON\.parse\('\K\[^']+(?='\))")
+          # Extract JSON data from the JavaScript file
+          # The pattern looks for JSON.parse( followed by a single quote, then captures everything
+          # until the closing single quote and parenthesis, handling multiline content
+          json_data=$(echo "$js_content" | grep -oP "JSON\.parse\(\s*'\K[^']+(?='\s*\))" | tr -d '\n')
 
           if [ -z "$json_data" ]; then
             echo "ERROR: Failed to extract JSON data. Check regex or JS file structure."
