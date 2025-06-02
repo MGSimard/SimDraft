@@ -90,6 +90,7 @@ function PageHome() {
         <div id="champion-controls">
           {ROLES.map((role) => {
             const IconComponent = ROLE_ICONS[role];
+            // TODO: Tooltip saying it's playrate roles from last patch like they do in client
             return (
               <button
                 key={role}
