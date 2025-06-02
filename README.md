@@ -15,7 +15,7 @@ Letting AI go wild on this one (not the UI though lmao).
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list
   - [x] Sorted by name
-  - [ ] Filter by position
+  - [x] Filter by position
   - [x] Filter by search
   - [x] Turn-based
   - [ ] Timers
