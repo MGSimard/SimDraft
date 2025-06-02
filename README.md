@@ -19,7 +19,7 @@ Letting AI go wild on this one (not the UI though lmao).
   - [x] Turn-based
   - [ ] Timers
   - [ ] Pause/Resume
-  - [ ] Clear
+  - [x] Clear
   - [ ] Undo
   - [ ] Pick override
 - [ ] ...
@@ -29,8 +29,4 @@ Letting AI go wild on this one (not the UI though lmao).
 
 ### Later potentially
 
-- [ ] Set up DB, Redis, Auth, tRPC
-- [ ] Allow setting summoner icon (Set gh action for icon set)
-- [ ] Edit draft title
 - [ ] Save draft, export/import draft
-- [ ] Co-op draft
