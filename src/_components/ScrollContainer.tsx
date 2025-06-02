@@ -14,7 +14,6 @@ function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (
 }
 
 function getDeviceType(): "touch" | "pointer" | "mouse" {
-  if (typeof window === "undefined") return "mouse";
   const hasCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
   const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
   const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
@@ -160,20 +159,15 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     updateThumb();
     viewport.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", debouncedUpdateThumb);
-    let resizeObserver: ResizeObserver;
-    if (typeof window.ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(updateThumb);
-      resizeObserver.observe(viewport);
-    }
+    const resizeObserver = new ResizeObserver(updateThumb);
+    resizeObserver.observe(viewport);
     return () => {
       viewport.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", debouncedUpdateThumb);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
-      if (resizeObserver) {
-        resizeObserver.disconnect();
-      }
+      resizeObserver.disconnect();
     };
   }, [updateThumb, handleScrollStart]);
 

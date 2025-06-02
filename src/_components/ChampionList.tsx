@@ -1,4 +1,4 @@
-import { useDraftStore } from "@/_store/DraftStoreProvider";
+import { useDraftStore } from "@/_store/draftStore";
 import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
 import { useCallback, useMemo } from "react";
 

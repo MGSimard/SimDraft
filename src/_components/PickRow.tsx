@@ -1,4 +1,4 @@
-import { useDraftStore } from "@/_store/DraftStoreProvider";
+import { useDraftStore } from "@/_store/draftStore";
 import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import type { TeamIndex, ActionIndex, PickLabel } from "@/_store/types";
 import { championByKey } from "@/_datasets/championPreprocessed";

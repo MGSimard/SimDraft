@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useDraftStore } from "@/_store/DraftStoreProvider";
+import { useDraftStore } from "@/_store/draftStore";
 import { ACTION_TYPE } from "@/_store/constants";
 
 export function ButtonDraftAction() {

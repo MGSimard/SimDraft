@@ -1,4 +1,4 @@
-import { useDraftStore } from "@/_store/DraftStoreProvider";
+import { useDraftStore } from "@/_store/draftStore";
 import type { TeamIndex } from "@/_store/types";
 
 interface BanRowProps {
