@@ -1,34 +1,69 @@
-import { championsMap } from "@/_datasets/championPreprocessed";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import React from "react";
+import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
+import React, { useCallback, useMemo } from "react";
 
-export function ChampionList({ filter = "" }: { filter?: string }) {
-  const { selectChampion, selectedChampion, isDraftComplete, bans, picks } = useDraftStore((state) => state);
-  const allBans = [...bans[0], ...bans[1]].filter((c): c is string => c !== null);
-  const allPicks = [...picks[0], ...picks[1]].filter((c): c is string => c !== null);
+interface ChampionListProps {
+  searchQuery: string;
+}
 
-  const disabled = (champKey: string) => isDraftComplete || allBans.includes(champKey) || allPicks.includes(champKey);
+export const ChampionList = React.memo(function ChampionList({ searchQuery }: ChampionListProps) {
+  const selectChampion = useDraftStore((state) => state.selectChampion);
+  const selectedChampion = useDraftStore((state) => state.selectedChampion);
+  const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
+  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
 
-  const handleClick = (champKey: string) => {
-    if (disabled(champKey)) return;
-    selectChampion(champKey);
-  };
+  const displayChampions = useMemo(() => {
+    if (!searchQuery.trim()) return championsMap;
+    return searchChampions(searchQuery);
+  }, [searchQuery]);
 
-  const filteredChampions = championsMap.filter((champ) => champ.name.toLowerCase().includes(filter.toLowerCase()));
+  const handleChampionClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDraftComplete) return;
+      const button = e.currentTarget;
+      const championKey = button.dataset.championKey;
+      if (!championKey || !isChampionAvailable(championKey)) {
+        return;
+      }
+      selectChampion(championKey);
+    },
+    [selectChampion, isDraftComplete, isChampionAvailable]
+  );
+
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (!img.src.endsWith("-1.png")) {
+      img.src = "/assets/champions/-1.png";
+    }
+  }, []);
 
   return (
     <>
-      {filteredChampions.map((champ) => (
-        <button
-          key={champ.key}
-          type="button"
-          disabled={disabled(champ.key)}
-          onClick={() => handleClick(champ.key)}
-          className={selectedChampion === champ.key ? "selected" : undefined}>
-          <img src={`/assets/champions/${champ.key}.png`} alt="" />
-          <span>{champ.name}</span>
-        </button>
-      ))}
+      {displayChampions.map((champ: Champion) => {
+        const isAvailable = isChampionAvailable(champ.key);
+        const isSelected = selectedChampion === champ.key;
+
+        return (
+          <button
+            key={champ.key}
+            type="button"
+            disabled={!isAvailable}
+            data-champion-key={champ.key}
+            onClick={handleChampionClick}
+            className={isSelected ? "selected" : undefined}
+            aria-label={`${isSelected ? "Selected" : "Select"} champion ${champ.name}`}
+            title={champ.name}>
+            <img
+              src={`/assets/champions/${champ.key}.png`}
+              alt={champ.name}
+              decoding="async"
+              loading="eager"
+              onError={handleImageError}
+            />
+            <span>{champ.name}</span>
+          </button>
+        );
+      })}
     </>
   );
-}
+});

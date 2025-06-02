@@ -1,131 +1,72 @@
 import { createStore } from "zustand/vanilla";
-
-// Should apply to TSS? https://zustand.docs.pmnd.rs/guides/nextjs
-
-// ENUM CONSTANTS
-export const DRAFT_PHASE = {
-  BAN_PHASE_1: "BAN_PHASE_1",
-  PICK_PHASE_1: "PICK_PHASE_1",
-  BAN_PHASE_2: "BAN_PHASE_2",
-  PICK_PHASE_2: "PICK_PHASE_2",
-} as const;
-type DraftPhase = (typeof DRAFT_PHASE)[keyof typeof DRAFT_PHASE];
-export const TEAM = {
-  BLUE: "BLUE",
-  RED: "RED",
-} as const;
-type Team = (typeof TEAM)[keyof typeof TEAM];
-export const ACTION_TYPE = {
-  BAN: "BAN",
-  PICK: "PICK",
-} as const;
-type ActionType = (typeof ACTION_TYPE)[keyof typeof ACTION_TYPE];
-
-// DRAFT ORDER
-interface StepDetails {
-  phase: DraftPhase;
-  team: Team;
-  type: ActionType;
-  actionIndex: 0 | 1 | 2 | 3 | 4; // 5 Picks & Bans per team
-}
-export const draftOrder: readonly StepDetails[] = [
-  // BAN_PHASE_1 (6 bans, 3 per team)
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 0 },
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 0 },
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 1 },
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 1 },
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 2 },
-  { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 2 },
-  // PICK_PHASE_1 (6 picks, 3 per team)
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.PICK, actionIndex: 0 },
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.PICK, actionIndex: 0 },
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.PICK, actionIndex: 1 },
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.PICK, actionIndex: 1 },
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.PICK, actionIndex: 2 },
-  { phase: DRAFT_PHASE.PICK_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.PICK, actionIndex: 2 },
-  // BAN_PHASE_2 (4 bans, 2 per team)
-  { phase: DRAFT_PHASE.BAN_PHASE_2, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 3 },
-  { phase: DRAFT_PHASE.BAN_PHASE_2, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 3 },
-  { phase: DRAFT_PHASE.BAN_PHASE_2, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 4 },
-  { phase: DRAFT_PHASE.BAN_PHASE_2, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 4 },
-  // PICK_PHASE_2 (4 picks, 2 per team)
-  { phase: DRAFT_PHASE.PICK_PHASE_2, team: TEAM.RED, type: ACTION_TYPE.PICK, actionIndex: 3 },
-  { phase: DRAFT_PHASE.PICK_PHASE_2, team: TEAM.BLUE, type: ACTION_TYPE.PICK, actionIndex: 3 },
-  { phase: DRAFT_PHASE.PICK_PHASE_2, team: TEAM.BLUE, type: ACTION_TYPE.PICK, actionIndex: 4 },
-  { phase: DRAFT_PHASE.PICK_PHASE_2, team: TEAM.RED, type: ACTION_TYPE.PICK, actionIndex: 4 },
-] as const;
-
-// STATE AND ACTIONS
-type FiveArr<T> = [T, T, T, T, T];
-interface DraftState {
-  currentStepIndex: number; // Index into the draftOrder array
-  isDraftComplete: boolean;
-  selectedChampion: string | null;
-  bans: [FiveArr<string | null>, FiveArr<string | null>]; // [blueBans, redBans]
-  picks: [FiveArr<string | null>, FiveArr<string | null>]; // [bluePicks, redPicks]
-}
-
-interface DraftActions {
-  selectChampion: (cKey: string) => void;
-  lockIn: () => void;
-  nextStep: () => void;
-  reset: () => void;
-  getCurrentStepDetails: () => StepDetails | null; // Utility
-}
-
-export type DraftStore = DraftState & DraftActions;
+import { TEAM, ACTION_TYPE, draftOrder } from "./constants";
+import type { FiveArray, TeamIndex, ActionIndex, DraftState, DraftStore } from "./types";
 
 export const initialState: DraftState = {
   currentStepIndex: 0,
   isDraftComplete: false,
   selectedChampion: null,
   bans: [
-    [null, null, null, null, null], // Blue Bans
-    [null, null, null, null, null], // Red Bans
+    [null, null, null, null, null],
+    [null, null, null, null, null],
   ],
   picks: [
-    [null, null, null, null, null], // Blue Picks
-    [null, null, null, null, null], // Red Picks
+    [null, null, null, null, null],
+    [null, null, null, null, null],
   ],
 };
 
 export const createDraftStore = (initState: DraftState = initialState) => {
+  let cachedUnavailableChampions: Set<string> | null = null;
+  let cachedStateHash: string | null = null;
+  let cachedStepDetails: { stepIndex: number; details: any } | null = null;
+
   return createStore<DraftStore>()((set, get) => ({
     ...initState,
 
-    selectChampion: (cKey: string) => {
-      set({ selectedChampion: cKey });
+    selectChampion: (championKey: string) => {
+      const state = get();
+      if (state.isDraftComplete || !state.isChampionAvailable(championKey)) {
+        return;
+      }
+      set({ selectedChampion: championKey });
     },
 
     lockIn: () => {
       set((state) => {
-        if (state.isDraftComplete || !state.selectedChampion || state.currentStepIndex >= draftOrder.length) {
+        if (state.isDraftComplete || !state.selectedChampion) {
           return state;
         }
-        const currentStepDetails = draftOrder[state.currentStepIndex];
-        if (!currentStepDetails) return state;
-        const newBans = [...state.bans] as [FiveArr<string | null>, FiveArr<string | null>];
-        const newPicks = [...state.picks] as [FiveArr<string | null>, FiveArr<string | null>];
-        const teamId = currentStepDetails.team === TEAM.BLUE ? 0 : 1;
-        if (currentStepDetails.type === ACTION_TYPE.BAN) {
-          // ACTION_TYPE.BAN
-          const teamBans = [...newBans[teamId]] as FiveArr<string | null>;
-          teamBans[currentStepDetails.actionIndex] = state.selectedChampion;
-          newBans[teamId] = teamBans;
+        const currentStep = state.getCurrentStepDetails();
+        if (!currentStep) return state;
+        const teamIndex: TeamIndex = currentStep.team === TEAM.BLUE ? 0 : 1;
+        if (currentStep.type === ACTION_TYPE.BAN) {
+          const newBans: typeof state.bans = [
+            [...state.bans[0]] as FiveArray<string | null>,
+            [...state.bans[1]] as FiveArray<string | null>,
+          ];
+          newBans[teamIndex][currentStep.actionIndex] = state.selectedChampion;
+          return {
+            ...state,
+            bans: newBans,
+            selectedChampion: null,
+          };
         } else {
-          // ACTION_TYPE.PICK
-          const teamPicks = [...newPicks[teamId]] as FiveArr<string | null>;
-          teamPicks[currentStepDetails.actionIndex] = state.selectedChampion;
-          newPicks[teamId] = teamPicks;
+          const newPicks: typeof state.picks = [
+            [...state.picks[0]] as FiveArray<string | null>,
+            [...state.picks[1]] as FiveArray<string | null>,
+          ];
+          newPicks[teamIndex][currentStep.actionIndex] = state.selectedChampion;
+          return {
+            ...state,
+            picks: newPicks,
+            selectedChampion: null,
+          };
         }
-        return {
-          ...state,
-          bans: newBans,
-          picks: newPicks,
-          selectedChampion: null,
-        };
       });
-      if (!get().isDraftComplete && get().currentStepIndex < draftOrder.length) {
+
+      const state = get();
+      if (!state.isDraftComplete) {
         get().nextStep();
       }
     },
@@ -134,21 +75,124 @@ export const createDraftStore = (initState: DraftState = initialState) => {
       set((state) => {
         if (state.isDraftComplete) return state;
         const newStepIndex = state.currentStepIndex + 1;
-        if (newStepIndex >= draftOrder.length) {
-          return { ...state, currentStepIndex: newStepIndex, isDraftComplete: true };
-        }
-        return { ...state, currentStepIndex: newStepIndex, isDraftComplete: false };
+        const isDraftComplete = newStepIndex >= draftOrder.length;
+        cachedUnavailableChampions = null;
+        cachedStateHash = null;
+        cachedStepDetails = null;
+        return {
+          ...state,
+          currentStepIndex: newStepIndex,
+          isDraftComplete,
+        };
       });
     },
 
     reset: () => {
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+      cachedStepDetails = null;
       set(initialState);
     },
 
     getCurrentStepDetails: () => {
-      const { currentStepIndex, isDraftComplete } = get();
-      if (isDraftComplete || currentStepIndex >= draftOrder.length) return null;
-      return draftOrder[currentStepIndex] as StepDetails;
+      const state = get();
+
+      if (cachedStepDetails && cachedStepDetails.stepIndex === state.currentStepIndex) {
+        return cachedStepDetails.details;
+      }
+
+      let details = null;
+      if (!state.isDraftComplete && state.currentStepIndex < draftOrder.length) {
+        details = draftOrder[state.currentStepIndex] || null;
+      }
+
+      cachedStepDetails = {
+        stepIndex: state.currentStepIndex,
+        details,
+      };
+
+      return details;
+    },
+
+    getAllBannedChampions: () => {
+      const state = get();
+      return [...state.bans[0], ...state.bans[1]].filter((champion): champion is string => champion !== null);
+    },
+
+    getAllPickedChampions: () => {
+      const state = get();
+      return [...state.picks[0], ...state.picks[1]].filter((champion): champion is string => champion !== null);
+    },
+
+    getUnavailableChampions: () => {
+      const state = get();
+      const currentStateHash = JSON.stringify({
+        bans: state.bans,
+        picks: state.picks,
+        isDraftComplete: state.isDraftComplete,
+      });
+      if (cachedStateHash === currentStateHash && cachedUnavailableChampions) {
+        return cachedUnavailableChampions;
+      }
+      const unavailable = new Set([...state.getAllBannedChampions(), ...state.getAllPickedChampions()]);
+      cachedUnavailableChampions = unavailable;
+      cachedStateHash = currentStateHash;
+      return unavailable;
+    },
+
+    isChampionAvailable: (championKey: string) => {
+      const state = get();
+      if (state.isDraftComplete) return false;
+      return !state.getUnavailableChampions().has(championKey);
+    },
+
+    getCurrentTeam: () => {
+      const currentStep = get().getCurrentStepDetails();
+      if (!currentStep) return null;
+      return currentStep.team === TEAM.BLUE ? 0 : 1;
+    },
+
+    getCurrentActionType: () => {
+      const currentStep = get().getCurrentStepDetails();
+      return currentStep?.type || null;
+    },
+
+    getTeamBans: (teamIndex: TeamIndex) => {
+      const state = get();
+      return state.bans[teamIndex].filter((champion): champion is string => champion !== null);
+    },
+
+    getTeamPicks: (teamIndex: TeamIndex) => {
+      const state = get();
+      return state.picks[teamIndex].filter((champion): champion is string => champion !== null);
+    },
+
+    getCurrentStepInfo: () => {
+      const state = get();
+      const stepDetails = state.getCurrentStepDetails();
+      return {
+        stepDetails,
+        currentTeam: stepDetails ? (stepDetails.team === TEAM.BLUE ? 0 : 1) : null,
+        actionType: stepDetails?.type || null,
+        isDraftComplete: state.isDraftComplete,
+      };
+    },
+
+    getPickRowState: (team: TeamIndex, pickIndex: ActionIndex) => {
+      const state = get();
+      const stepInfo = state.getCurrentStepInfo();
+      const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
+
+      const isPicking =
+        stepInfo.stepDetails?.type === ACTION_TYPE.PICK &&
+        stepInfo.stepDetails?.actionIndex === pickIndex &&
+        stepInfo.stepDetails?.team === teamName;
+
+      const isBanning = stepInfo.stepDetails?.type === ACTION_TYPE.BAN && stepInfo.stepDetails?.team === teamName;
+
+      const pick = state.picks[team][pickIndex] || null;
+
+      return { isPicking, isBanning, pick };
     },
   }));
 };

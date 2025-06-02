@@ -1,4 +1,5 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import React from "react";
 
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -30,36 +31,59 @@ function getDeviceType(): "touch" | "pointer" | "mouse" {
 interface ScrollContainerProps {
   children: React.ReactNode;
 }
+
 interface ExtendedCSSProperties extends React.CSSProperties {
   WebkitOverflowScrolling?: "auto" | "touch";
 }
-export function ScrollContainer({ children }: ScrollContainerProps) {
+
+interface ScrollState {
+  thumbHeight: number;
+  thumbTop: number;
+  scrollRatio: number;
+  showScrollbar: boolean;
+  isScrolling: boolean;
+}
+
+export const ScrollContainer = React.memo(function ScrollContainer({ children }: ScrollContainerProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const [thumbHeight, setThumbHeight] = useState(0);
-  const [thumbTop, setThumbTop] = useState(0);
-  const [scrollRatio, setScrollRatio] = useState(0);
-  const [showScrollbar, setShowScrollbar] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [clientDeviceType, setClientDeviceType] = useState<"touch" | "pointer" | "mouse">("mouse");
   const thumbTopTarget = useRef(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    setClientDeviceType(getDeviceType());
-  }, []);
+  const [scrollState, setScrollState] = useState<ScrollState>({
+    thumbHeight: 0,
+    thumbTop: 0,
+    scrollRatio: 0,
+    showScrollbar: false,
+    isScrolling: false,
+  });
+
+  const [clientDeviceType] = useState(() => getDeviceType());
+
+  const styles = useMemo(
+    () => ({
+      viewport: {
+        overflowY: clientDeviceType === "touch" ? "auto" : "hidden",
+        WebkitOverflowScrolling: clientDeviceType === "touch" ? "touch" : undefined,
+      } as ExtendedCSSProperties,
+      thumb: {
+        height: `${scrollState.thumbHeight}px`,
+        transform: `translateY(${scrollState.thumbTop}px)`,
+      },
+    }),
+    [clientDeviceType, scrollState.thumbHeight, scrollState.thumbTop]
+  );
 
   const handleScrollStart = useCallback(() => {
     if (clientDeviceType === "touch") {
-      setIsScrolling(true);
-      setShowScrollbar(true);
+      setScrollState((prev) => ({ ...prev, isScrolling: true, showScrollbar: true }));
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
       scrollTimeoutRef.current = setTimeout(() => {
-        setIsScrolling(false);
-        setShowScrollbar(false);
+        setScrollState((prev) => ({ ...prev, isScrolling: false, showScrollbar: false }));
       }, 1000);
     }
   }, [clientDeviceType]);
@@ -67,49 +91,64 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
   const updateThumb = useCallback(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
+
     const { scrollTop, scrollHeight, clientHeight } = viewport;
     if (scrollHeight <= clientHeight) {
-      setShowScrollbar(false);
+      setScrollState((prev) => ({ ...prev, showScrollbar: false }));
       return;
     }
+
     const ratio = clientHeight / scrollHeight;
     const height = Math.max(clientHeight * ratio, 32);
-    setThumbHeight(height);
     const newThumbTop = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - height) || 0;
+    const newScrollRatio = scrollTop / (scrollHeight - clientHeight) || 0;
+
     if (clientDeviceType === "touch") {
       thumbTopTarget.current = newThumbTop;
-      setThumbTop(newThumbTop);
-    } else {
-      setThumbTop(newThumbTop);
     }
-    setScrollRatio(scrollTop / (scrollHeight - clientHeight) || 0);
-    if (clientDeviceType !== "touch") {
-      setShowScrollbar(true);
-    }
+
+    setScrollState((prev) => ({
+      ...prev,
+      thumbHeight: height,
+      thumbTop: newThumbTop,
+      scrollRatio: newScrollRatio,
+      showScrollbar: clientDeviceType !== "touch" ? true : prev.showScrollbar,
+    }));
   }, [clientDeviceType]);
 
   useEffect(() => {
     if (clientDeviceType !== "touch") return;
 
-    let frame: number;
+    const viewport = viewportRef.current;
+    if (viewport) {
+      (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = "touch";
+    }
+
     function animate() {
-      setThumbTop((prev) => {
+      setScrollState((prev) => {
         const target = thumbTopTarget.current;
-        const next = prev + (target - prev) * 0.2;
+        const next = prev.thumbTop + (target - prev.thumbTop) * 0.2;
         if (Math.abs(next - target) < 0.5) {
-          return target;
+          return { ...prev, thumbTop: target };
         }
-        frame = requestAnimationFrame(animate);
-        return next;
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return { ...prev, thumbTop: next };
       });
     }
-    if (isScrolling) {
-      frame = requestAnimationFrame(animate);
+
+    if (scrollState.isScrolling) {
+      animationFrameRef.current = requestAnimationFrame(animate);
     }
+
     return () => {
-      if (frame) cancelAnimationFrame(frame);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (viewport) {
+        (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = undefined;
+      }
     };
-  }, [clientDeviceType, isScrolling]);
+  }, [clientDeviceType, scrollState.isScrolling]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -124,12 +163,9 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     window.addEventListener("resize", debouncedUpdateThumb);
     let resizeObserver: ResizeObserver;
     if (typeof window.ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(() => {
-        updateThumb();
-      });
+      resizeObserver = new ResizeObserver(updateThumb);
       resizeObserver.observe(viewport);
     }
-
     return () => {
       viewport.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", debouncedUpdateThumb);
@@ -146,9 +182,11 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     const viewport = viewportRef.current;
     const thumb = thumbRef.current;
     if (!viewport || !thumb) return;
+
     let isDragging = false;
     let initialOffset = 0;
     const pointerEventOptions = { capture: true };
+
     const handlePointerDown = (e: PointerEvent) => {
       if (e.target !== thumb) return;
       e.preventDefault();
@@ -160,13 +198,14 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       document.addEventListener("pointerup", handlePointerUp, pointerEventOptions);
       document.addEventListener("pointercancel", handlePointerUp, pointerEventOptions);
     };
+
     const handlePointerMove = (e: PointerEvent) => {
       if (!isDragging) return;
       e.preventDefault();
       e.stopPropagation();
       const { scrollHeight, clientHeight } = viewport;
       const maxScroll = scrollHeight - clientHeight;
-      const maxThumbMove = clientHeight - thumbHeight;
+      const maxThumbMove = clientHeight - scrollState.thumbHeight;
       const track = thumb.parentElement as HTMLElement;
       const trackRect = track.getBoundingClientRect();
       let newThumbTop = e.clientY - trackRect.top - initialOffset;
@@ -175,45 +214,60 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       const newScrollTop = scrollRatio * maxScroll;
       viewport.scrollTop = newScrollTop;
     };
-    const handlePointerUp = (e: PointerEvent) => {
+
+    const handlePointerUp = () => {
       if (!isDragging) return;
       isDragging = false;
       document.removeEventListener("pointermove", handlePointerMove, pointerEventOptions);
       document.removeEventListener("pointerup", handlePointerUp, pointerEventOptions);
       document.removeEventListener("pointercancel", handlePointerUp, pointerEventOptions);
     };
+    const handleWheel = (e: WheelEvent) => {
+      if (clientDeviceType === "touch") return;
+      e.preventDefault();
+      viewport.scrollTop += e.deltaY;
+      handleScrollStart();
+    };
     thumb.addEventListener("pointerdown", handlePointerDown);
+    if (clientDeviceType !== "touch") {
+      viewport.addEventListener("wheel", handleWheel);
+    }
     return () => {
       thumb.removeEventListener("pointerdown", handlePointerDown);
+      viewport.removeEventListener("wheel", handleWheel);
       document.removeEventListener("pointermove", handlePointerMove, pointerEventOptions);
       document.removeEventListener("pointerup", handlePointerUp, pointerEventOptions);
       document.removeEventListener("pointercancel", handlePointerUp, pointerEventOptions);
     };
-  }, [thumbHeight]);
+  }, [scrollState.thumbHeight, clientDeviceType, handleScrollStart]);
 
-  const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === thumbRef.current) return;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const track = e.currentTarget;
-    const trackRect = track.getBoundingClientRect();
-    const clickY = e.clientY - trackRect.top;
-    const thumbCenter = thumbHeight / 2;
-    const maxThumbMove = trackRect.height - thumbHeight;
-    let newThumbTop = clickY - thumbCenter;
-    newThumbTop = Math.max(0, Math.min(newThumbTop, maxThumbMove));
-    const { scrollHeight, clientHeight } = viewport;
-    const maxScroll = scrollHeight - clientHeight;
-    const scrollRatio = maxThumbMove > 0 ? newThumbTop / maxThumbMove : 0;
-    const newScrollTop = scrollRatio * maxScroll;
-    viewport.scrollTop = newScrollTop;
-  };
+  const handleTrackClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (e.target === thumbRef.current) return;
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      const track = e.currentTarget;
+      const trackRect = track.getBoundingClientRect();
+      const clickY = e.clientY - trackRect.top;
+      const thumbCenter = scrollState.thumbHeight / 2;
+      const maxThumbMove = trackRect.height - scrollState.thumbHeight;
+      let newThumbTop = clickY - thumbCenter;
+      newThumbTop = Math.max(0, Math.min(newThumbTop, maxThumbMove));
+      const { scrollHeight, clientHeight } = viewport;
+      const maxScroll = scrollHeight - clientHeight;
+      const scrollRatio = maxThumbMove > 0 ? newThumbTop / maxThumbMove : 0;
+      const newScrollTop = scrollRatio * maxScroll;
+      viewport.scrollTop = newScrollTop;
+    },
+    [scrollState.thumbHeight]
+  );
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const { clientHeight, scrollHeight } = viewport;
     let handled = true;
+
     switch (e.key) {
       case "ArrowDown":
         viewport.scrollTop += 40;
@@ -248,54 +302,12 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       e.preventDefault();
       e.stopPropagation();
     }
-  };
+  }, []);
 
-  const handleScrollbarKeyDown = (e: React.KeyboardEvent) => {
-    handleKeyDown(e);
-  };
-
-  useEffect(() => {
-    if (clientDeviceType === "touch") return;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      viewport.scrollTop += e.deltaY;
-      handleScrollStart();
-    };
-    viewport.addEventListener("wheel", handleWheel);
-    return () => {
-      viewport.removeEventListener("wheel", handleWheel);
-    };
-  }, [handleScrollStart, clientDeviceType]);
-
-  useEffect(() => {
-    if (clientDeviceType !== "touch") return;
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = "touch";
-    return () => {
-      (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = undefined;
-    };
-  }, [clientDeviceType]);
-
-  useEffect(() => {
-    updateThumb();
-  }, [updateThumb]);
-
-  const ariaProps = {
-    role: "scrollbar" as const,
-    "aria-controls": "champion-list",
-    "aria-orientation": "vertical" as const,
-    "aria-valuenow": Math.round(scrollRatio * 100),
-    "aria-valuemin": 0,
-    "aria-valuemax": 100,
-    "aria-label": "Champion list scrollbar",
-    tabIndex: 0,
-    onKeyDown: handleScrollbarKeyDown,
-  };
-
-  const shouldShowScrollbar = showScrollbar && thumbHeight > 0 && (clientDeviceType !== "touch" || isScrolling);
+  const shouldShowScrollbar =
+    scrollState.showScrollbar &&
+    scrollState.thumbHeight > 0 &&
+    (clientDeviceType !== "touch" || scrollState.isScrolling);
 
   return (
     <div id="champion-list-wrapper" ref={wrapperRef}>
@@ -305,12 +317,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
         tabIndex={0}
         onKeyDown={handleKeyDown}
         className="champion-list"
-        style={
-          {
-            overflowY: clientDeviceType === "touch" ? "auto" : "hidden",
-            WebkitOverflowScrolling: clientDeviceType === "touch" ? "touch" : undefined,
-          } as ExtendedCSSProperties
-        }>
+        style={styles.viewport}>
         {children}
       </div>
       {shouldShowScrollbar && (
@@ -318,19 +325,24 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
           id="scrollbar-track"
           className={clientDeviceType === "touch" ? "scrollbarTrackTouch" : undefined}
           onClick={handleTrackClick}
-          {...ariaProps}>
+          role="scrollbar"
+          aria-controls="champion-list"
+          aria-orientation="vertical"
+          aria-valuenow={Math.round(scrollState.scrollRatio * 100)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Champion list scrollbar"
+          tabIndex={0}
+          onKeyDown={handleKeyDown}>
           <div
             id="scrollbar-thumb"
             ref={thumbRef}
             tabIndex={-1}
             className={clientDeviceType === "touch" ? "thumbTouch" : undefined}
-            style={{
-              height: `${thumbHeight}px`,
-              transform: `translateY(${thumbTop}px)`,
-            }}
+            style={styles.thumb}
           />
         </div>
       )}
     </div>
   );
-}
+});

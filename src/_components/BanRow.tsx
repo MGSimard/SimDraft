@@ -1,16 +1,31 @@
 import { useDraftStore } from "@/_store/DraftStoreProvider";
+import type { TeamIndex } from "@/_store/types";
+import React from "react";
 
-export function BanRow({ team }: { team: 0 | 1 }) {
-  const { bans } = useDraftStore((state) => state);
+interface BanRowProps {
+  team: TeamIndex;
+}
 
-  // Reversing for team 1 instead of row-reverse to keep navigability order
-  const banOrder = team === 0 ? bans[0] : [...bans[1]].reverse();
+export const BanRow = React.memo(function BanRow({ team }: BanRowProps) {
+  const bans = useDraftStore((state) => state.bans);
+  const teamBans = bans[team];
+  const banOrder = team === 0 ? teamBans : [...teamBans].reverse();
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = "/assets/champions/-1.png";
+  };
 
   return (
     <div className="ban-row">
-      {banOrder.map((ban, i) => (
-        <img src={ban ? `/assets/champions/${ban}.png` : "/assets/champions/-1.png"} key={team + i} alt="img" />
+      {banOrder.map((ban: string | null, i: number) => (
+        <img
+          key={`${team}-${i}`}
+          src={ban ? `/assets/champions/${ban}.png` : "/assets/champions/-1.png"}
+          alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}
+          decoding="async"
+          onError={handleImageError}
+        />
       ))}
     </div>
   );
-}
+});

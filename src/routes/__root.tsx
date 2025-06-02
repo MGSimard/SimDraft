@@ -34,6 +34,12 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: globalCss },
       { rel: "stylesheet", href: fontsCss },
     ],
+    scripts: [
+      {
+        crossOrigin: "anonymous",
+        src: "//unpkg.com/react-scan/dist/auto.global.js",
+      },
+    ],
   }),
   component: RootComponent,
 });

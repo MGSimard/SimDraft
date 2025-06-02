@@ -6,26 +6,61 @@ import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 import { ChampionList } from "@/_components/ChampionList";
 import { BanRow } from "@/_components/BanRow";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import { ACTION_TYPE } from "@/_store/draftStore";
-import { useState } from "react";
+import { ACTION_TYPE } from "@/_store/constants";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
 });
 
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
 function PageHome() {
-  const { getCurrentStepDetails } = useDraftStore((state) => state);
-  const currentStepDetails = getCurrentStepDetails();
-
-  const isPicking = currentStepDetails?.type === ACTION_TYPE.PICK;
-  const isBanning = currentStepDetails?.type === ACTION_TYPE.BAN;
-
-  const mainClass = isPicking ? "theme-picking" : isBanning ? "theme-banning" : "";
-
+  const getCurrentStepInfo = useDraftStore((state) => state.getCurrentStepInfo);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 200);
+  const { actionType, isDraftComplete } = getCurrentStepInfo();
+
+  const mainThemeClass = useMemo(() => {
+    if (actionType === ACTION_TYPE.PICK) return "theme-picking";
+    if (actionType === ACTION_TYPE.BAN) return "theme-banning";
+    return "";
+  }, [actionType]);
+
+  const headerContent = useMemo(() => {
+    const actionText = isDraftComplete
+      ? "DRAFT COMPLETE"
+      : actionType === ACTION_TYPE.BAN
+      ? "BAN A CHAMPION!"
+      : actionType === ACTION_TYPE.PICK
+      ? "PICK A CHAMPION!"
+      : "DRAFT COMPLETE";
+
+    const timeRemaining = "28";
+
+    return { actionText, timeRemaining };
+  }, [actionType, isDraftComplete]);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  }, []);
 
   return (
-    <main id="draft" className={mainClass}>
+    <main id="draft" className={mainThemeClass}>
       <div id="team-blue">
         <BanRow team={0} />
         <PickSeparator />
@@ -40,24 +75,45 @@ function PageHome() {
         <PickRow team={0} pickIndex={4} label="B5" />
         <PickSeparator />
       </div>
+
       <div id="center">
         <header>
-          <h2>BAN A CHAMPION!</h2>
-          <span>28</span>
+          <h2>{headerContent.actionText}</h2>
+          <span>{headerContent.timeRemaining}</span>
         </header>
+
         <div id="champion-controls">
-          <button type="button">X</button>
-          <button type="button">X</button>
-          <button type="button">X</button>
-          <button type="button">X</button>
-          <button type="button">X</button>
-          <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <button type="button" aria-label="Filter option 1">
+            X
+          </button>
+          <button type="button" aria-label="Filter option 2">
+            X
+          </button>
+          <button type="button" aria-label="Filter option 3">
+            X
+          </button>
+          <button type="button" aria-label="Filter option 4">
+            X
+          </button>
+          <button type="button" aria-label="Filter option 5">
+            X
+          </button>
+          <input
+            type="text"
+            placeholder="Search"
+            value={search}
+            onChange={handleSearchChange}
+            aria-label="Search champions"
+          />
         </div>
+
         <ScrollContainer>
-          <ChampionList filter={search} />
+          <ChampionList searchQuery={debouncedSearch} />
         </ScrollContainer>
+
         <ButtonDraftAction />
       </div>
+
       <div id="team-red">
         <BanRow team={1} />
         <PickSeparator />

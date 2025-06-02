@@ -1,5 +1,7 @@
 # vsDraft
 
+Letting AI go wild on this one (not the UI though lmao).
+
 ## Task List
 
 - [x] Init

@@ -1,94 +1,73 @@
-import { ACTION_TYPE } from "@/_store/draftStore";
+import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import { useDraftStore } from "@/_store/DraftStoreProvider";
-import { championsMap } from "@/_datasets/championPreprocessed";
+import { championByKey } from "@/_datasets/championPreprocessed";
+import type { TeamIndex, ActionIndex, PickLabel } from "@/_store/types";
+import React, { useMemo } from "react";
 
 interface PickRowProps {
-  team: 0 | 1;
-  pickIndex: 0 | 1 | 2 | 3 | 4;
-  label: "B1" | "B2" | "B3" | "B4" | "B5" | "R1" | "R2" | "R3" | "R4" | "R5";
+  team: TeamIndex;
+  pickIndex: ActionIndex;
+  label: PickLabel;
 }
+
 export function PickRow({ team, pickIndex, label }: PickRowProps) {
-  const { picks, getCurrentStepDetails, selectedChampion } = useDraftStore((state) => state);
-  const currentStepDetails = getCurrentStepDetails();
-  const type = currentStepDetails?.type;
-  const actionIndex = currentStepDetails?.actionIndex;
-  const currentTeam = currentStepDetails?.team;
+  const getPickRowState = useDraftStore((state) => state.getPickRowState);
+  const selectedChampion = useDraftStore((state) => state.selectedChampion);
+  const { isPicking, isBanning, pick } = getPickRowState(team, pickIndex);
 
-  const isPicking =
-    type === ACTION_TYPE.PICK && actionIndex === pickIndex && currentTeam === (team === 0 ? "BLUE" : "RED");
-  const isBanning = type === ACTION_TYPE.BAN && currentTeam === (team === 0 ? "BLUE" : "RED");
+  const champName = pick ? championByKey.get(pick)?.name || pick : null;
 
-  const pick = picks[team][pickIndex];
+  const selectedChampInfo = useMemo(() => {
+    if (!isPicking || !selectedChampion) return null;
+    const champion = championByKey.get(selectedChampion);
+    if (!champion) return null;
 
-  // Find champion name if picked
-  let champName: string | null = null;
-  if (pick) {
-    const champ = championsMap.find((c) => c.key === pick);
-    champName = champ ? champ.name : pick;
-  }
+    return {
+      key: selectedChampion,
+      name: champion.name,
+      imageSrc: `/assets/champions/${selectedChampion}.png`,
+    };
+  }, [isPicking, selectedChampion]);
 
-  // Determine what to render in the first span
-  let statusSpan: React.ReactNode = null;
-  let champSpan: React.ReactNode = null;
-  if (isBanning && pickIndex === 0) {
-    statusSpan = <span>Banning...</span>;
-  } else if (!pick) {
-    if (isPicking) {
-      statusSpan = <span>Picking...</span>;
-    }
-  } else if (pick && champName) {
-    champSpan = <span className="cName">{champName}</span>;
-  }
+  const statusContent = useMemo(() => {
+    if (isBanning && pickIndex === 0) return <span>Banning...</span>;
+    if (!pick && isPicking) return <span>Picking...</span>;
+    if (pick && champName) return <span className="cName">{champName}</span>;
+    return null;
+  }, [isBanning, pickIndex, pick, isPicking, champName]);
 
-  // Only apply pending-action if this row is currently picking or (banning and pickIndex === 0)
   const isPendingAction = isPicking || (isBanning && pickIndex === 0);
+  const imageSrc = pick ? `/assets/champions/${pick}.png` : "/assets/champions/-1.png";
 
-  // If picking and this is the current row, show selected champion's frame and name
-  let selectedChampFrame: React.ReactNode = null;
-  let selectedChampName: React.ReactNode = null;
-  if (isPicking && selectedChampion) {
-    const champ = championsMap.find((c) => c.key === selectedChampion);
-    selectedChampFrame = (
-      <img
-        src={`/assets/champions/${selectedChampion}.png`}
-        alt={champ ? champ.name : selectedChampion}
-        className="selected-champ-frame"
-      />
-    );
-    selectedChampName = <span className="cName">{champ ? champ.name : selectedChampion}</span>;
-  }
+  const renderContent = () => (
+    <>
+      {statusContent}
+      {selectedChampInfo && (
+        <>
+          <img
+            src={selectedChampInfo.imageSrc}
+            alt={selectedChampInfo.name}
+            className="selected-champ-frame"
+            decoding="async"
+          />
+          <span className="cName">{selectedChampInfo.name}</span>
+        </>
+      )}
+      <span>{label}</span>
+    </>
+  );
 
   return (
     <div className={`pick-row${isPendingAction ? " pending-action" : ""}`}>
       {team === 0 ? (
         <>
-          <img src={pick ? `/assets/champions/${pick}.png` : "/assets/champions/-1.png"} alt="img" />
-          <div>
-            {statusSpan}
-            {isPicking && selectedChampion && (
-              <>
-                {selectedChampFrame}
-                {selectedChampName}
-              </>
-            )}
-            {champSpan}
-            <span>{label}</span>
-          </div>
+          <img src={imageSrc} alt={champName || "Empty slot"} decoding="async" />
+          <div>{renderContent()}</div>
         </>
       ) : (
         <>
-          <div>
-            {statusSpan}
-            {isPicking && selectedChampion && (
-              <>
-                {selectedChampFrame}
-                {selectedChampName}
-              </>
-            )}
-            {champSpan}
-            <span>{label}</span>
-          </div>
-          <img src={pick ? `/assets/champions/${pick}.png` : "/assets/champions/-1.png"} alt="img" />
+          <div>{renderContent()}</div>
+          <img src={imageSrc} alt={champName || "Empty slot"} decoding="async" />
         </>
       )}
     </div>
