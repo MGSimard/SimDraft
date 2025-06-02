@@ -51,7 +51,7 @@ export const ChampionList = React.memo(function ChampionList({ searchQuery }: Ch
             data-champion-key={champ.key}
             onClick={handleChampionClick}
             className={isSelected ? "selected" : undefined}
-            aria-label={`${isSelected ? "Selected" : "Select"} champion ${champ.name}`}
+            aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}`}
             title={champ.name}>
             <img
               src={`/assets/champions/${champ.key}.png`}

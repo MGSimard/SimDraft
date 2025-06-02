@@ -51,7 +51,6 @@ export interface DraftSelectors {
     pickIndex: ActionIndex
   ) => {
     isPicking: boolean;
-    isBanning: boolean;
     pick: string | null;
   };
 }

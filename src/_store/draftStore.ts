@@ -188,11 +188,9 @@ export const createDraftStore = (initState: DraftState = initialState) => {
         stepInfo.stepDetails?.actionIndex === pickIndex &&
         stepInfo.stepDetails?.team === teamName;
 
-      const isBanning = stepInfo.stepDetails?.type === ACTION_TYPE.BAN && stepInfo.stepDetails?.team === teamName;
-
       const pick = state.picks[team][pickIndex] || null;
 
-      return { isPicking, isBanning, pick };
+      return { isPicking, pick };
     },
   }));
 };
