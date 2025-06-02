@@ -10,6 +10,7 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [x] Initial layout
 - [ ] Restyle primary button
+- [ ] Red during bans btw
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list

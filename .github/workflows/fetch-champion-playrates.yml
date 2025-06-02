@@ -1,0 +1,79 @@
+name: Fetch and Update Champion Playrates Dataset
+
+on:
+  schedule:
+    - cron: "0 */12 * * *" # Runs every 12 hours
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-playrates-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Fetch and Process Champion Playrates
+        id: fetch_playrates
+        run: |
+          mkdir -p src/_datasets
+          set -e
+
+          echo "Fetching champion playrates JS file from CommunityDragon..."
+          js_url="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champion-statistics/global/default/rcp-fe-lol-champion-statistics.js"
+          js_content=$(curl -fs "$js_url")
+
+          if [ -z "$js_content" ]; then
+            echo "ERROR: Failed to fetch champion playrates JS file from $js_url"
+            exit 1
+          fi
+
+          echo "Extracting JSON data from JS file..."
+          # The regex JSON\.parse\(\'\K\[^']+(?=\'\)) looks for JSON.parse('CONTENT_HERE') 
+          # and extracts CONTENT_HERE.
+          # \K discards the match up to that point.
+          # \[^']_ matches any character not a single quote, one or more times.
+          # (?=\'\)) is a positive lookahead for the closing single quote and parenthesis.
+          json_data=$(echo "$js_content" | grep -oP "JSON\.parse\('\K\[^']+(?='\))")
+
+          if [ -z "$json_data" ]; then
+            echo "ERROR: Failed to extract JSON data. Check regex or JS file structure."
+            echo "Fetched content snippet (first 500 chars):"
+            echo "${js_content:0:500}" # Log a snippet for debugging
+            exit 1
+          fi
+
+          echo "Validating and saving champion playrates JSON data..."
+          # Use jq to validate and pretty-print the JSON before saving
+          output_file="src/_datasets/championPlayrates.json"
+          echo "$json_data" | jq '.' > "$output_file"
+
+          # Check if jq was successful (valid JSON)
+          if [ $? -ne 0 ]; then
+            echo "ERROR: Extracted data is not valid JSON or jq failed."
+            echo "Problematic JSON data was written to $output_file for inspection before this error."
+            # Optionally, remove the invalid file: rm "$output_file"
+            exit 1
+          fi
+
+          echo "Champion playrates data successfully saved to $output_file"
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.name "GitHub Action"
+          git config --local user.email "action@github.com"
+          git add src/_datasets/playrates.json
+
+          # Check for changes before attempting to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit for champion playrates."
+          else
+            git commit -m "GHA: Update champion playrates dataset"
+            git push
+          fi
