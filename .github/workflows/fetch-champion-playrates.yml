@@ -51,7 +51,7 @@ jobs:
 
           echo "Validating and saving champion playrates JSON data..."
           # Use jq to validate and pretty-print the JSON before saving
-          output_file="src/_datasets/championPlayrates.json"
+          output_file="src/_datasets/playrates.json"
           echo "$json_data" | jq '.' > "$output_file"
 
           # Check if jq was successful (valid JSON)
