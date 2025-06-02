@@ -72,8 +72,12 @@ html {
 }
 body {
   height: 100dvh;
-  padding: 1.6rem;
   font-size: 1.6rem;
+  overflow: hidden;
+}
+#root {
+  height: 100%;
+  padding: 1.6rem;
   overflow: hidden;
 }
 main {
