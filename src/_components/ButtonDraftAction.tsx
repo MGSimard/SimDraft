@@ -8,16 +8,17 @@ export function ButtonDraftAction() {
   const currentStepDetails = getCurrentStepDetails();
 
   const type = currentStepDetails?.type;
-  const label =
-    type === ACTION_TYPE.PICK
-      ? "LOCK IN"
-      : type === ACTION_TYPE.BAN
-      ? "BAN"
-      : !type && isDraftComplete
-      ? "RESET"
-      : !type && !isDraftComplete
-      ? (console.warn("ERROR: No action type and draft isn't complete."), "ERROR")
-      : "";
+  let label = "";
+  if (type === ACTION_TYPE.PICK) {
+    label = "LOCK IN";
+  } else if (type === ACTION_TYPE.BAN) {
+    label = "BAN";
+  } else if (!type && isDraftComplete) {
+    label = "RESET";
+  } else if (!type && !isDraftComplete) {
+    console.warn("ERROR: No action type and draft isn't complete.");
+    label = "ERROR";
+  }
 
   const allBans = [...bans[0], ...bans[1]].filter((c): c is string => c !== null);
   const allPicks = [...picks[0], ...picks[1]].filter((c): c is string => c !== null);
