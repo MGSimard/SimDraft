@@ -110,7 +110,7 @@ export const ScrollContainer = React.memo(function ScrollContainer({ children }:
     setScrollState((prev) => ({
       ...prev,
       thumbHeight: height,
-      thumbTop: newThumbTop,
+      thumbTop: clientDeviceType === "touch" ? prev.thumbTop : newThumbTop,
       scrollRatio: newScrollRatio,
       showScrollbar: clientDeviceType !== "touch" ? true : prev.showScrollbar,
     }));
