@@ -74,7 +74,6 @@ function PageHome() {
           <h2>{actionText}</h2>
           <span>{timeRemaining}</span>
         </header>
-
         <div id="champion-controls">
           <button type="button" aria-label="Filter option 1">
             X
