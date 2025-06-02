@@ -53,14 +53,8 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
   // Track when isPendingAction changes and detect lock-ins
   useEffect(() => {
-    console.log(`${teamColor} PickRow ${pickIndex} pending state:`, {
-      isPendingAction,
-      wasPending: wasPendingRef.current,
-    });
-
     // Start intro when action begins
     if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
-      console.log(`🎬 Starting intro for: ${teamColor} ${pickIndex}`);
       introVideoRef.current.currentTime = 0;
       introVideoRef.current.play().catch(console.error);
       setShowOutro(false);
@@ -68,7 +62,6 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
     // Detect lock-in: was pending, now not pending
     if (wasPendingRef.current && !isPendingAction) {
-      console.log(`🎉 LOCK-IN DETECTED! Playing outro for: ${teamColor} ${pickIndex}`);
       setShowOutro(true);
     }
 
@@ -79,23 +72,14 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   useEffect(() => {
     if (showOutro) {
       requestAnimationFrame(() => {
-        console.log(`🔧 ${teamColor} outro effect triggered, checking refs...`);
-        console.log("Refs exist:", {
-          idle: !!idleVideoRef.current,
-          outro: !!outroVideoRef.current,
-          showOutro,
-        });
-
         // Hide idle video and play outro
         if (idleVideoRef.current) {
           idleVideoRef.current.style.display = "none";
-          console.log(`🛑 ${teamColor} idle video hidden`);
         }
 
         if (outroVideoRef.current) {
           outroVideoRef.current.currentTime = 0;
           outroVideoRef.current.play().catch(console.error);
-          console.log(`🎬 ${teamColor} outro video started`);
         }
       });
     }
@@ -122,16 +106,13 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             muted
             playsInline
             onEnded={() => {
-              console.log(`🎬 ${teamColor} intro video ended, switching to idle`);
               if (introVideoRef.current) {
                 introVideoRef.current.style.display = "none";
-                console.log(`✅ ${teamColor} intro video hidden`);
               }
               if (idleVideoRef.current) {
                 idleVideoRef.current.style.display = "block";
                 idleVideoRef.current.currentTime = 0;
                 idleVideoRef.current.play().catch(console.error);
-                console.log(`✅ ${teamColor} idle video started`);
               }
             }}>
             <source src={`/assets/animations/magic-action-${teamColor}-intro.webm`} type="video/webm" />
