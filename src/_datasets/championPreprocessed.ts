@@ -1,8 +1,21 @@
 import championDataset from "@/_datasets/champion.json";
+import playratesData from "@/_datasets/playrates.json";
 
 export interface Champion {
   key: string;
   name: string;
+  roles: string[];
+}
+
+// Function to determine which roles a champion belongs to
+function getChampionRoles(championKey: string): string[] {
+  const roles: string[] = [];
+  for (const [roleName, champions] of Object.entries(playratesData)) {
+    if (championKey in champions) {
+      roles.push(roleName);
+    }
+  }
+  return roles;
 }
 
 export const championsMap: Champion[] = Object.values(championDataset.data)
@@ -10,6 +23,7 @@ export const championsMap: Champion[] = Object.values(championDataset.data)
     const champion: Champion = {
       key: champInfo.key,
       name: champInfo.name,
+      roles: getChampionRoles(champInfo.key),
     };
     return champion;
   })

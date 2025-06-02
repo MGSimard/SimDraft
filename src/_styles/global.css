@@ -60,6 +60,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline: 1px solid red;
 }
 html {
   font-family: var(--fontSpiegel);
@@ -345,7 +346,7 @@ header span {
   display: flex;
   align-items: stretch;
   gap: 1.6rem;
-  padding: 1.6rem 3.2rem 0.4rem 1.6rem;
+  padding: 1.6rem 3.2rem 0.4rem 3.2rem;
 }
 #champion-controls button {
   width: 3.2rem;
@@ -365,6 +366,7 @@ header span {
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
   gap: 3.2rem;
   height: 100%;
+  align-content: start;
   padding: 1.6rem 0;
   text-align: center;
   white-space: nowrap;

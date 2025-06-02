@@ -114,6 +114,16 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     }));
   }, [clientDeviceType]);
 
+  // Update scrollbar when children change (due to filtering)
+  useEffect(() => {
+    // Use a small delay to ensure DOM has updated
+    const timeoutId = setTimeout(() => {
+      updateThumb();
+    }, 10);
+
+    return () => clearTimeout(timeoutId);
+  }, [children, updateThumb]);
+
   useEffect(() => {
     if (clientDeviceType !== "touch") return;
 

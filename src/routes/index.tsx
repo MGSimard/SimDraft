@@ -29,10 +29,13 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "SUPPORT"] as const;
+
 function PageHome() {
   const actionType = useDraftStore((state) => state.getCurrentActionType());
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const [search, setSearch] = useState("");
+  const [activeRoleFilters, setActiveRoleFilters] = useState<string[]>([]);
   const debouncedSearch = useDebounce(search, 200);
 
   const mainThemeClass =
@@ -48,6 +51,10 @@ function PageHome() {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+  };
+
+  const handleRoleFilterToggle = (role: string) => {
+    setActiveRoleFilters((prev) => (prev.includes(role) ? [] : [role]));
   };
 
   return (
@@ -72,21 +79,16 @@ function PageHome() {
           <h2>{actionText}</h2>
         </header>
         <div id="champion-controls">
-          <button type="button" aria-label="Filter option 1">
-            X
-          </button>
-          <button type="button" aria-label="Filter option 2">
-            X
-          </button>
-          <button type="button" aria-label="Filter option 3">
-            X
-          </button>
-          <button type="button" aria-label="Filter option 4">
-            X
-          </button>
-          <button type="button" aria-label="Filter option 5">
-            X
-          </button>
+          {ROLES.map((role) => (
+            <button
+              key={role}
+              type="button"
+              aria-label={`Filter by ${role}`}
+              onClick={() => handleRoleFilterToggle(role)}
+              className={activeRoleFilters.includes(role) ? "active" : ""}>
+              X
+            </button>
+          ))}
           <input
             type="text"
             placeholder="Search"
@@ -96,7 +98,7 @@ function PageHome() {
           />
         </div>
         <ScrollContainer>
-          <ChampionList searchQuery={debouncedSearch} />
+          <ChampionList searchQuery={debouncedSearch} roleFilters={activeRoleFilters} />
         </ScrollContainer>
         <ButtonDraftAction />
       </div>

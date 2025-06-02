@@ -4,18 +4,30 @@ import { useCallback, useMemo } from "react";
 
 interface ChampionListProps {
   searchQuery: string;
+  roleFilters: string[];
 }
 
-export function ChampionList({ searchQuery }: ChampionListProps) {
+export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   const selectChampion = useDraftStore((state) => state.selectChampion);
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
 
   const displayChampions = useMemo(() => {
-    if (!searchQuery.trim()) return championsMap;
-    return searchChampions(searchQuery);
-  }, [searchQuery]);
+    let champions = championsMap;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      champions = searchChampions(searchQuery);
+    }
+
+    // Apply role filters
+    if (roleFilters.length > 0) {
+      champions = champions.filter((champion) => champion.roles.some((role) => roleFilters.includes(role)));
+    }
+
+    return champions;
+  }, [searchQuery, roleFilters]);
 
   const handleChampionClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
