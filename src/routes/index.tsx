@@ -1,28 +1,43 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { championsMap } from "@/_datasets/championPreprocessed";
 import { ScrollContainer } from "@/_components/ScrollContainer";
 import { PickRow } from "@/_components/PickRow";
 import { PickSeparator } from "@/_components/PickSeparator";
 import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
+import { ChampionList } from "@/_components/ChampionList";
+import { BanRow } from "@/_components/BanRow";
+import { useDraftStore } from "@/_store/DraftStoreProvider";
+import { ACTION_TYPE } from "@/_store/draftStore";
+import { useState } from "react";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
 });
 
 function PageHome() {
+  const { getCurrentStepDetails } = useDraftStore((state) => state);
+  const currentStepDetails = getCurrentStepDetails();
+
+  const isPicking = currentStepDetails?.type === ACTION_TYPE.PICK;
+  const isBanning = currentStepDetails?.type === ACTION_TYPE.BAN;
+
+  const mainClass = isPicking ? "theme-picking" : isBanning ? "theme-banning" : "";
+
+  const [search, setSearch] = useState("");
+
   return (
-    <main id="draft">
+    <main id="draft" className={mainClass}>
       <div id="team-blue">
+        <BanRow team={0} />
         <PickSeparator />
-        <PickRow team={0} label="B1" />
+        <PickRow team={0} pickIndex={0} label="B1" />
         <PickSeparator />
-        <PickRow team={0} label="B2" />
+        <PickRow team={0} pickIndex={1} label="B2" />
         <PickSeparator />
-        <PickRow team={0} label="B3" />
+        <PickRow team={0} pickIndex={2} label="B3" />
         <PickSeparator />
-        <PickRow team={0} label="B4" />
+        <PickRow team={0} pickIndex={3} label="B4" />
         <PickSeparator />
-        <PickRow team={0} label="B5" />
+        <PickRow team={0} pickIndex={4} label="B5" />
         <PickSeparator />
       </div>
       <div id="center">
@@ -36,29 +51,25 @@ function PageHome() {
           <button type="button">X</button>
           <button type="button">X</button>
           <button type="button">X</button>
-          <input type="text" placeholder="Search" />
+          <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <ScrollContainer>
-          {championsMap.map((champ) => (
-            <button key={champ.key} type="button">
-              <img src={`/assets/champions/${champ.key}.png`} alt="" />
-              <span>{champ.name}</span>
-            </button>
-          ))}
+          <ChampionList filter={search} />
         </ScrollContainer>
         <ButtonDraftAction />
       </div>
       <div id="team-red">
+        <BanRow team={1} />
         <PickSeparator />
-        <PickRow team={1} label="R1" />
+        <PickRow team={1} pickIndex={0} label="R1" />
         <PickSeparator />
-        <PickRow team={1} label="R2" />
+        <PickRow team={1} pickIndex={1} label="R2" />
         <PickSeparator />
-        <PickRow team={1} label="R3" />
+        <PickRow team={1} pickIndex={2} label="R3" />
         <PickSeparator />
-        <PickRow team={1} label="R4" />
+        <PickRow team={1} pickIndex={3} label="R4" />
         <PickSeparator />
-        <PickRow team={1} label="R5" />
+        <PickRow team={1} pickIndex={4} label="R5" />
         <PickSeparator />
       </div>
     </main>

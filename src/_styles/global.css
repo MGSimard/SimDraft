@@ -20,6 +20,8 @@
   --clrBlue6: hsl(219, 63%, 10%);
   --clrBlue7: hsl(220, 60%, 10%);
 
+  --clrRed1: hsl(350, 74%, 52%);
+
   --clrGold1: hsl(40, 50%, 88%);
   --clrGold2: hsl(40, 45%, 61%);
   --clrGold3: hsl(40, 45%, 61%);
@@ -58,7 +60,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  outline: 1px solid red;
 }
 html {
   font-family: var(--fontSpiegel);
@@ -184,10 +185,18 @@ a.btn-primary-action {
   grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   gap: 1.6rem;
 }
+.ban-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.6rem;
+}
+#team-red .ban-row {
+  justify-content: flex-end;
+}
 .ban-row img {
   width: 3.2rem;
   height: 3.2rem;
-  border: 1px solid red;
 }
 .pick-row {
   display: flex;
@@ -202,7 +211,7 @@ a.btn-primary-action {
   overflow: hidden;
   object-fit: contain;
   object-position: center;
-  border: 1px solid red;
+  border: 0.2rem solid var(--clrTextMuted);
 }
 .pick-row > div {
   display: flex;
@@ -211,6 +220,10 @@ a.btn-primary-action {
 }
 #team-blue .pick-row {
   border-left: 0.8rem solid transparent;
+  &.pending-action {
+    color: var(--clrGold4);
+    border-color: var(--clrGold4);
+  }
 }
 #team-red .pick-row {
   justify-content: flex-end;
@@ -218,6 +231,15 @@ a.btn-primary-action {
   & span {
     text-align: right;
   }
+  &.pending-action {
+    border-color: var(--clrGold4);
+    color: var(--clrGold4);
+  }
+}
+.pick-row .cName {
+  font-family: var(--fontBeaufort);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 .pick-separator {
   position: relative;
@@ -287,6 +309,7 @@ header span {
 #champion-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  grid-template-rows: repeat(auto-fill, minmax(6rem, 1fr));
   gap: 3.2rem;
   height: 100%;
   padding: 1.6rem 0;
@@ -301,6 +324,17 @@ header span {
 #champion-list button {
   position: relative;
   border: 1px solid var(--clrTextMuted);
+  &:disabled {
+    /* Add a little thing on the bottom later */
+    filter: grayscale(1) brightness(0.5);
+  }
+}
+
+.theme-banning #champion-list button.selected {
+  border-color: var(--clrRed1);
+}
+.theme-picking #champion-list button.selected {
+  border-color: var(--clrGold4);
 }
 #champion-list button img {
   width: 100%;
