@@ -8,6 +8,7 @@ import { BanRow } from "@/_components/BanRow";
 import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/draftStore";
 import { useState, useEffect } from "react";
+import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport } from "@/_components/Icons";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -30,6 +31,14 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "SUPPORT"] as const;
+
+const ROLE_ICONS = {
+  TOP: IconTop,
+  JUNGLE: IconJungle,
+  MIDDLE: IconMiddle,
+  BOTTOM: IconBottom,
+  SUPPORT: IconSupport,
+} as const;
 
 function PageHome() {
   const actionType = useDraftStore((state) => state.getCurrentActionType());
@@ -79,16 +88,19 @@ function PageHome() {
           <h2>{actionText}</h2>
         </header>
         <div id="champion-controls">
-          {ROLES.map((role) => (
-            <button
-              key={role}
-              type="button"
-              aria-label={`Filter by ${role}`}
-              onClick={() => handleRoleFilterToggle(role)}
-              className={activeRoleFilters.includes(role) ? "active" : ""}>
-              X
-            </button>
-          ))}
+          {ROLES.map((role) => {
+            const IconComponent = ROLE_ICONS[role];
+            return (
+              <button
+                key={role}
+                type="button"
+                aria-label={`Filter by ${role}`}
+                onClick={() => handleRoleFilterToggle(role)}
+                className={activeRoleFilters.includes(role) ? "active" : ""}>
+                <IconComponent />
+              </button>
+            );
+          })}
           <input
             type="text"
             placeholder="Search"
