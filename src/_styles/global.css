@@ -417,10 +417,11 @@ header span {
     /* TODO Add a little thing on the bottom later */
     filter: grayscale(1) brightness(0.5);
   }
-  &:not(:disabled):hover::before {
+  &:not(:disabled):hover::before,
+  &.selected:not(:disabled)::before {
     content: "";
     position: absolute;
-    inset: -0.1rem;
+    inset: -0.2rem;
     mask-image: url("/assets/corner_mask.svg");
     -webkit-mask-image: url("/assets/corner_mask.svg");
     mask-size: contain;
@@ -438,12 +439,44 @@ header span {
   box-shadow: 0 0 0.4rem 0.2rem var(--clrRed3);
 }
 .theme-banning #champion-list button:not(:disabled):hover::before,
-.theme-banning #champion-list button:not(:disabled):active::before {
+.theme-banning #champion-list button.selected:not(:disabled)::before {
   background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed3));
 }
+.theme-banning #champion-list button.selected:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed3));
+  mask-image: url("/assets/crossed_ring_mask.svg");
+  -webkit-mask-image: url("/assets/crossed_ring_mask.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
 .theme-picking #champion-list button:not(:disabled):hover::before,
-.theme-picking #champion-list button:not(:disabled):active::before {
+.theme-picking #champion-list button.selected:not(:disabled)::before {
   background: linear-gradient(to bottom, var(--clrGold2), var(--clrGold4));
+}
+.theme-picking #champion-list button.selected:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  background: linear-gradient(to top, var(--clrGold2), var(--clrGold4));
+  mask-image: url("/assets/ring_mask.svg");
+  -webkit-mask-image: url("/assets/ring_mask.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  pointer-events: none;
+  z-index: 1;
 }
 .theme-picking #champion-list button.selected img {
   filter: grayscale(1) brightness(0.5);
