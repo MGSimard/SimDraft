@@ -1,8 +1,21 @@
 export function Header() {
   return (
     <header className="no-select">
-      <img src="/metadata/icon.svg" alt="Logo" />
-      <h1>SimDraft</h1>
+      <div id="header-logo">
+        <img src="/metadata/icon.svg" alt="Logo" />
+        <h1>SimDraft</h1>
+      </div>
+      <div id="header-controls">
+        <button type="button" aria-label="Close">
+          <span>x</span>
+        </button>
+        <button type="button" aria-label="Minimize">
+          <span>x</span>
+        </button>
+        <button type="button" aria-label="Maximize">
+          <span>x</span>
+        </button>
+      </div>
     </header>
   );
 }

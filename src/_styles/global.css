@@ -105,12 +105,22 @@ body:has(.theme-picking)::after {
 }
 header {
   position: fixed;
-  top: var(--sitePadding);
-  left: var(--sitePadding);
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--sitePadding);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  z-index: 100;
+  pointer-events: none;
+}
+#header-logo {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  z-index: 100;
 }
 header img {
   width: 3.2rem;
@@ -121,6 +131,12 @@ header img {
 header h1 {
   font-size: 1.6rem;
   opacity: 0.5;
+}
+#header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  pointer-events: auto;
 }
 main {
   max-width: var(--siteMaxWidth);
