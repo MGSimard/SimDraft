@@ -100,9 +100,9 @@ body::after {
   z-index: -1;
 }
 body::before {
-  background: radial-gradient(ellipse 50vw 30rem at center top, hsla(from var(--clrRed3) h s l / 0.2), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at left center, hsla(from var(--clrRed3) h s l / 0.2), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at right center, hsla(from var(--clrRed3) h s l / 0.2), transparent);
+  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed2) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed2) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed2) l c h / 0.4), transparent);
 }
 body::after {
   background: radial-gradient(ellipse 50vw 30rem at center top, hsla(from var(--clrBlue3) h s l / 0.2), transparent),
@@ -397,14 +397,16 @@ header span {
   gap: 3.2rem;
   height: 100%;
   align-content: start;
-  padding: 1.6rem 0;
+  padding: 1.6rem 0.4rem;
   text-align: center;
   white-space: nowrap;
   border-top: 1px solid var(--clrBorderGoldIdle);
   border-bottom: 1px solid var(--clrBorderGoldIdle);
-  overflow: hidden scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 #champion-list button {
   position: relative;
@@ -433,6 +435,7 @@ header span {
 }
 .theme-banning #champion-list button:not(:disabled) {
   border-color: var(--clrRed2);
+  box-shadow: 0 0 0.4rem 0.2rem var(--clrRed3);
 }
 .theme-banning #champion-list button:not(:disabled):hover::before,
 .theme-banning #champion-list button:not(:disabled):active::before {
@@ -478,23 +481,6 @@ header span {
   border-radius: 999rem;
   &.thumbTouch {
     transition: transform 0.1s ease-out;
-  }
-}
-.champion-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
-  gap: 3.2rem;
-  height: 100%;
-  padding: 1.6rem 0;
-  text-align: center;
-  white-space: nowrap;
-  border-top: 1px solid var(--clrBorderGoldIdle);
-  border-bottom: 1px solid var(--clrBorderGoldIdle);
-  overflow: hidden scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none;
   }
 }
 #center-footer {

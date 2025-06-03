@@ -309,13 +309,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
 
   return (
     <div id="champion-list-wrapper" ref={wrapperRef}>
-      <div
-        id="champion-list"
-        ref={viewportRef}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-        className="champion-list"
-        style={styles.viewport}>
+      <div id="champion-list" ref={viewportRef} tabIndex={0} onKeyDown={handleKeyDown} style={styles.viewport}>
         {children}
       </div>
       {shouldShowScrollbar && (
