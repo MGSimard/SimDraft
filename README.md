@@ -14,6 +14,7 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Style the search bar
 - [x] Add clear button to search bar
 - [ ] Champ hovers & selected styles
+- [ ] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list

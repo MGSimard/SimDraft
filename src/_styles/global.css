@@ -20,13 +20,9 @@
   --clrBlue6: hsl(219, 63%, 10%);
   --clrBlue7: hsl(220, 60%, 10%);
 
-  --clrRed1: hsl(0, 82%, 89%);
-  --clrRed2: hsl(0, 90%, 41%);
-  --clrRed3: hsl(0, 97%, 34%);
-  --clrRed4: hsl(0, 100%, 25%);
-  --clrRed5: hsl(0, 72%, 14%);
-  --clrRed6: hsl(0, 65%, 10%);
-  --clrRed7: hsl(0, 61%, 10%);
+  --clrRed1: oklch(0.7188 0.1791 37.1);
+  --clrRed2: oklch(0.6291 0.1622 9.08);
+  --clrRed3: oklch(0.3573 0.0716 359.73);
 
   --clrGold1: hsl(40, 50%, 88%);
   --clrGold2: hsl(40, 45%, 61%);
@@ -412,18 +408,42 @@ header span {
 }
 #champion-list button {
   position: relative;
-  border: 1px solid var(--clrTextMuted);
   aspect-ratio: 1;
+  border: 1px solid var(--clrTextMuted);
+  background: var(--clrBg);
   &:disabled {
     /* TODO Add a little thing on the bottom later */
     filter: grayscale(1) brightness(0.5);
   }
+  &:not(:disabled):hover::before {
+    content: "";
+    position: absolute;
+    inset: -0.1rem;
+    mask-image: url("/assets/corner_mask.svg");
+    -webkit-mask-image: url("/assets/corner_mask.svg");
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    pointer-events: none;
+    z-index: 1;
+  }
 }
-.theme-banning #champion-list button.selected {
-  border-color: var(--clrRed3);
+.theme-banning #champion-list button:not(:disabled) {
+  border-color: var(--clrRed2);
 }
-.theme-picking #champion-list button.selected {
-  border-color: var(--clrGold4);
+.theme-banning #champion-list button:not(:disabled):hover::before,
+.theme-banning #champion-list button:not(:disabled):active::before {
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed3));
+}
+.theme-picking #champion-list button:not(:disabled):hover::before,
+.theme-picking #champion-list button:not(:disabled):active::before {
+  background: linear-gradient(to bottom, var(--clrGold2), var(--clrGold4));
+}
+.theme-picking #champion-list button.selected img {
+  filter: grayscale(1) brightness(0.5);
 }
 #champion-list button img {
   width: 100%;
