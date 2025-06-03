@@ -1,4 +1,4 @@
-# vsDraft
+# SimDraft
 
 Letting AI go wild on this one (not the UI though lmao).
 
@@ -9,11 +9,12 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Set up datasets (game versions, champions) fetching GitHub Action
 - [x] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [x] Initial layout
-- [ ] Restyle primary button
+- [x] Restyle primary button
 - [x] Red during bans btw
 - [x] Style the search bar
 - [x] Add clear button to search bar
-- [ ] Champ hovers & selected styles
+- [x] Champ hovers & selected styles
+- [ ] Find out why filter drop-shadow isn't working on overlays
 - [ ] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
@@ -28,9 +29,10 @@ Letting AI go wild on this one (not the UI though lmao).
   - [ ] Undo
   - [ ] Pick override
 - [ ] ...
-- [ ] Find real app name
+- [x] Find real app name
 - [ ] Metadata
-- [ ] Deploy
+- [ ] Preloads
+- [x] Deploy
 
 ### Later potentially
 
