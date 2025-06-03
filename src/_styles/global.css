@@ -1,11 +1,7 @@
 /* THEME */
 :root {
   --siteMaxWidth: 1440px;
-  --sitePadding: 2rem;
-  --navWidth: 30rem;
-  --navHeaderHeight: 8rem;
-  --navPadding: 1rem;
-  --navTransition: 0.5s ease;
+  --sitePadding: 1.6rem;
 
   --fontBeaufort: "Beaufort For LOL", "Times New Roman", "Georgia", "Garamond", "Times", "serif";
   --fontSpiegel: "Spiegel", "-apple-system", "BlinkMacSystemFont", "avenir next", "avenir", "segoe ui", "helvetica neue",
@@ -47,11 +43,8 @@
   --clrSubheading: var(--clrGold4);
 
   --clrBg: var(--clrHextechBlack);
-  --clrBg2: var(--clrBlue6);
-  --clrBorderMuted: var(--clrGrey3);
   --clrBorderGoldIdle: var(--clrGold6);
   --clrBorderGoldActive: var(--clrGold4);
-  --clrBorderRadial: radial-gradient(circle at top, var(--clrGold4), var(--clrGold5));
 }
 /**/
 /* CORE */
@@ -59,9 +52,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-*:focus-visible {
-  outline: 1px solid var(--clrBorderGoldActive);
 }
 html {
   font-family: var(--fontSpiegel);
@@ -110,8 +100,21 @@ body:has(.theme-picking)::after {
 #root {
   position: relative;
   height: 100%;
-  padding: 1.6rem;
+  padding: var(--sitePadding);
   overflow: hidden;
+}
+header {
+  position: fixed;
+  top: var(--sitePadding);
+  left: var(--sitePadding);
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  z-index: 100;
+}
+header img {
+  width: 3.2rem;
+  height: 3.2rem;
 }
 main {
   max-width: var(--siteMaxWidth);
@@ -306,7 +309,7 @@ button {
   flex-direction: column;
   overflow: hidden;
 }
-header {
+#header {
   flex-shrink: 0;
   font-family: var(--fontBeaufort);
   font-weight: 700;
@@ -315,10 +318,10 @@ header {
   text-align: center;
   padding: 1.6rem 3.2rem;
 }
-header h2 {
+#header h2 {
   font-size: 3.2rem;
 }
-header span {
+#header span {
   font-size: 4.8rem;
 }
 #champion-controls {

@@ -84,9 +84,9 @@ function PageHome() {
       </div>
 
       <div id="center">
-        <header>
+        <div id="header">
           <h2>{actionText}</h2>
-        </header>
+        </div>
         <div id="champion-controls">
           {ROLES.map((role) => {
             const IconComponent = ROLE_ICONS[role];
