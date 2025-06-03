@@ -222,11 +222,12 @@ a.btn-primary-action {
 .pick-row .doing {
   font-size: 1.4rem;
 }
-.pick-row-image {
+.pick-row-image-wrapper {
   width: 6.4rem;
   height: 6.4rem;
   border: 0.2rem solid var(--clrTextMuted);
   border-radius: 999rem;
+  background: var(--clrBg);
   overflow: hidden;
 }
 .pick-row img {

@@ -135,7 +135,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       )}
       {team === 0 ? (
         <>
-          <div className="pick-row-image">
+          <div className="pick-row-image-wrapper">
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
           <div>{renderContent()}</div>
@@ -143,7 +143,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       ) : (
         <>
           <div>{renderContent()}</div>
-          <div className="pick-row-image">
+          <div className="pick-row-image-wrapper">
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
         </>
