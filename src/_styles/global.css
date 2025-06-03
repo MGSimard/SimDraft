@@ -201,9 +201,16 @@ a.btn-primary-action {
 #team-red .ban-row {
   justify-content: flex-end;
 }
-.ban-row img {
+.ban-row div {
   width: 3.2rem;
   height: 3.2rem;
+  border: 1px solid var(--clrGreyCool);
+}
+.ban-row img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 .pick-row {
   position: relative;

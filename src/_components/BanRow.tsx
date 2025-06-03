@@ -17,13 +17,14 @@ export function BanRow({ team }: BanRowProps) {
   return (
     <div className="ban-row">
       {banOrder.map((ban: string | null, i: number) => (
-        <img
-          key={`${team}-${i}`}
-          src={ban ? `/assets/champions/${ban}.png` : "/assets/champions/-1.png"}
-          alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}
-          decoding="async"
-          onError={handleImageError}
-        />
+        <div key={`${team}-${i}`}>
+          <img
+            src={ban ? `/assets/champions/${ban}.png` : "/assets/ban_placeholder.svg"}
+            alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}
+            decoding="async"
+            onError={handleImageError}
+          />
+        </div>
       ))}
     </div>
   );
