@@ -8,7 +8,7 @@ import { BanRow } from "@/_components/BanRow";
 import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/draftStore";
 import { useState, useEffect } from "react";
-import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport } from "@/_components/Icons";
+import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -102,13 +102,21 @@ function PageHome() {
               </button>
             );
           })}
-          <input
-            type="text"
-            placeholder="Search"
-            value={search}
-            onChange={handleSearchChange}
-            aria-label="Search champions"
-          />
+          <div id="search-wrapper">
+            <IconSearch />
+            <input
+              type="text"
+              placeholder="Search"
+              value={search}
+              onChange={handleSearchChange}
+              aria-label="Search champions"
+            />
+            {search && (
+              <button type="button" aria-label="Clear search" onClick={() => setSearch("")}>
+                <IconClose aria-hidden="true" />
+              </button>
+            )}
+          </div>
         </div>
         <ScrollContainer>
           <ChampionList searchQuery={debouncedSearch} roleFilters={activeRoleFilters} />

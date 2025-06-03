@@ -11,8 +11,9 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Initial layout
 - [ ] Restyle primary button
 - [ ] Red during bans btw
-- [ ] Style the search bar
-- [ ] Add clear button to search bar
+- [x] Style the search bar
+- [x] Add clear button to search bar
+- [ ] Champ hovers & selected styles
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list
