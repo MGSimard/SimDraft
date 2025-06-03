@@ -63,8 +63,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
             data-champion-key={champ.key}
             onClick={handleChampionClick}
             className={isSelected ? "selected" : undefined}
-            aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}`}
-            title={champ.name}>
+            aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}`}>
             <img
               src={`/assets/champions/${champ.key}.png`}
               alt={champ.name}

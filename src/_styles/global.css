@@ -12,32 +12,32 @@
     "helvetica", "Cantarell", "Ubuntu", "roboto", "noto", "arial", "sans-serif";
 
   /* Palette */
-  --clrBlue1: hsl(180, 82%, 89%);
-  --clrBlue2: hsl(175, 90%, 41%);
-  --clrBlue3: hsl(187, 97%, 34%);
-  --clrBlue4: hsl(198, 100%, 25%);
-  --clrBlue5: hsl(192, 71%, 14%);
-  --clrBlue6: hsl(219, 63%, 10%);
-  --clrBlue7: hsl(220, 60%, 10%);
+  --clrBlue1: oklch(0.953 0.0469 196.39);
+  --clrBlue2: oklch(0.7454 0.1304 184.82);
+  --clrBlue3: oklch(0.6209 0.1073 210.87);
+  --clrBlue4: oklch(0.4398 0.09491845005703219 236.21097700370234);
+  --clrBlue5: oklch(0.2984 0.0468 218.24);
+  --clrBlue6: oklch(0.1968 0.0453 261.74);
+  --clrBlue7: oklch(0.1959 0.044 262.91);
 
-  --clrRed1: oklch(0.7188 0.1791 37.1);
-  --clrRed2: oklch(0.6291 0.1622 9.08);
-  --clrRed3: oklch(0.3573 0.0716 359.73);
+  --clrRed1: oklch(0.7102 0.1855 35.97);
 
-  --clrGold1: hsl(40, 50%, 88%);
-  --clrGold2: hsl(40, 45%, 61%);
-  --clrGold3: hsl(40, 45%, 61%);
-  --clrGold4: hsl(41, 56%, 51%);
-  --clrGold5: hsl(38, 50%, 31%);
-  --clrGold6: hsl(42, 56%, 18%);
-  --clrGold7: hsl(30, 25%, 16%);
+  --clrRed4: oklch(0.3469 0.0694 358.76);
 
-  --clrGrey1: hsl(45, 10%, 59%);
-  --clrGrey1p5: hsl(48, 3%, 35%);
-  --clrGrey2: hsl(240, 4%, 25%);
-  --clrGrey3: hsl(210, 14%, 14%);
-  --clrGreyCool: hsl(200, 20%, 15%);
-  --clrHextechBlack: hsl(210, 90%, 4%);
+  --clrGold1: oklch(0.9261 0.0293 84.59);
+  --clrGold2: oklch(0.7523 0.0851 83.94);
+  --clrGold3: oklch(0.7523 0.0851 83.94);
+  --clrGold4: oklch(0.7158 0.1228 83.37);
+  --clrGold5: oklch(0.4855 0.077 78.85);
+  --clrGold6: oklch(0.35 0.0561 85.8);
+  --clrGold7: oklch(0.2884 0.0233 66.68);
+
+  --clrGrey1: oklch(0.6917 0.0232 91.67);
+  --clrGrey1p5: oklch(0.4703 0.0069 95.2);
+  --clrGrey2: oklch(0.3627 0.0087 285.96);
+  --clrGrey3: oklch(0.2562 0.0119 248.29);
+  --clrGreyCool: oklch(0.2727 0.0171 229.77);
+  --clrHextechBlack: oklch(0.1395 0.0281 240.66);
 
   --clrText: var(--clrGrey1);
   --clrTextMuted: var(--clrGrey1p5);
@@ -53,13 +53,13 @@
 
   --clrMainActionBg: linear-gradient(to bottom, var(--clrBlue7), var(--clrBlue3));
   --clrMainActionBorder: linear-gradient(to bottom, var(--clrBlue3), var(--clrBlue2));
-  --clrMainActionInnerGlow: hsl(from var(--clrBlue3) h s calc(l + 10));
+  --clrMainActionInnerGlow: oklch(from var(--clrBlue3) calc(l + 10) c h);
   --clrMainActionActive: var(--clrBlue5);
 
-  --clrRedActionBg: linear-gradient(to bottom, var(--clrRed7), var(--clrRed3));
-  --clrRedActionBorder: linear-gradient(to bottom, var(--clrRed3), var(--clrRed2));
-  --clrRedActionInnerGlow: hsl(from var(--clrRed3) h s calc(l + 10));
-  --clrRedActionActive: var(--clrRed5);
+  --clrRedActionBg: linear-gradient(to bottom, var(--clrRed4), var(--clrRed1));
+  --clrRedActionBorder: linear-gradient(to bottom, var(--clrRed4), var(--clrRed1));
+  --clrRedActionInnerGlow: oklch(from var(--clrRed4) calc(l + 10) c h);
+  --clrRedActionActive: var(--clrRed4);
 }
 /**/
 /* CORE */
@@ -100,14 +100,14 @@ body::after {
   z-index: -1;
 }
 body::before {
-  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed2) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed2) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed2) l c h / 0.4), transparent);
+  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed4) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed4) l c h / 0.4), transparent);
 }
 body::after {
-  background: radial-gradient(ellipse 50vw 30rem at center top, hsla(from var(--clrBlue3) h s l / 0.2), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at left center, hsla(from var(--clrBlue3) h s l / 0.2), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at right center, hsla(from var(--clrBlue3) h s l / 0.2), transparent);
+  background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrBlue3) l c h / 0.2), transparent);
 }
 body:has(.theme-banning)::before {
   opacity: 1;
@@ -235,14 +235,14 @@ button {
     text-align: right;
   }
   &.pending-action {
-    border-color: var(--clrRed3);
+    border-color: var(--clrRed1);
     color: var(--clrGold4);
     animation: glowIn 1s ease-out;
   }
 }
 @keyframes glowIn {
   0% {
-    border-color: #ffffff;
+    border-color: oklch(1 0 0);
   }
 }
 .pick-row .cName {
@@ -435,18 +435,18 @@ header span {
   }
 }
 .theme-banning #champion-list button:not(:disabled) {
-  border-color: var(--clrRed2);
-  box-shadow: 0 0 0.4rem 0.2rem var(--clrRed3);
+  border-color: var(--clrRed1);
+  box-shadow: 0 0 0 0.1rem var(--clrHextechBlack), 0 0 0.7rem 0.1rem oklch(0.5192 0.1916 20.04 / 85.1%);
 }
 .theme-banning #champion-list button:not(:disabled):hover::before,
 .theme-banning #champion-list button.selected:not(:disabled)::before {
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed3));
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
 }
 .theme-banning #champion-list button.selected:not(:disabled)::after {
   content: "";
   position: absolute;
   inset: -0.2rem;
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed3));
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
   mask-image: url("/assets/crossed_ring_mask.svg");
   -webkit-mask-image: url("/assets/crossed_ring_mask.svg");
   mask-size: contain;
@@ -460,13 +460,13 @@ header span {
 }
 .theme-picking #champion-list button:not(:disabled):hover::before,
 .theme-picking #champion-list button.selected:not(:disabled)::before {
-  background: linear-gradient(to bottom, var(--clrGold2), var(--clrGold4));
+  background: var(--clrGold3);
 }
 .theme-picking #champion-list button.selected:not(:disabled)::after {
   content: "";
   position: absolute;
   inset: -0.2rem;
-  background: linear-gradient(to top, var(--clrGold2), var(--clrGold4));
+  background: linear-gradient(to top, var(--clrGold1), var(--clrGold4));
   mask-image: url("/assets/ring_mask.svg");
   -webkit-mask-image: url("/assets/ring_mask.svg");
   mask-size: contain;
@@ -563,11 +563,11 @@ header span {
 }
 .btn-primary-action:not(:disabled):hover::before,
 .btn-primary-action:not(:disabled):focus-visible::before {
-  background: linear-gradient(to bottom, hsl(187, 97%, 90%), hsl(175, 90%, 97%));
+  background: linear-gradient(to bottom, oklch(0.9518 0.0454 206.26), oklch(0.9872 0.0145 190.93));
 }
 .theme-banning .btn-primary-action:not(:disabled):hover::before,
 .theme-banning .btn-primary-action:not(:disabled):focus-visible::before {
-  background: linear-gradient(to bottom, hsl(0, 96%, 90%), hsl(0, 88%, 97%));
+  background: linear-gradient(to bottom, oklch(0.8909 0.0556 18.25), oklch(0.9676 0.0146 17.41));
 }
 .btn-primary-action:not(:disabled):active::before {
   background: var(--clrMainActionActive);
