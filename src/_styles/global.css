@@ -21,8 +21,10 @@
   --clrBlue7: oklch(0.1959 0.044 262.91);
 
   --clrRed1: oklch(0.7102 0.1855 35.97);
-  --clrRed3: oklch(0.4046 0.0857 9.11);
-  --clrRed4: oklch(0.3469 0.0694 358.76);
+  --clrRed2: oklch(0.6054 0.1567 4.51);
+  --clrRed3: oklch(0.4959 0.1205 4.04);
+  --clrRed4: oklch(0.4046 0.0857 9.11);
+  --clrRed5: oklch(0.3469 0.0694 358.76);
 
   --clrGold1: oklch(0.9261 0.0293 84.59);
   --clrGold2: oklch(0.7523 0.0851 83.94);
@@ -90,9 +92,9 @@ body::after {
   z-index: -1;
 }
 body::before {
-  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed4) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed4) l c h / 0.4), transparent);
+  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed5) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed5) l c h / 0.4), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed5) l c h / 0.4), transparent);
 }
 body::after {
   background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
@@ -430,13 +432,13 @@ header span {
 }
 .theme-banning #champion-list button:not(:disabled):hover::before,
 .theme-banning #champion-list button.selected:not(:disabled)::before {
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed5));
 }
 .theme-banning #champion-list button.selected:not(:disabled)::after {
   content: "";
   position: absolute;
   inset: -0.2rem;
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed5));
   mask-image: url("/assets/crossed_ring_mask.svg");
   -webkit-mask-image: url("/assets/crossed_ring_mask.svg");
   mask-size: contain;
@@ -522,7 +524,7 @@ header span {
   text-transform: uppercase;
   text-align: center;
   background: linear-gradient(to bottom, var(--clrBlue3), var(--clrBlue4));
-  transition: box-shadow 0.2s ease, color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
   outline: none;
   &:disabled {
     filter: grayscale(1) brightness(0.5);
@@ -531,11 +533,9 @@ header span {
 .btn-primary-action:not(:disabled):hover,
 .btn-primary-action:not(:disabled):focus-visible {
   background: linear-gradient(to bottom, var(--clrBlue1), var(--clrBlue3));
-  box-shadow: 0 0 0.3rem white;
 }
 .btn-primary-action:not(:disabled):active {
   background: linear-gradient(to bottom, var(--clrBlue5), var(--clrBlue4));
-  box-shadow: none;
 }
 .btn-primary-action span {
   display: flex;
@@ -551,16 +551,19 @@ header span {
   box-shadow: inset 0 -2rem 2rem 0.5rem var(--clrBlue4);
 }
 .theme-banning .btn-primary-action {
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
+  color: var(--clrRed3);
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed5));
 }
 .theme-banning .btn-primary-action:not(:disabled):hover,
 .theme-banning .btn-primary-action:not(:disabled):focus-visible {
-  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed4));
+  color: var(--clrRed2);
+  background: linear-gradient(to bottom, var(--clrRed1), var(--clrRed5));
 }
 .theme-banning .btn-primary-action:not(:disabled):active {
-  background: var(--clrRed3);
+  color: var(--clrRed3);
+  background: var(--clrRed4);
 }
 .theme-banning .btn-primary-action:not(:disabled):hover:not(:active) span,
 .theme-banning .btn-primary-action:not(:disabled):focus-visible:not(:active) span {
-  box-shadow: inset 0 -2rem 2rem 0.5rem var(--clrRed3);
+  box-shadow: inset 0 -2rem 2rem 0.5rem var(--clrRed4);
 }
