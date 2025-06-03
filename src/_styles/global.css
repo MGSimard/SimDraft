@@ -520,7 +520,7 @@ header span {
   padding: 0.3rem;
   font-family: var(--fontBeaufort);
   font-weight: 700;
-  color: white;
+  color: oklch(from var(--clrBlue1) l c h / 0.8);
   text-transform: uppercase;
   text-align: center;
   background: linear-gradient(to bottom, var(--clrBlue3), var(--clrBlue4));
@@ -532,9 +532,11 @@ header span {
 }
 .btn-primary-action:not(:disabled):hover,
 .btn-primary-action:not(:disabled):focus-visible {
+  color: var(--clrBlue1);
   background: linear-gradient(to bottom, var(--clrBlue1), var(--clrBlue3));
 }
 .btn-primary-action:not(:disabled):active {
+  color: var(--clrBlue4);
   background: linear-gradient(to bottom, var(--clrBlue5), var(--clrBlue4));
 }
 .btn-primary-action span {
