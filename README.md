@@ -30,7 +30,7 @@ This app was an excuse to try out letting AI go wild (not UI).
   - [ ] Pick override
 - [ ] ...
 - [x] Find real app name
-- [ ] Metadata
+- [x] Metadata
 - [ ] Preloads
 - [x] Deploy
 
