@@ -1,22 +1,29 @@
 {
-  "name": "vsdraft",
+  "name": "SimDraft",
   "version": "0.1.0",
   "private": true,
   "author": "MGSimard <mgsimard.dev@gmail.com> (https://mgsimard.dev)",
-  "description": "TBD",
+  "description": "League of Legends Draft Simulator",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MGSimard/vsdraft.git"
+    "url": "git+https://github.com/MGSimard/simdraft.git"
   },
   "keywords": [
-    "vsdraft"
+    "SimDraft",
+    "League of Legends",
+    "Draft",
+    "React",
+    "Vite",
+    "TypeScript",
+    "TanStack Router",
+    "Zustand"
   ],
   "bugs": {
-    "url": "https://github.com/MGSimard/vsdraft/issues"
+    "url": "https://github.com/MGSimard/simdraft/issues"
   },
-  "homepage": "https://github.com/MGSimard/vsdraft#readme",
+  "homepage": "https://github.com/MGSimard/simdraft#readme",
   "scripts": {
     "dev": "vite --port 3000",
     "build": "tsc -b && vite build",

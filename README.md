@@ -1,6 +1,6 @@
-# SimDraft
+# SimDraft - League of Legends Draft Simulator
 
-Letting AI go wild on this one (not the UI though lmao).
+This app was an excuse to try out letting AI go wild (not UI).
 
 ## Task List
 
