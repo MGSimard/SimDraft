@@ -85,17 +85,97 @@ html {
   }
 }
 body {
+  position: relative;
   height: 100dvh;
   font-size: 1.6rem;
   overflow: hidden;
 }
+body:has(.theme-banning)::before,
+body:has(.theme-banning)::after,
+body:has(.theme-picking)::before,
+body:has(.theme-picking)::after {
+  position: absolute;
+  content: "";
+  width: 100dvw;
+  height: 150dvh;
+  top: 50%;
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+body:has(.theme-banning)::before {
+  left: 0;
+  background: radial-gradient(circle closest-side at center, var(--clrRed3), transparent);
+  transform: translate(-50%, -50%);
+}
+body:has(.theme-banning)::after {
+  right: 0;
+  background: radial-gradient(circle closest-side at center, var(--clrRed3), transparent);
+  transform: translate(50%, -50%);
+}
+body:has(.theme-picking)::before {
+  left: 0;
+  background: radial-gradient(circle closest-side at center, var(--clrBlue3), transparent);
+  transform: translate(-50%, -50%);
+}
+body:has(.theme-picking)::after {
+  right: 0;
+  background: radial-gradient(circle closest-side at center, var(--clrBlue3), transparent);
+  transform: translate(50%, -50%);
+}
 #root {
+  position: relative;
   height: 100%;
   padding: 1.6rem;
   overflow: hidden;
 }
+#root::before {
+  transition: background 2s ease;
+}
+#root:has(.theme-banning)::before,
+#root:has(.theme-picking)::before {
+  content: "";
+  position: absolute;
+  width: 100dvw;
+  height: 100dvh;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+#root::has(.theme-banning)::before {
+  background: radial-gradient(ellipse closest-side at center, var(--clrRed3), transparent);
+}
+#root::has(.theme-picking)::before {
+  background: radial-gradient(ellipse closest-side at center, var(--clrBlue3), transparent);
+}
+#root:has(.theme-banning)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100dvw;
+  height: 100dvh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse closest-side at center, var(--clrRed3), transparent);
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+#root:has(.theme-picking)::before {
+  content: "";
+  position: absolute;
+  width: 100dvw;
+  height: 100dvh;
+  top: 0;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse closest-side at center, var(--clrBlue3), transparent);
+}
 main {
   max-width: 1440px;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
@@ -205,7 +285,7 @@ button {
     text-align: right;
   }
   &.pending-action {
-    border-color: var(--clrRed1);
+    border-color: var(--clrRed3);
     color: var(--clrGold4);
     animation: glowIn 1s ease-out;
   }
@@ -386,7 +466,7 @@ header span {
   }
 }
 .theme-banning #champion-list button.selected {
-  border-color: var(--clrRed1);
+  border-color: var(--clrRed3);
 }
 .theme-picking #champion-list button.selected {
   border-color: var(--clrGold4);
