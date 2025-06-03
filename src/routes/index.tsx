@@ -121,7 +121,9 @@ function PageHome() {
         <ScrollContainer>
           <ChampionList searchQuery={debouncedSearch} roleFilters={activeRoleFilters} />
         </ScrollContainer>
-        <ButtonDraftAction />
+        <div id="center-footer">
+          <ButtonDraftAction />
+        </div>
       </div>
 
       <div id="team-red">

@@ -10,7 +10,7 @@ Letting AI go wild on this one (not the UI though lmao).
 - [x] Set up asset fetching GitHub Action (Otherwise, just use a DataDragon URL)
 - [x] Initial layout
 - [ ] Restyle primary button
-- [ ] Red during bans btw
+- [x] Red during bans btw
 - [x] Style the search bar
 - [x] Add clear button to search bar
 - [ ] Champ hovers & selected styles
