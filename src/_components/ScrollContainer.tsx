@@ -222,6 +222,11 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     };
     const handleWheel = (e: WheelEvent) => {
       if (clientDeviceType === "touch") return;
+
+      if (e.ctrlKey || e.metaKey) {
+        return;
+      }
+
       e.preventDefault();
       viewport.scrollTop += e.deltaY;
       handleScrollStart();

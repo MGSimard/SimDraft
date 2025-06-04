@@ -15,7 +15,7 @@ This app was an excuse to try out letting AI go wild (not UI).
 - [x] Add clear button to search bar
 - [x] Champ hovers & selected styles
 - [ ] Find out why filter drop-shadow isn't working on overlays
-- [ ] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
+- [x] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
 - [ ] Focus-visible style
 - [ ] Add /some/ level of responsiveness
 - [ ] Functionalities
