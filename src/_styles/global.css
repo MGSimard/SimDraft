@@ -648,6 +648,7 @@ a {
   position: relative;
   padding: 0 3.2rem;
   min-height: 0;
+  height: 100%;
 }
 #scrollbar-track {
   --trackWidth: 0.8rem;
