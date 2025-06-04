@@ -11,6 +11,7 @@ import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 import { ButtonUndo } from "@/_components/ButtonUndo";
 import { ButtonReset } from "@/_components/ButtonReset";
 import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
+import { DestructiveButtons } from "@/_components/DestructiveButtons";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -150,10 +151,7 @@ function PageHome() {
         </ScrollContainer>
         <div id="center-footer">
           <ButtonDraftAction />
-          <div id="bottom-controls">
-            <ButtonUndo />
-            <ButtonReset />
-          </div>
+          <DestructiveButtons />
         </div>
       </div>
 

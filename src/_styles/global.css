@@ -839,10 +839,12 @@ a {
 
 /* UNDO BUTTON */
 #bottom-controls {
+  position: fixed;
+  bottom: var(--sitePadding);
+  right: var(--sitePadding);
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  margin-left: 0.8rem;
 }
 .bottom-control {
   width: 2.8rem;
