@@ -37,15 +37,11 @@ All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were proc
   - [x] Early reset
   - [x] Undo
   - [x] Pick override
-- [ ] ...
+  - [x] Save draft, export/import draft
 - [x] Find real app name
 - [x] Metadata
 - [x] Preloads
 - [x] Deploy
-
-### Later potentially
-
-- [ ] Save draft, export/import draft
 
 ---
 

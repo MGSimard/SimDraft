@@ -1,5 +1,7 @@
 import { create } from "zustand";
+import { z } from "zod";
 import { TEAM, ACTION_TYPE, draftOrder } from "./constants";
+import { DraftSchema } from "./schemas";
 import type { FiveArray, TeamIndex, ActionIndex, DraftState, DraftStore } from "./types";
 
 export const initialState: DraftState = {
@@ -404,5 +406,46 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
   isOverridingAny: () => {
     const state = get();
     return state.overridingPick !== null || state.overridingBan !== null;
+  },
+
+  exportDraft: () => {
+    const state = get();
+    return {
+      version: "1.0",
+      timestamp: new Date().toISOString(),
+      appName: "SimDraft",
+      currentStepIndex: state.currentStepIndex,
+      isDraftComplete: state.isDraftComplete,
+      bans: state.bans,
+      picks: state.picks,
+    };
+  },
+
+  importDraft: (data: any) => {
+    try {
+      // Validate with Zod
+      const validatedData = DraftSchema.parse(data);
+
+      // Clear caches
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+      cachedStepDetails = null;
+
+      set({
+        currentStepIndex: validatedData.currentStepIndex,
+        isDraftComplete: validatedData.isDraftComplete,
+        bans: validatedData.bans,
+        picks: validatedData.picks,
+        selectedChampion: null,
+        overridingPick: null,
+        overridingBan: null,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errorMessages = error.errors.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ");
+        throw new Error(`Invalid draft file: ${errorMessages}`);
+      }
+      throw new Error("Invalid draft file format");
+    }
   },
 }));

@@ -27,6 +27,10 @@ export interface OverrideBanData {
 
 export type OverrideData = OverridePickData | OverrideBanData;
 
+import type { DraftSchemaType } from "./schemas";
+
+export type ExportData = DraftSchemaType;
+
 export interface DraftState {
   currentStepIndex: number;
   isDraftComplete: boolean;
@@ -50,6 +54,8 @@ export interface DraftActions {
   completeBanOverride: (championKey: string) => void;
   cancelBanOverride: () => void;
   cancelAnyOverride: () => void;
+  exportDraft: () => ExportData;
+  importDraft: (data: any) => void;
 }
 
 export interface DraftSelectors {

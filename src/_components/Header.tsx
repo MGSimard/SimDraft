@@ -1,3 +1,4 @@
+import { DropdownFile } from "@/_components/DropdownFile";
 import { IconGithub } from "@/_components/Icons";
 
 export function Header() {
@@ -8,6 +9,7 @@ export function Header() {
         <h1>SimDraft</h1>
       </div>
       <div id="header-controls">
+        <DropdownFile />
         <div id="info-popover-container">
           <button type="button" aria-label="Info" aria-describedby="info-popover">
             <span aria-hidden="true">?</span>
