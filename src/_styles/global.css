@@ -378,7 +378,6 @@ button {
 }
 .tooltip-detect {
   position: relative;
-  outline: 1px solid red;
 }
 .tooltip {
   visibility: hidden;
