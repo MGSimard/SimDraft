@@ -340,6 +340,9 @@ a {
   mask: linear-gradient(to left, black 0%, black 70%, transparent 100%);
   -webkit-mask: linear-gradient(to left, black 0%, black 70%, transparent 100%);
 }
+#team-red .overriding .pick-row-video {
+  transform: scaleX(-1);
+}
 .pick-separator {
   position: relative;
   display: block;
