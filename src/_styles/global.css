@@ -197,7 +197,7 @@ button {
   border: none;
   cursor: pointer;
   &:disabled {
-    cursor: default;
+    cursor: not-allowed;
   }
 }
 a {
@@ -244,24 +244,6 @@ a {
   background: var(--clrBg);
   transition: border-color 0.2s ease;
 }
-.ban-slot.clickable {
-  cursor: pointer;
-}
-.ban-slot.clickable:hover {
-  border-color: var(--clrGold4);
-}
-.ban-slot.overriding {
-  border-color: var(--clrGold4);
-  box-shadow: 0 0 0.4rem var(--clrGold4);
-  animation: glowIn 1s ease-out;
-}
-.ban-slot {
-  outline: none;
-}
-.ban-slot.clickable:focus-visible {
-  border-color: var(--clrGold4);
-  box-shadow: 0 0 0 0.2rem oklch(from var(--clrGold4) l c h / 0.5);
-}
 .ban-row img {
   width: 100%;
   height: 100%;
@@ -287,10 +269,6 @@ a {
   background: var(--clrBg);
   overflow: hidden;
   outline: none;
-}
-.pick-row-image-wrapper.clickable:focus-visible {
-  border-color: var(--clrGold4);
-  box-shadow: 0 0 0 0.2rem oklch(from var(--clrGold4) l c h / 0.5);
 }
 .pick-row img {
   width: 100%;
@@ -816,4 +794,30 @@ a {
 #info-popover-container button:hover ~ #info-popover,
 #info-popover-container button:focus-visible ~ #info-popover {
   visibility: visible;
+}
+
+.swappable {
+  cursor: pointer;
+  position: relative;
+}
+.swappable:hover::after,
+.swappable:focus-visible::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  background-color: oklch(0 0 182 / 0.6);
+  pointer-events: none;
+  z-index: 1;
+}
+.swappable:hover::before,
+.swappable:focus-visible::before {
+  position: absolute;
+  content: "";
+  inset: 20%;
+  background-image: url("/assets/swap.svg");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
 }

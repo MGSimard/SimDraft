@@ -41,13 +41,12 @@ export function BanRow({ team }: BanRowProps) {
         return (
           <div
             key={`${team}-${actualIndex}`}
-            className={`ban-slot${ban ? " clickable" : ""}${isBeingOverridden ? " overriding" : ""}`}
+            className={`ban-slot${ban ? " swappable" : ""}${isBeingOverridden ? " overriding" : ""}`}
             onClick={ban ? () => handleBanClick(actualIndex) : undefined}
             onKeyDown={ban ? (e) => handleBanKeyDown(e, actualIndex) : undefined}
             tabIndex={ban ? (team === 0 ? 1 : 2) : -1}
             role={ban ? "button" : undefined}
-            aria-label={ban ? `Override banned ${ban}` : undefined}
-            style={{ cursor: ban ? "pointer" : "default" }}>
+            aria-label={ban ? `Override banned ${ban}` : undefined}>
             <img
               src={ban ? `/assets/champions/${ban}.png` : "/assets/ban_placeholder.svg"}
               alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}

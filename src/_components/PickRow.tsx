@@ -156,13 +156,12 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       {team === 0 ? (
         <>
           <div
-            className={`pick-row-image-wrapper${pick ? " clickable" : ""}`}
+            className={`pick-row-image-wrapper${pick ? " swappable" : ""}`}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 1 : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName || pick}` : undefined}
-            style={{ cursor: pick ? "pointer" : "default" }}>
+            aria-label={pick ? `Override ${champName || pick}` : undefined}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
           <div>{renderContent()}</div>
@@ -171,13 +170,12 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
         <>
           <div>{renderContent()}</div>
           <div
-            className={`pick-row-image-wrapper${pick ? " clickable" : ""}`}
+            className={`pick-row-image-wrapper${pick ? " swappable" : ""}`}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 2 : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName || pick}` : undefined}
-            style={{ cursor: pick ? "pointer" : "default" }}>
+            aria-label={pick ? `Override ${champName || pick}` : undefined}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
         </>

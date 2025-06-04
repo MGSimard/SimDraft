@@ -12,7 +12,7 @@ export function ButtonDraftAction() {
   const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
 
   const buttonLabel = isOverridingAny
-    ? "CANCEL OVERRIDE"
+    ? "CANCEL"
     : isDraftComplete
     ? "RESET"
     : actionType === ACTION_TYPE.PICK
