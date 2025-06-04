@@ -41,6 +41,7 @@ export interface DraftActions {
   selectChampion: (championKey: string) => void;
   lockIn: () => void;
   nextStep: () => void;
+  undoStep: () => void;
   reset: () => void;
   startPickOverride: (team: TeamIndex, pickIndex: ActionIndex) => void;
   completePickOverride: (championKey: string) => void;

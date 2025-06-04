@@ -150,8 +150,10 @@ function PageHome() {
         </ScrollContainer>
         <div id="center-footer">
           <ButtonDraftAction />
-          <ButtonUndo />
-          <ButtonReset />
+          <div id="bottom-controls">
+            <ButtonUndo />
+            <ButtonReset />
+          </div>
         </div>
       </div>
 

@@ -101,6 +101,61 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
     });
   },
 
+  undoStep: () => {
+    set((state) => {
+      if (state.currentStepIndex <= 0) return state;
+
+      const previousStepIndex = state.currentStepIndex - 1;
+      const previousStep = draftOrder[previousStepIndex];
+
+      if (!previousStep) return state;
+
+      const teamIndex: TeamIndex = previousStep.team === TEAM.BLUE ? 0 : 1;
+
+      if (previousStep.type === ACTION_TYPE.BAN) {
+        const newBans: typeof state.bans = [
+          [...state.bans[0]] as FiveArray<string | null>,
+          [...state.bans[1]] as FiveArray<string | null>,
+        ];
+        newBans[teamIndex][previousStep.actionIndex] = null;
+
+        cachedUnavailableChampions = null;
+        cachedStateHash = null;
+        cachedStepDetails = null;
+
+        return {
+          ...state,
+          bans: newBans,
+          currentStepIndex: previousStepIndex,
+          isDraftComplete: false,
+          selectedChampion: null,
+          overridingPick: null,
+          overridingBan: null,
+        };
+      } else {
+        const newPicks: typeof state.picks = [
+          [...state.picks[0]] as FiveArray<string | null>,
+          [...state.picks[1]] as FiveArray<string | null>,
+        ];
+        newPicks[teamIndex][previousStep.actionIndex] = null;
+
+        cachedUnavailableChampions = null;
+        cachedStateHash = null;
+        cachedStepDetails = null;
+
+        return {
+          ...state,
+          picks: newPicks,
+          currentStepIndex: previousStepIndex,
+          isDraftComplete: false,
+          selectedChampion: null,
+          overridingPick: null,
+          overridingBan: null,
+        };
+      }
+    });
+  },
+
   reset: () => {
     cachedUnavailableChampions = null;
     cachedStateHash = null;

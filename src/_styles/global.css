@@ -832,6 +832,12 @@ a {
 } */
 
 /* UNDO BUTTON */
+#bottom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-left: 0.8rem;
+}
 .bottom-control {
   width: 2.8rem;
   height: 2.8rem;
