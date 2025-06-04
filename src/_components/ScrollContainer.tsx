@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { clsx } from "clsx";
 
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -313,14 +314,17 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     (clientDeviceType !== "touch" || scrollState.isScrolling);
 
   return (
-    <div id="champion-list-wrapper" ref={wrapperRef}>
+    <div
+      ref={wrapperRef}
+      className={clsx(clientDeviceType === "touch" && "scrollbarTrackTouch")}
+      style={{ position: "relative", height: "100%", overflow: "hidden" }}>
       <div id="champion-list" ref={viewportRef} tabIndex={0} onKeyDown={handleKeyDown} style={styles.viewport}>
         {children}
       </div>
       {shouldShowScrollbar && (
         <div
           id="scrollbar-track"
-          className={clientDeviceType === "touch" ? "scrollbarTrackTouch" : undefined}
+          className={clsx(clientDeviceType === "touch" && "scrollbarTrackTouch")}
           onClick={handleTrackClick}
           role="scrollbar"
           aria-controls="champion-list"
@@ -335,7 +339,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
             id="scrollbar-thumb"
             ref={thumbRef}
             tabIndex={-1}
-            className={clientDeviceType === "touch" ? "thumbTouch" : undefined}
+            className={clsx(clientDeviceType === "touch" && "thumbTouch")}
             style={styles.thumb}
           />
         </div>

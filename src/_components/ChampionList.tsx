@@ -1,6 +1,7 @@
 import { useDraftStore } from "@/_store/draftStore";
 import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
 import { useEffect } from "react";
+import { clsx } from "clsx";
 
 interface ChampionListProps {
   searchQuery: string;
@@ -70,7 +71,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
             disabled={!isAvailable}
             data-champion-key={champ.key}
             onClick={handleChampionClick}
-            className={`${isSelected ? "selected" : ""}${isOverridingAny ? " override-mode" : ""}`}
+            className={clsx(isSelected && "selected", isOverridingAny && "override-mode")}
             aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}${
               isOverridingAny ? " (Override Mode)" : ""
             }`}

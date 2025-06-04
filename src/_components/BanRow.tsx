@@ -1,5 +1,8 @@
 import { useDraftStore } from "@/_store/draftStore";
+import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import type { TeamIndex, ActionIndex } from "@/_store/types";
+import { championByKey } from "@/_datasets/championPreprocessed";
+import { clsx } from "clsx";
 
 interface BanRowProps {
   team: TeamIndex;
@@ -37,16 +40,17 @@ export function BanRow({ team }: BanRowProps) {
       {banOrder.map((ban: string | null, i: number) => {
         const actualIndex = (team === 0 ? i : teamBans.length - 1 - i) as ActionIndex;
         const isBeingOverridden = overridingBanData?.team === team && overridingBanData?.banIndex === actualIndex;
+        const banName = ban ? championByKey.get(ban)?.name : null;
 
         return (
           <div
             key={`${team}-${actualIndex}`}
-            className={`ban-slot${ban ? " swappable" : ""}${isBeingOverridden ? " overriding" : ""}`}
+            className={clsx("ban-slot", ban && "swappable", isBeingOverridden && "overriding")}
             onClick={ban ? () => handleBanClick(actualIndex) : undefined}
             onKeyDown={ban ? (e) => handleBanKeyDown(e, actualIndex) : undefined}
-            tabIndex={ban ? (team === 0 ? 1 : 2) : -1}
+            tabIndex={ban ? 4 : -1}
             role={ban ? "button" : undefined}
-            aria-label={ban ? `Override banned ${ban}` : undefined}>
+            aria-label={ban ? `Override ${banName || ban}` : undefined}>
             <img
               src={ban ? `/assets/champions/${ban}.png` : "/assets/ban_placeholder.svg"}
               alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}

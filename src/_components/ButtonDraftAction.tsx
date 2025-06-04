@@ -1,5 +1,6 @@
 import { useDraftStore } from "@/_store/draftStore";
 import { ACTION_TYPE } from "@/_store/constants";
+import { clsx } from "clsx";
 
 export function ButtonDraftAction() {
   const actionType = useDraftStore((state) => state.getCurrentActionType());
@@ -44,12 +45,11 @@ export function ButtonDraftAction() {
 
   return (
     <button
-      type="submit"
-      className={`btn-primary-action${isOverridingAny ? " override-mode" : ""}`}
-      disabled={isDisabled}
+      type="button"
       onClick={handleClick}
-      aria-label={`${buttonLabel} ${selectedChampion ? `champion ${selectedChampion}` : ""}`}
-      tabIndex={3}>
+      disabled={isDisabled}
+      className={clsx("btn-primary-action", isOverridingAny && "override-mode")}
+      aria-describedby={isDisabled ? "draft-button-tooltip" : undefined}>
       <span>{buttonLabel}</span>
     </button>
   );

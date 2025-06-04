@@ -3,6 +3,7 @@ import { ACTION_TYPE, TEAM } from "@/_store/constants";
 import type { TeamIndex, ActionIndex, PickLabel } from "@/_store/types";
 import { championByKey } from "@/_datasets/championPreprocessed";
 import React, { useRef, useEffect, useState } from "react";
+import { clsx } from "clsx";
 
 interface PickRowProps {
   team: TeamIndex;
@@ -115,9 +116,12 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
   return (
     <div
-      className={`pick-row${isPendingAction ? " pending-action" : ""}${
-        showSelectedChampion ? " selected-champ-frame" : ""
-      }${isBeingOverridden ? " overriding" : ""}`}>
+      className={clsx(
+        "pick-row",
+        isPendingAction && "pending-action",
+        showSelectedChampion && "selected-champ-frame",
+        isBeingOverridden && "overriding"
+      )}>
       {(shouldShowIntroVideo || showOutro) && (
         <>
           <video
@@ -156,7 +160,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       {team === 0 ? (
         <>
           <div
-            className={`pick-row-image-wrapper${pick ? " swappable" : ""}`}
+            className={clsx("pick-row-image-wrapper", pick && "swappable")}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 1 : -1}
@@ -170,7 +174,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
         <>
           <div>{renderContent()}</div>
           <div
-            className={`pick-row-image-wrapper${pick ? " swappable" : ""}`}
+            className={clsx("pick-row-image-wrapper", pick && "swappable")}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 2 : -1}
