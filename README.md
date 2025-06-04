@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/95da6b2e-e8b2-462f-9199-1124a37694e4)
+
 # [SimDraft - League of Legends Draft Simulator](https://simdraft.pages.dev/)
 
 This app was an excuse to try out letting AI go wild (not UI).
