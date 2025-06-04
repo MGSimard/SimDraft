@@ -34,8 +34,8 @@ All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were proc
   - [x] Filter by search
   - [x] Turn-based
   - [x] Reset
-  - [ ] Early reset
-  - [ ] Undo
+  - [x] Early reset
+  - [x] Undo
   - [ ] Redo?
   - [x] Pick override
 - [ ] ...
