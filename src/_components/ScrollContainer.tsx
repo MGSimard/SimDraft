@@ -316,7 +316,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     <div
       ref={wrapperRef}
       className={clientDeviceType === "touch" ? "scrollbarTrackTouch" : undefined}
-      style={{ position: "relative", height: "100%", overflow: "hidden" }}>
+      id="scrollbar-container">
       <div id="champion-list" ref={viewportRef} tabIndex={0} onKeyDown={handleKeyDown} style={styles.viewport}>
         {children}
       </div>

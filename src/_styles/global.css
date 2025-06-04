@@ -638,11 +638,15 @@ a {
   transform: translate(-50%, 100%);
   font-size: 1.4rem;
 }
+#scrollbar-container {
+  position: relative;
+  min-height: 0;
+}
 #scrollbar-track {
   --trackWidth: 0.8rem;
   position: absolute;
   top: 0;
-  right: 0;
+  right: -2rem;
   width: var(--trackWidth);
   height: 100%;
   z-index: 10;
