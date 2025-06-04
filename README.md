@@ -2,6 +2,12 @@
 
 This app was an excuse to try out letting AI go wild (not UI).
 
+## Disclaimer
+
+SimDraft is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were procured through [CommunityDragon](https://communitydragon.org/) following Riot Games' "[Legal Jibber Jabber](https://www.riotgames.com/en/legal)".
+
 ## Task List
 
 - [x] Init
@@ -17,6 +23,7 @@ This app was an excuse to try out letting AI go wild (not UI).
 - [ ] Find out why filter drop-shadow isn't working on overlays
 - [x] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
 - [ ] Add /some/ level of responsiveness
+- [x] Riot disclaimer
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list
@@ -26,7 +33,8 @@ This app was an excuse to try out letting AI go wild (not UI).
   - [x] Turn-based
   - [ ] Timers
   - [ ] Pause/Resume
-  - [x] Clear
+  - [x] Reset
+  - [ ] Early reset
   - [ ] Undo
   - [ ] Pick override
 - [ ] ...

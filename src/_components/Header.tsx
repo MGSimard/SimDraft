@@ -1,3 +1,5 @@
+import { IconGithub } from "@/_components/Icons";
+
 export function Header() {
   return (
     <header className="no-select">
@@ -7,19 +9,33 @@ export function Header() {
       </div>
       <div id="header-controls">
         <div id="info-popover-container">
-          <button type="button" aria-label="Close" popoverTarget="info-popover">
-            <span>?</span>
+          <button type="button" aria-label="Info" aria-describedby="info-popover">
+            <span aria-hidden="true">?</span>
           </button>
-          <div id="info-popover" className="popover" popover="auto">
-            <p>Test</p>
+          <div role="tooltip" id="info-popover">
+            <div>
+              <p>
+                SimDraft is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or
+                anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated
+                properties are trademarks or registered trademarks of Riot Games, Inc.
+              </p>
+              <p>
+                All Riot-owned IP & assets <em>(except manual SVG reproductions of PNGs)</em> were procured through{" "}
+                <a href="https://communitydragon.org/" target="_blank" rel="noopener noreferrer">
+                  CommunityDragon
+                </a>{" "}
+                following Riot Games' "
+                <a href="https://www.riotgames.com/en/legal" target="_blank" rel="noopener noreferrer">
+                  Legal Jibber Jabber
+                </a>
+                " .
+              </p>
+            </div>
           </div>
         </div>
-        <button type="button" aria-label="Minimize">
-          <span>x</span>
-        </button>
-        <button type="button" aria-label="Maximize">
-          <span>x</span>
-        </button>
+        <a href="https://github.com/MGSimard/simdraft" target="_blank" rel="noopener noreferrer">
+          <IconGithub aria-hidden="true" />
+        </a>
       </div>
     </header>
   );

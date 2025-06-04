@@ -101,7 +101,7 @@ function PageHome() {
                   className={activeRoleFilters.includes(role) ? " active" : ""}>
                   <IconComponent />
                 </button>
-                <div id={`info-popover-${role}`} className="tooltip">
+                <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
                   <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
                 </div>
               </div>
