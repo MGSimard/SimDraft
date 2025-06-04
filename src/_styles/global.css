@@ -433,9 +433,11 @@ a {
   clip-path: polygon(0 100%, 100% 0, 100% 100%);
 }
 .tooltip-detect:hover .tooltip,
-.tooltip-detect:focus-visible .tooltip {
+.tooltip-detect button:hover ~ .tooltip,
+.tooltip-detect button:focus-visible ~ .tooltip {
   visibility: visible;
 }
+
 #search-wrapper {
   position: relative;
   display: flex;
@@ -718,6 +720,7 @@ a {
   clip-path: polygon(0 100%, 0 0, 100% 0);
 }
 #info-popover-container:hover #info-popover,
-#info-popover-container:focus-visible #info-popover {
+#info-popover-container button:hover ~ #info-popover,
+#info-popover-container button:focus-visible ~ #info-popover {
   visibility: visible;
 }
