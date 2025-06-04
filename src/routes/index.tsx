@@ -110,9 +110,8 @@ function PageHome() {
           {ROLES.map((role) => {
             const IconComponent = ROLE_ICONS[role];
             return (
-              <div className="tooltip-detect">
+              <div key={role} className="tooltip-detect">
                 <button
-                  key={role}
                   type="button"
                   aria-label={`Filter by ${role}`}
                   aria-describedby={`info-popover-${role}`}

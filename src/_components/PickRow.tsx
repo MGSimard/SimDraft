@@ -37,10 +37,10 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const isBeingOverridden =
     isOverridingPick && overridingPickData?.team === team && overridingPickData?.pickIndex === pickIndex;
 
-  const champName = pick ? championByKey.get(pick)?.name || pick : null;
+  const champName = pick ? championByKey.get(pick)?.name ?? pick : null;
 
   const showSelectedChampion = (isPicking || isBeingOverridden) && selectedChampion;
-  const selectedChampionName = showSelectedChampion ? championByKey.get(selectedChampion)?.name : null;
+  const selectedChampionName = showSelectedChampion ? championByKey.get(selectedChampion)?.name ?? null : null;
 
   const handlePickClick = () => {
     if (pick) {
@@ -75,19 +75,17 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     ? `/assets/champions/${pick}.png`
     : "/assets/champions/-1.png";
 
-  const displayImageAlt = showSelectedChampion ? selectedChampionName || selectedChampion : champName || "Empty slot";
+  const displayImageAlt = showSelectedChampion ? selectedChampionName ?? selectedChampion : champName ?? "Empty slot";
 
   useEffect(() => {
     if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
       introVideoRef.current.currentTime = 0;
-      introVideoRef.current.play().catch(console.error);
+      introVideoRef.current.play().catch(() => console.warn("Video play failed"));
       setShowOutro(false);
     }
-
     if (wasPendingRef.current && !isPendingAction) {
       setShowOutro(true);
     }
-
     wasPendingRef.current = isPendingAction;
   }, [isPendingAction]);
 
@@ -100,7 +98,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
         if (outroVideoRef.current) {
           outroVideoRef.current.currentTime = 0;
-          outroVideoRef.current.play().catch(console.error);
+          outroVideoRef.current.play().catch(() => console.warn("Video play failed"));
         }
       });
     }
@@ -165,7 +163,8 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 1 : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName || pick}` : undefined}>
+            aria-label={pick ? `Override ${champName ?? pick}` : undefined}
+            aria-disabled={!pick}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
           <div>{renderContent()}</div>
@@ -179,7 +178,8 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? 2 : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName || pick}` : undefined}>
+            aria-label={pick ? `Override ${champName ?? pick}` : undefined}
+            aria-disabled={!pick}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
         </>

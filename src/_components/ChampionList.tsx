@@ -28,16 +28,12 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
 
   const handleChampionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isDraftComplete) return;
-
     const button = e.currentTarget;
     const championKey = button.dataset.championKey;
-
-    if (!championKey) return;
-
+    if (!championKey || typeof championKey !== "string") return;
     if (!isChampionAvailable(championKey)) {
       return;
     }
-
     selectChampion(championKey);
   };
 
