@@ -96,11 +96,12 @@ function PageHome() {
                   key={role}
                   type="button"
                   aria-label={`Filter by ${role}`}
+                  aria-describedby={`info-popover-${role}`}
                   onClick={() => handleRoleFilterToggle(role)}
                   className={activeRoleFilters.includes(role) ? " active" : ""}>
                   <IconComponent />
                 </button>
-                <div className="tooltip">
+                <div id={`info-popover-${role}`} className="tooltip">
                   <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
                 </div>
               </div>

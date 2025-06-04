@@ -82,9 +82,9 @@ body::after {
   z-index: -1;
 }
 body::before {
-  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed5) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed5) l c h / 0.4), transparent),
-    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed5) l c h / 0.4), transparent);
+  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed4) l c h / 0.5), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.5), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed4) l c h / 0.5), transparent);
 }
 body::after {
   background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
