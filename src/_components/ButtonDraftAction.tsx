@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useDraftStore } from "@/_store/draftStore";
 import { ACTION_TYPE } from "@/_store/constants";
 
@@ -9,8 +8,12 @@ export function ButtonDraftAction() {
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
   const reset = useDraftStore((state) => state.reset);
+  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
+  const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
 
-  const buttonLabel = isDraftComplete
+  const buttonLabel = isOverridingAny
+    ? "CANCEL OVERRIDE"
+    : isDraftComplete
     ? "RESET"
     : actionType === ACTION_TYPE.PICK
     ? "LOCK IN"
@@ -18,10 +21,18 @@ export function ButtonDraftAction() {
     ? "BAN"
     : "ERROR";
 
-  const isDisabled = isDraftComplete ? false : !selectedChampion ? true : !isChampionAvailable(selectedChampion);
+  const isDisabled = isOverridingAny
+    ? false
+    : isDraftComplete
+    ? false
+    : !selectedChampion
+    ? true
+    : !isChampionAvailable(selectedChampion);
 
-  const handleClick = useCallback(() => {
-    if (isDraftComplete) {
+  const handleClick = () => {
+    if (isOverridingAny) {
+      cancelAnyOverride();
+    } else if (isDraftComplete) {
       if (window.confirm("Are you sure you want to reset the draft?")) {
         reset();
       }
@@ -29,15 +40,16 @@ export function ButtonDraftAction() {
       if (isDisabled) return;
       lockIn();
     }
-  }, [isDraftComplete, reset, isDisabled, lockIn]);
+  };
 
   return (
     <button
       type="submit"
-      className="btn-primary-action"
+      className={`btn-primary-action${isOverridingAny ? " override-mode" : ""}`}
       disabled={isDisabled}
       onClick={handleClick}
-      aria-label={`${buttonLabel} ${selectedChampion ? `champion ${selectedChampion}` : ""}`}>
+      aria-label={`${buttonLabel} ${selectedChampion ? `champion ${selectedChampion}` : ""}`}
+      tabIndex={3}>
       <span>{buttonLabel}</span>
     </button>
   );

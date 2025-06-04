@@ -97,6 +97,16 @@ body:has(.theme-banning)::before {
 body:has(.theme-picking)::after {
   opacity: 1;
 }
+body:has(.theme-overriding)::before,
+body:has(.theme-overriding)::after {
+  opacity: 0;
+  background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrGold4) l c h / 0.3), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrGold4) l c h / 0.2), transparent),
+    radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrGold4) l c h / 0.2), transparent);
+}
+body:has(.theme-overriding)::before {
+  opacity: 1;
+}
 #root {
   position: relative;
   height: 100%;
@@ -227,11 +237,30 @@ a {
 #team-red .ban-row {
   justify-content: flex-end;
 }
-.ban-row div {
+.ban-slot {
   width: 3.2rem;
   height: 3.2rem;
   border: 1px solid var(--clrGreyCool);
   background: var(--clrBg);
+  transition: border-color 0.2s ease;
+}
+.ban-slot.clickable {
+  cursor: pointer;
+}
+.ban-slot.clickable:hover {
+  border-color: var(--clrGold4);
+}
+.ban-slot.overriding {
+  border-color: var(--clrGold4);
+  box-shadow: 0 0 0.4rem var(--clrGold4);
+  animation: glowIn 1s ease-out;
+}
+.ban-slot {
+  outline: none;
+}
+.ban-slot.clickable:focus-visible {
+  border-color: var(--clrGold4);
+  box-shadow: 0 0 0 0.2rem oklch(from var(--clrGold4) l c h / 0.5);
 }
 .ban-row img {
   width: 100%;
@@ -257,6 +286,11 @@ a {
   border-radius: 999rem;
   background: var(--clrBg);
   overflow: hidden;
+  outline: none;
+}
+.pick-row-image-wrapper.clickable:focus-visible {
+  border-color: var(--clrGold4);
+  box-shadow: 0 0 0 0.2rem oklch(from var(--clrGold4) l c h / 0.5);
 }
 .pick-row img {
   width: 100%;
@@ -277,6 +311,11 @@ a {
     border-color: var(--clrBlue3);
     animation: glowIn 1s ease-out;
   }
+  &.overriding {
+    border-color: var(--clrGold4);
+    color: var(--clrGold1);
+    animation: glowIn 1s ease-out;
+  }
 }
 #team-red .pick-row {
   justify-content: flex-end;
@@ -287,6 +326,11 @@ a {
   &.pending-action {
     border-color: var(--clrRed1);
     color: var(--clrGold4);
+    animation: glowIn 1s ease-out;
+  }
+  &.overriding {
+    border-color: var(--clrGold4);
+    color: var(--clrGold1);
     animation: glowIn 1s ease-out;
   }
 }
@@ -363,20 +407,22 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: fit-content;
 }
 #header {
   flex-shrink: 0;
-  font-family: var(--fontBeaufort);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--clrHeading);
   text-align: center;
   padding: 1.6rem 3.2rem;
   overflow: hidden;
 }
 #header h2 {
+  font-family: var(--fontBeaufort);
+  font-weight: 700;
   font-size: 3.2rem;
+  color: var(--clrHeading);
+  text-transform: uppercase;
+}
+.override-hint {
+  font-family: var(--fontSpiegel);
 }
 #champion-controls {
   flex-shrink: 0;
@@ -574,6 +620,33 @@ a {
 .theme-picking #champion-list button.selected img {
   filter: grayscale(1) brightness(0.5);
 }
+.theme-overriding #champion-list button:not(:disabled) {
+  border-color: var(--clrGold4);
+  box-shadow: 0 0 0 0.1rem var(--clrHextechBlack), 0 0 0.7rem 0.1rem oklch(from var(--clrGold4) l c h / 85.1%);
+}
+.theme-overriding #champion-list button:not(:disabled):hover::before,
+.theme-overriding #champion-list button.selected:not(:disabled)::before {
+  background: var(--clrGold3);
+}
+.theme-overriding #champion-list button.selected:not(:disabled)::after {
+  content: "";
+  position: absolute;
+  inset: -0.2rem;
+  background: linear-gradient(to top, var(--clrGold1), var(--clrGold4));
+  mask-image: url("/assets/ring_mask.svg");
+  -webkit-mask-image: url("/assets/ring_mask.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.theme-overriding #champion-list button.selected img {
+  filter: grayscale(1) brightness(0.5);
+}
 #champion-list button img {
   width: 100%;
   height: 100%;
@@ -669,6 +742,23 @@ a {
 .theme-banning .btn-primary-action:not(:disabled):hover:not(:active) span,
 .theme-banning .btn-primary-action:not(:disabled):focus-visible:not(:active) span {
   box-shadow: inset 0 -2rem 2rem 0.5rem var(--clrRed4);
+}
+.theme-overriding .btn-primary-action {
+  color: var(--clrGold3);
+  background: linear-gradient(to bottom, var(--clrGold3), var(--clrGold5));
+}
+.theme-overriding .btn-primary-action:not(:disabled):hover,
+.theme-overriding .btn-primary-action:not(:disabled):focus-visible {
+  color: var(--clrGold1);
+  background: linear-gradient(to bottom, var(--clrGold2), var(--clrGold4));
+}
+.theme-overriding .btn-primary-action:not(:disabled):active {
+  color: var(--clrGold5);
+  background: var(--clrGold6);
+}
+.theme-overriding .btn-primary-action:not(:disabled):hover:not(:active) span,
+.theme-overriding .btn-primary-action:not(:disabled):focus-visible:not(:active) span {
+  box-shadow: inset 0 -2rem 2rem 0.5rem var(--clrGold5);
 }
 
 /* POPOVER */

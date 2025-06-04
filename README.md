@@ -38,7 +38,7 @@ All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were proc
   - [x] Reset
   - [ ] Early reset
   - [ ] Undo
-  - [ ] Pick override
+  - [x] Pick override
 - [ ] ...
 - [x] Find real app name
 - [x] Metadata

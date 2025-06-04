@@ -14,6 +14,10 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const stepDetails = useDraftStore((state) => state.getCurrentStepDetails());
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const picks = useDraftStore((state) => state.picks);
+  const startPickOverride = useDraftStore((state) => state.startPickOverride);
+  const isOverridingPick = useDraftStore((state) => state.isOverridingPick());
+  const overridingPickData = useDraftStore((state) => state.getOverridingPickData());
+  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
   const introVideoRef = useRef<HTMLVideoElement>(null);
   const idleVideoRef = useRef<HTMLVideoElement>(null);
   const outroVideoRef = useRef<HTMLVideoElement>(null);
@@ -21,27 +25,48 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const pick = picks[team][pickIndex];
 
   const isPicking =
-    stepDetails?.type === ACTION_TYPE.PICK && stepDetails?.actionIndex === pickIndex && stepDetails?.team === teamName;
+    !isOverridingAny &&
+    stepDetails?.type === ACTION_TYPE.PICK &&
+    stepDetails?.actionIndex === pickIndex &&
+    stepDetails?.team === teamName;
 
-  const isBanning = stepDetails?.type === ACTION_TYPE.BAN && stepDetails?.team === teamName && pickIndex === 0;
+  const isBanning =
+    !isOverridingAny && stepDetails?.type === ACTION_TYPE.BAN && stepDetails?.team === teamName && pickIndex === 0;
+
+  const isBeingOverridden =
+    isOverridingPick && overridingPickData?.team === team && overridingPickData?.pickIndex === pickIndex;
 
   const champName = pick ? championByKey.get(pick)?.name || pick : null;
 
-  const showSelectedChampion = isPicking && selectedChampion;
+  const showSelectedChampion = (isPicking || isBeingOverridden) && selectedChampion;
   const selectedChampionName = showSelectedChampion ? championByKey.get(selectedChampion)?.name : null;
+
+  const handlePickClick = () => {
+    if (pick) {
+      startPickOverride(team, pickIndex);
+    }
+  };
+
+  const handlePickKeyDown = (e: React.KeyboardEvent) => {
+    if (pick && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      startPickOverride(team, pickIndex);
+    }
+  };
 
   const statusContent = (() => {
     if (isBanning) return <span className="doing">Banning...</span>;
     if (!pick && isPicking) return <span className="doing">Picking...</span>;
+    if (isBeingOverridden) return <span className="doing">Overriding...</span>;
     if (pick && champName) return <span className="cName">{champName}</span>;
     return null;
   })();
 
-  const isPendingAction = isPicking || isBanning;
-  const shouldShowIntroVideo = isPendingAction; // Both teams
+  const isPendingAction = isPicking || isBanning || isBeingOverridden;
+  const shouldShowIntroVideo = isPendingAction;
   const [showOutro, setShowOutro] = useState(false);
   const wasPendingRef = useRef(false);
-  const teamColor = team === 0 ? "blue" : "red";
+  const teamColor = isBeingOverridden ? "gold" : team === 0 ? "blue" : "red";
 
   const displayImageSrc = showSelectedChampion
     ? `/assets/champions/${selectedChampion}.png`
@@ -51,16 +76,13 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
   const displayImageAlt = showSelectedChampion ? selectedChampionName || selectedChampion : champName || "Empty slot";
 
-  // Track when isPendingAction changes and detect lock-ins
   useEffect(() => {
-    // Start intro when action begins
     if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
       introVideoRef.current.currentTime = 0;
       introVideoRef.current.play().catch(console.error);
       setShowOutro(false);
     }
 
-    // Detect lock-in: was pending, now not pending
     if (wasPendingRef.current && !isPendingAction) {
       setShowOutro(true);
     }
@@ -68,11 +90,9 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     wasPendingRef.current = isPendingAction;
   }, [isPendingAction]);
 
-  // Handle outro playback when showOutro becomes true
   useEffect(() => {
     if (showOutro) {
       requestAnimationFrame(() => {
-        // Hide idle video and play outro
         if (idleVideoRef.current) {
           idleVideoRef.current.style.display = "none";
         }
@@ -97,7 +117,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     <div
       className={`pick-row${isPendingAction ? " pending-action" : ""}${
         showSelectedChampion ? " selected-champ-frame" : ""
-      }`}>
+      }${isBeingOverridden ? " overriding" : ""}`}>
       {(shouldShowIntroVideo || showOutro) && (
         <>
           <video
@@ -135,7 +155,14 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       )}
       {team === 0 ? (
         <>
-          <div className="pick-row-image-wrapper">
+          <div
+            className={`pick-row-image-wrapper${pick ? " clickable" : ""}`}
+            onClick={pick ? handlePickClick : undefined}
+            onKeyDown={pick ? handlePickKeyDown : undefined}
+            tabIndex={pick ? 1 : -1}
+            role={pick ? "button" : undefined}
+            aria-label={pick ? `Override ${champName || pick}` : undefined}
+            style={{ cursor: pick ? "pointer" : "default" }}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
           <div>{renderContent()}</div>
@@ -143,7 +170,14 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       ) : (
         <>
           <div>{renderContent()}</div>
-          <div className="pick-row-image-wrapper">
+          <div
+            className={`pick-row-image-wrapper${pick ? " clickable" : ""}`}
+            onClick={pick ? handlePickClick : undefined}
+            onKeyDown={pick ? handlePickKeyDown : undefined}
+            tabIndex={pick ? 2 : -1}
+            role={pick ? "button" : undefined}
+            aria-label={pick ? `Override ${champName || pick}` : undefined}
+            style={{ cursor: pick ? "pointer" : "default" }}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
         </>

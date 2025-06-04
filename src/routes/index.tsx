@@ -43,14 +43,28 @@ const ROLE_ICONS = {
 function PageHome() {
   const actionType = useDraftStore((state) => state.getCurrentActionType());
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
+  const isOverridingPick = useDraftStore((state) => state.isOverridingPick());
+  const overridingPickData = useDraftStore((state) => state.getOverridingPickData());
+  const isOverridingBan = useDraftStore((state) => state.isOverridingBan());
+  const overridingBanData = useDraftStore((state) => state.getOverridingBanData());
+  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
   const [search, setSearch] = useState("");
   const [activeRoleFilters, setActiveRoleFilters] = useState<string[]>([]);
   const debouncedSearch = useDebounce(search, 100);
 
-  const mainThemeClass =
-    actionType === ACTION_TYPE.PICK ? "theme-picking" : actionType === ACTION_TYPE.BAN ? "theme-banning" : "";
+  const mainThemeClass = isOverridingAny
+    ? "theme-overriding"
+    : actionType === ACTION_TYPE.PICK
+    ? "theme-picking"
+    : actionType === ACTION_TYPE.BAN
+    ? "theme-banning"
+    : "";
 
-  const actionText = isDraftComplete
+  const actionText = isOverridingPick
+    ? `OVERRIDE ${overridingPickData?.team === 0 ? "B" : "R"}${(overridingPickData?.pickIndex || 0) + 1}`
+    : isOverridingBan
+    ? `OVERRIDE ${overridingBanData?.team === 0 ? "BLUE" : "RED"} BAN ${(overridingBanData?.banIndex || 0) + 1}`
+    : isDraftComplete
     ? "DRAFT COMPLETE"
     : actionType === ACTION_TYPE.BAN
     ? "BAN A CHAMPION!"
@@ -86,6 +100,11 @@ function PageHome() {
       <div id="center">
         <div id="header">
           <h2>{actionText}</h2>
+          {isOverridingAny && (
+            <p className="override-hint" role="status" aria-live="polite" aria-atomic="true">
+              Select a champion, ESC to cancel.
+            </p>
+          )}
         </div>
         <div id="champion-controls">
           {ROLES.map((role) => {
@@ -98,7 +117,8 @@ function PageHome() {
                   aria-label={`Filter by ${role}`}
                   aria-describedby={`info-popover-${role}`}
                   onClick={() => handleRoleFilterToggle(role)}
-                  className={activeRoleFilters.includes(role) ? " active" : ""}>
+                  className={activeRoleFilters.includes(role) ? " active" : ""}
+                  tabIndex={3}>
                   <IconComponent />
                 </button>
                 <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
@@ -115,9 +135,10 @@ function PageHome() {
               value={search}
               onChange={handleSearchChange}
               aria-label="Search champions"
+              tabIndex={3}
             />
             {search && (
-              <button type="button" aria-label="Clear search" onClick={() => setSearch("")}>
+              <button type="button" aria-label="Clear search" onClick={() => setSearch("")} tabIndex={3}>
                 <IconClose aria-hidden="true" />
               </button>
             )}

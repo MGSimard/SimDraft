@@ -15,12 +15,26 @@ export interface StepDetails {
   actionIndex: ActionIndex;
 }
 
+export interface OverridePickData {
+  team: TeamIndex;
+  pickIndex: ActionIndex;
+}
+
+export interface OverrideBanData {
+  team: TeamIndex;
+  banIndex: ActionIndex;
+}
+
+export type OverrideData = OverridePickData | OverrideBanData;
+
 export interface DraftState {
   currentStepIndex: number;
   isDraftComplete: boolean;
   selectedChampion: string | null;
   bans: [FiveArray<string | null>, FiveArray<string | null>];
   picks: [FiveArray<string | null>, FiveArray<string | null>];
+  overridingPick: OverridePickData | null;
+  overridingBan: OverrideBanData | null;
 }
 
 export interface DraftActions {
@@ -28,6 +42,13 @@ export interface DraftActions {
   lockIn: () => void;
   nextStep: () => void;
   reset: () => void;
+  startPickOverride: (team: TeamIndex, pickIndex: ActionIndex) => void;
+  completePickOverride: (championKey: string) => void;
+  cancelPickOverride: () => void;
+  startBanOverride: (team: TeamIndex, banIndex: ActionIndex) => void;
+  completeBanOverride: (championKey: string) => void;
+  cancelBanOverride: () => void;
+  cancelAnyOverride: () => void;
 }
 
 export interface DraftSelectors {
@@ -53,6 +74,11 @@ export interface DraftSelectors {
     isPicking: boolean;
     pick: string | null;
   };
+  isOverridingPick: () => boolean;
+  getOverridingPickData: () => OverridePickData | null;
+  isOverridingBan: () => boolean;
+  getOverridingBanData: () => OverrideBanData | null;
+  isOverridingAny: () => boolean;
 }
 
 export type DraftStore = DraftState & DraftActions & DraftSelectors;

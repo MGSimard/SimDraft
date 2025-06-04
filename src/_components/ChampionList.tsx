@@ -1,6 +1,6 @@
 import { useDraftStore } from "@/_store/draftStore";
 import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
-import { useCallback, useMemo } from "react";
+import { useEffect } from "react";
 
 interface ChampionListProps {
   searchQuery: string;
@@ -12,42 +12,50 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
   const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
+  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
+  const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
 
-  const displayChampions = useMemo(() => {
-    let champions = championsMap;
+  let displayChampions = championsMap;
 
-    // Apply search filter
-    if (searchQuery.trim()) {
-      champions = searchChampions(searchQuery);
+  if (searchQuery.trim()) {
+    displayChampions = searchChampions(searchQuery);
+  }
+
+  if (roleFilters.length > 0) {
+    displayChampions = displayChampions.filter((champion) => champion.roles.some((role) => roleFilters.includes(role)));
+  }
+
+  const handleChampionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDraftComplete) return;
+
+    const button = e.currentTarget;
+    const championKey = button.dataset.championKey;
+
+    if (!championKey) return;
+
+    if (!isChampionAvailable(championKey)) {
+      return;
     }
 
-    // Apply role filters
-    if (roleFilters.length > 0) {
-      champions = champions.filter((champion) => champion.roles.some((role) => roleFilters.includes(role)));
-    }
+    selectChampion(championKey);
+  };
 
-    return champions;
-  }, [searchQuery, roleFilters]);
-
-  const handleChampionClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (isDraftComplete) return;
-      const button = e.currentTarget;
-      const championKey = button.dataset.championKey;
-      if (!championKey || !isChampionAvailable(championKey)) {
-        return;
-      }
-      selectChampion(championKey);
-    },
-    [selectChampion, isDraftComplete, isChampionAvailable]
-  );
-
-  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
     if (!img.src.endsWith("-1.png")) {
       img.src = "/assets/champions/-1.png";
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOverridingAny) {
+        cancelAnyOverride();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOverridingAny, cancelAnyOverride]);
 
   return (
     <>
@@ -62,8 +70,11 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
             disabled={!isAvailable}
             data-champion-key={champ.key}
             onClick={handleChampionClick}
-            className={isSelected ? "selected" : undefined}
-            aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}`}>
+            className={`${isSelected ? "selected" : ""}${isOverridingAny ? " override-mode" : ""}`}
+            aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}${
+              isOverridingAny ? " (Override Mode)" : ""
+            }`}
+            tabIndex={3}>
             <img
               src={`/assets/champions/${champ.key}.png`}
               alt={champ.name}
