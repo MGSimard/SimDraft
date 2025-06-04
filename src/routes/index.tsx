@@ -90,16 +90,20 @@ function PageHome() {
         <div id="champion-controls">
           {ROLES.map((role) => {
             const IconComponent = ROLE_ICONS[role];
-            // TODO: Tooltip saying it's playrate roles from last patch like they do in client
             return (
-              <button
-                key={role}
-                type="button"
-                aria-label={`Filter by ${role}`}
-                onClick={() => handleRoleFilterToggle(role)}
-                className={activeRoleFilters.includes(role) ? "active" : ""}>
-                <IconComponent />
-              </button>
+              <div className="tooltip-detect">
+                <button
+                  key={role}
+                  type="button"
+                  aria-label={`Filter by ${role}`}
+                  onClick={() => handleRoleFilterToggle(role)}
+                  className={activeRoleFilters.includes(role) ? " active" : ""}>
+                  <IconComponent />
+                </button>
+                <div className="tooltip">
+                  <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
+                </div>
+              </div>
             );
           })}
           <div id="search-wrapper">

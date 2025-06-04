@@ -17,6 +17,7 @@ This app was an excuse to try out letting AI go wild (not UI).
 - [ ] Find out why filter drop-shadow isn't working on overlays
 - [ ] Restore ctrl + mousewheel zooming when hovered over the custom scroll container
 - [ ] Focus-visible style
+- [ ] Add /some/ level of responsiveness
 - [ ] Functionalities
   - [x] Preprocess champion dataset with id, name, frame file name, position
   - [x] Full champion list

@@ -6,9 +6,14 @@ export function Header() {
         <h1>SimDraft</h1>
       </div>
       <div id="header-controls">
-        <button type="button" aria-label="Close">
-          <span>x</span>
-        </button>
+        <div id="info-popover-container">
+          <button type="button" aria-label="Close" popoverTarget="info-popover">
+            <span>?</span>
+          </button>
+          <div id="info-popover" className="popover" popover="auto">
+            <p>Test</p>
+          </div>
+        </div>
         <button type="button" aria-label="Minimize">
           <span>x</span>
         </button>
