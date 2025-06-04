@@ -46,3 +46,16 @@ All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were proc
 ### Later potentially
 
 - [ ] Save draft, export/import draft
+
+---
+
+## Contact
+
+MGSimard  
+X: [@MGSimard](https://x.com/MGSimard)  
+GitHub: [@MGSimard](https://github.com/MGSimard)  
+Mail: [mgsimard.dev@gmail.com](mailto:mgsimard.dev@gmail.com)
+
+For more info, view my portfolio at [mgsimard.dev](https://mgsimard.dev).
+
+---
