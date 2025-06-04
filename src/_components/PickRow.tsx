@@ -67,6 +67,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const shouldShowIntroVideo = isPendingAction;
   const [showOutro, setShowOutro] = useState(false);
   const wasPendingRef = useRef(false);
+  const [activeTeamColor, setActiveTeamColor] = useState<string | null>(null);
   const teamColor = isBeingOverridden ? "gold" : team === 0 ? "blue" : "red";
 
   const displayImageSrc = showSelectedChampion
@@ -79,6 +80,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
   useEffect(() => {
     if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
+      setActiveTeamColor(teamColor);
       introVideoRef.current.currentTime = 0;
       introVideoRef.current.play().catch(() => console.warn("Video play failed"));
       setShowOutro(false);
@@ -87,7 +89,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       setShowOutro(true);
     }
     wasPendingRef.current = isPendingAction;
-  }, [isPendingAction]);
+  }, [isPendingAction, teamColor]);
 
   useEffect(() => {
     if (showOutro) {
@@ -137,10 +139,16 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
                 idleVideoRef.current.play().catch(console.error);
               }
             }}>
-            <source src={`/assets/animations/magic-action-${teamColor}-intro.webm`} type="video/webm" />
+            <source
+              src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-intro.webm`}
+              type="video/webm"
+            />
           </video>
           <video ref={idleVideoRef} className="pick-row-video" muted playsInline loop style={{ display: "none" }}>
-            <source src={`/assets/animations/magic-action-${teamColor}-idle.webm`} type="video/webm" />
+            <source
+              src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-idle.webm`}
+              type="video/webm"
+            />
           </video>
           <video
             ref={outroVideoRef}
@@ -150,8 +158,12 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             style={{ display: showOutro ? "block" : "none" }}
             onEnded={() => {
               setShowOutro(false);
+              setActiveTeamColor(null);
             }}>
-            <source src={`/assets/animations/magic-action-${teamColor}-outro.webm`} type="video/webm" />
+            <source
+              src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-outro.webm`}
+              type="video/webm"
+            />
           </video>
         </>
       )}
