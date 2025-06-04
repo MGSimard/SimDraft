@@ -30,6 +30,13 @@ export function Header() {
                 </a>
                 " .
               </p>
+              <p>
+                © 2025 SimDraft by{" "}
+                <a href="https://github.com/MGSimard" target="_blank" rel="noopener noreferrer">
+                  MGSimard
+                </a>
+                .
+              </p>
             </div>
           </div>
         </div>
