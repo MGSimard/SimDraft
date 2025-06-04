@@ -9,7 +9,6 @@ import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/draftStore";
 import { useState, useEffect } from "react";
 import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
-import { clsx } from "clsx";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -118,7 +117,7 @@ function PageHome() {
                   aria-label={`Filter by ${role}`}
                   aria-describedby={`info-popover-${role}`}
                   onClick={() => handleRoleFilterToggle(role)}
-                  className={clsx(activeRoleFilters.includes(role) && "active")}
+                  className={activeRoleFilters.includes(role) ? "active" : undefined}
                   tabIndex={3}>
                   <IconComponent />
                 </button>
