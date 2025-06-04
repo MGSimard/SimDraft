@@ -395,6 +395,10 @@ a {
   padding: 0.4rem;
   &:not(.active) {
     filter: grayscale(1) brightness(0.7);
+    &:hover,
+    &:focus-visible {
+      filter: grayscale(1) brightness(1);
+    }
   }
 }
 #champion-controls svg {
@@ -437,7 +441,6 @@ a {
 .tooltip-detect button:focus-visible ~ .tooltip {
   visibility: visible;
 }
-
 #search-wrapper {
   position: relative;
   display: flex;
