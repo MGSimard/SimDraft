@@ -33,11 +33,10 @@ All Riot-owned IP & assets _(except manual SVG reproductions of PNGs)_ were proc
   - [x] Filter by position
   - [x] Filter by search
   - [x] Turn-based
-  - [ ] Timers
-  - [ ] Pause/Resume
   - [x] Reset
   - [ ] Early reset
   - [ ] Undo
+  - [ ] Redo?
   - [x] Pick override
 - [ ] ...
 - [x] Find real app name

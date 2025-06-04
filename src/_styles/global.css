@@ -514,7 +514,7 @@ a {
   min-height: 0;
   height: 100%;
   align-content: start;
-  padding: 1.6rem 0.4rem;
+  padding: 1.6rem 0;
   text-align: center;
   white-space: nowrap;
   border-top: 1px solid var(--clrBorderGoldIdle);
@@ -640,13 +640,14 @@ a {
 }
 #scrollbar-container {
   position: relative;
+  padding: 0 3.2rem;
   min-height: 0;
 }
 #scrollbar-track {
   --trackWidth: 0.8rem;
   position: absolute;
   top: 0;
-  right: -2rem;
+  right: 0;
   width: var(--trackWidth);
   height: 100%;
   z-index: 10;

@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ScrollContainer } from "@/_components/ScrollContainer";
-import { PickRow } from "@/_components/PickRow";
-import { PickSeparator } from "@/_components/PickSeparator";
-import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
-import { ChampionList } from "@/_components/ChampionList";
-import { BanRow } from "@/_components/BanRow";
+import { useState, useEffect } from "react";
 import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/draftStore";
-import { useState, useEffect } from "react";
+import { BanRow } from "@/_components/BanRow";
+import { PickRow } from "@/_components/PickRow";
+import { PickSeparator } from "@/_components/PickSeparator";
+import { ScrollContainer } from "@/_components/ScrollContainer";
+import { ChampionList } from "@/_components/ChampionList";
+import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
+import { ButtonUndo } from "@/_components/ButtonUndo";
 import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
 
 export const Route = createFileRoute("/")({
@@ -148,6 +149,7 @@ function PageHome() {
         </ScrollContainer>
         <div id="center-footer">
           <ButtonDraftAction />
+          <ButtonUndo />
         </div>
       </div>
 
