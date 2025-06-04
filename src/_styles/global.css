@@ -826,3 +826,35 @@ a {
   pointer-events: none;
   z-index: 2;
 }
+
+/* * {
+  outline: 1px solid red;
+} */
+
+/* UNDO BUTTON */
+.bottom-control {
+  width: 2.8rem;
+  height: 2.8rem;
+  padding: 0.1rem;
+  background: linear-gradient(to bottom, var(--clrGold4), var(--clrGold5));
+}
+.bottom-control svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0.2rem;
+  color: var(--clrGold2);
+  background: var(--clrGrey3);
+}
+.bottom-control:hover:not(:disabled),
+.bottom-control:focus-visible:not(:disabled) {
+  background: linear-gradient(to bottom, var(--clrGold1), var(--clrGold4));
+}
+.bottom-control:hover:not(:disabled) svg,
+.bottom-control:focus-visible:not(:disabled) svg {
+  background: linear-gradient(to bottom, var(--clrGrey3), var(--clrGold6));
+}
+.bottom-control:disabled {
+  background: var(--clrGold6);
+  filter: grayscale(1) brightness(0.7);
+}

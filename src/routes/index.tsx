@@ -9,6 +9,7 @@ import { ScrollContainer } from "@/_components/ScrollContainer";
 import { ChampionList } from "@/_components/ChampionList";
 import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 import { ButtonUndo } from "@/_components/ButtonUndo";
+import { ButtonReset } from "@/_components/ButtonReset";
 import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
 
 export const Route = createFileRoute("/")({
@@ -150,6 +151,7 @@ function PageHome() {
         <div id="center-footer">
           <ButtonDraftAction />
           <ButtonUndo />
+          <ButtonReset />
         </div>
       </div>
 

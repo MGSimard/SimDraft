@@ -150,9 +150,6 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
     if (cachedStateHash === currentStateHash && cachedUnavailableChampions) {
       return cachedUnavailableChampions;
     }
-
-    // In override mode, all champions should remain disabled as normal
-    // The override logic is handled in selectChampion, not availability
     const unavailable = new Set([...state.getAllBannedChampions(), ...state.getAllPickedChampions()]);
     cachedUnavailableChampions = unavailable;
     cachedStateHash = currentStateHash;
