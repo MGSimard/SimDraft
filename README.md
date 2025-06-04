@@ -1,4 +1,4 @@
-# SimDraft - League of Legends Draft Simulator
+# [SimDraft - League of Legends Draft Simulator](https://simdraft.pages.dev/)
 
 This app was an excuse to try out letting AI go wild (not UI).
 
