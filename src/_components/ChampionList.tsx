@@ -20,7 +20,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   const overridingBan = useDraftStore((state) => state.overridingBan);
 
   const isChampionAvailable = (championKey: string) => {
-    if (isDraftComplete) return false;
+    if (isDraftComplete && !isOverridingAny) return false;
     const unavailableChampions = new Set([...picks.flat().filter(Boolean), ...bans.flat().filter(Boolean)]);
     return !unavailableChampions.has(championKey);
   };
@@ -36,7 +36,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   }
 
   const handleChampionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (isDraftComplete) return;
+    if (isDraftComplete && !isOverridingAny) return;
     const button = e.currentTarget;
     const championKey = button.dataset.championKey;
     if (!championKey || typeof championKey !== "string") return;

@@ -213,7 +213,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   isChampionAvailable: (championKey: string) => {
     const state = get();
-    if (state.isDraftComplete) return false;
+    if (state.isDraftComplete && !state.overridingPick && !state.overridingBan) return false;
     return !state.getUnavailableChampions().has(championKey);
   },
 
