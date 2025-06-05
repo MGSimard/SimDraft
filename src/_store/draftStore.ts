@@ -64,13 +64,9 @@ const filterNonNullChampions = (champion: string | null): champion is string => 
 type PostLockCallback = () => void;
 
 export const useDraftStore = create<DraftStore>()((set, get) => {
-  // Store callbacks that should be called after lock/ban
   let postLockCallbacks: PostLockCallback[] = [];
-
   return {
     ...initialState,
-
-    // Add method to register callbacks
     registerPostLockCallback: (callback: PostLockCallback) => {
       postLockCallbacks.push(callback);
       return () => {
@@ -80,19 +76,14 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
 
     selectChampion: (championKey: string) => {
       const state = get();
-
-      // If we're overriding a pick, complete the pick override
       if (state.overridingPick) {
         get().completePickOverride(championKey);
         return;
       }
-
-      // If we're overriding a ban, complete the ban override
       if (state.overridingBan) {
         get().completeBanOverride(championKey);
         return;
       }
-
       if (state.isDraftComplete || !state.isChampionAvailable(championKey)) {
         return;
       }
