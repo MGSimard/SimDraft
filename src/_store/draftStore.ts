@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { z } from "zod";
 import { TEAM, ACTION_TYPE, draftOrder } from "./constants";
 import { DraftSchema } from "./schemas";
-import type { FiveArray, TeamIndex, ActionIndex, DraftState, DraftStore } from "./types";
+import type { FiveArray, TeamIndex, ActionIndex, DraftState, DraftStore, Team } from "./types";
 
 export const initialState: DraftState = {
   currentStepIndex: 0,
@@ -23,6 +23,40 @@ export const initialState: DraftState = {
 let cachedUnavailableChampions: Set<string> | null = null;
 let cachedStateHash: string | null = null;
 let cachedStepDetails: { stepIndex: number; details: any } | null = null;
+
+// Helper function to clear all caches
+const clearCaches = () => {
+  cachedUnavailableChampions = null;
+  cachedStateHash = null;
+  cachedStepDetails = null;
+};
+
+// Helper function to clear override state
+const clearOverrides = () => ({
+  overridingPick: null,
+  overridingBan: null,
+  selectedChampion: null,
+});
+
+// Helper function to create new ban array copies
+const createBanArrayCopies = (originalBans: typeof initialState.bans) =>
+  [
+    [...originalBans[0]] as FiveArray<string | null>,
+    [...originalBans[1]] as FiveArray<string | null>,
+  ] as typeof originalBans;
+
+// Helper function to create new pick array copies
+const createPickArrayCopies = (originalPicks: typeof initialState.picks) =>
+  [
+    [...originalPicks[0]] as FiveArray<string | null>,
+    [...originalPicks[1]] as FiveArray<string | null>,
+  ] as typeof originalPicks;
+
+// Helper function to convert team enum to index
+const teamToIndex = (team: Team): TeamIndex => (team === TEAM.BLUE ? 0 : 1);
+
+// Helper function to convert team index to enum
+const indexToTeam = (index: TeamIndex): Team => (index === 0 ? TEAM.BLUE : TEAM.RED);
 
 export const useDraftStore = create<DraftStore>()((set, get) => ({
   ...initialState,
@@ -55,12 +89,9 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
       }
       const currentStep = state.getCurrentStepDetails();
       if (!currentStep) return state;
-      const teamIndex: TeamIndex = currentStep.team === TEAM.BLUE ? 0 : 1;
+      const teamIndex = teamToIndex(currentStep.team);
       if (currentStep.type === ACTION_TYPE.BAN) {
-        const newBans: typeof state.bans = [
-          [...state.bans[0]] as FiveArray<string | null>,
-          [...state.bans[1]] as FiveArray<string | null>,
-        ];
+        const newBans = createBanArrayCopies(state.bans);
         newBans[teamIndex][currentStep.actionIndex] = state.selectedChampion;
         return {
           ...state,
@@ -68,10 +99,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
           selectedChampion: null,
         };
       } else {
-        const newPicks: typeof state.picks = [
-          [...state.picks[0]] as FiveArray<string | null>,
-          [...state.picks[1]] as FiveArray<string | null>,
-        ];
+        const newPicks = createPickArrayCopies(state.picks);
         newPicks[teamIndex][currentStep.actionIndex] = state.selectedChampion;
         return {
           ...state,
@@ -92,9 +120,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
       if (state.isDraftComplete) return state;
       const newStepIndex = state.currentStepIndex + 1;
       const isDraftComplete = newStepIndex >= draftOrder.length;
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
-      cachedStepDetails = null;
+      clearCaches();
       return {
         ...state,
         currentStepIndex: newStepIndex,
@@ -112,56 +138,40 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
       if (!previousStep) return state;
 
-      const teamIndex: TeamIndex = previousStep.team === TEAM.BLUE ? 0 : 1;
+      const teamIndex = teamToIndex(previousStep.team);
 
       if (previousStep.type === ACTION_TYPE.BAN) {
-        const newBans: typeof state.bans = [
-          [...state.bans[0]] as FiveArray<string | null>,
-          [...state.bans[1]] as FiveArray<string | null>,
-        ];
+        const newBans = createBanArrayCopies(state.bans);
         newBans[teamIndex][previousStep.actionIndex] = null;
 
-        cachedUnavailableChampions = null;
-        cachedStateHash = null;
-        cachedStepDetails = null;
+        clearCaches();
 
         return {
           ...state,
           bans: newBans,
           currentStepIndex: previousStepIndex,
           isDraftComplete: false,
-          selectedChampion: null,
-          overridingPick: null,
-          overridingBan: null,
+          ...clearOverrides(),
         };
       } else {
-        const newPicks: typeof state.picks = [
-          [...state.picks[0]] as FiveArray<string | null>,
-          [...state.picks[1]] as FiveArray<string | null>,
-        ];
+        const newPicks = createPickArrayCopies(state.picks);
         newPicks[teamIndex][previousStep.actionIndex] = null;
 
-        cachedUnavailableChampions = null;
-        cachedStateHash = null;
-        cachedStepDetails = null;
+        clearCaches();
 
         return {
           ...state,
           picks: newPicks,
           currentStepIndex: previousStepIndex,
           isDraftComplete: false,
-          selectedChampion: null,
-          overridingPick: null,
-          overridingBan: null,
+          ...clearOverrides(),
         };
       }
     });
   },
 
   reset: () => {
-    cachedUnavailableChampions = null;
-    cachedStateHash = null;
-    cachedStepDetails = null;
+    clearCaches();
     set(initialState);
   },
 
@@ -222,7 +232,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
   getCurrentTeam: () => {
     const currentStep = get().getCurrentStepDetails();
     if (!currentStep) return null;
-    return currentStep.team === TEAM.BLUE ? 0 : 1;
+    return teamToIndex(currentStep.team);
   },
 
   getCurrentActionType: () => {
@@ -245,7 +255,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
     const stepDetails = state.getCurrentStepDetails();
     return {
       stepDetails,
-      currentTeam: stepDetails ? (stepDetails.team === TEAM.BLUE ? 0 : 1) : null,
+      currentTeam: stepDetails ? teamToIndex(stepDetails.team) : null,
       actionType: stepDetails?.type || null,
       isDraftComplete: state.isDraftComplete,
     };
@@ -254,7 +264,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
   getPickRowState: (team: TeamIndex, pickIndex: ActionIndex) => {
     const state = get();
     const stepInfo = state.getCurrentStepInfo();
-    const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
+    const teamName = indexToTeam(team);
 
     const isPicking =
       stepInfo.stepDetails?.type === ACTION_TYPE.PICK &&
@@ -292,7 +302,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
       // If there's a pick in the clicked slot, swap ban with pick
       if (state.picks[team][pickIndex] !== null) {
-        get().swapBanWithPick(overridingTeam, overridingBanIndex, team, pickIndex);
+        get().swapBetweenTypes(overridingTeam, overridingBanIndex, team, pickIndex, "ban-to-pick");
         return;
       }
     }
@@ -323,16 +333,10 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
         return state;
       }
 
-      const newPicks: typeof state.picks = [
-        [...state.picks[0]] as FiveArray<string | null>,
-        [...state.picks[1]] as FiveArray<string | null>,
-      ];
-
+      const newPicks = createPickArrayCopies(state.picks);
       newPicks[team][pickIndex] = championKey;
 
-      // Clear cache since picks have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
+      clearCaches();
 
       return {
         ...state,
@@ -350,15 +354,8 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
     });
   },
 
-  isOverridingPick: () => {
-    const state = get();
-    return state.overridingPick !== null;
-  },
-
-  getOverridingPickData: () => {
-    const state = get();
-    return state.overridingPick;
-  },
+  isOverridingPick: () => get().overridingPick !== null,
+  getOverridingPickData: () => get().overridingPick,
 
   startBanOverride: (team: TeamIndex, banIndex: ActionIndex) => {
     const state = get();
@@ -386,7 +383,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
       // If there's a ban in the clicked slot, swap pick with ban
       if (state.bans[team][banIndex] !== null) {
-        get().swapPickWithBan(overridingTeam, overridingPickIndex, team, banIndex);
+        get().swapBetweenTypes(overridingTeam, overridingPickIndex, team, banIndex, "pick-to-ban");
         return;
       }
     }
@@ -417,16 +414,10 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
         return state;
       }
 
-      const newBans: typeof state.bans = [
-        [...state.bans[0]] as FiveArray<string | null>,
-        [...state.bans[1]] as FiveArray<string | null>,
-      ];
-
+      const newBans = createBanArrayCopies(state.bans);
       newBans[team][banIndex] = championKey;
 
-      // Clear cache since bans have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
+      clearCaches();
 
       return {
         ...state,
@@ -445,22 +436,11 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
   },
 
   cancelAnyOverride: () => {
-    set({
-      overridingPick: null,
-      overridingBan: null,
-      selectedChampion: null,
-    });
+    set(clearOverrides());
   },
 
-  isOverridingBan: () => {
-    const state = get();
-    return state.overridingBan !== null;
-  },
-
-  getOverridingBanData: () => {
-    const state = get();
-    return state.overridingBan;
-  },
+  isOverridingBan: () => get().overridingBan !== null,
+  getOverridingBanData: () => get().overridingBan,
 
   isOverridingAny: () => {
     const state = get();
@@ -485,19 +465,14 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
       // Validate with Zod
       const validatedData = DraftSchema.parse(data);
 
-      // Clear caches
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
-      cachedStepDetails = null;
+      clearCaches();
 
       set({
         currentStepIndex: validatedData.currentStepIndex,
         isDraftComplete: validatedData.isDraftComplete,
         bans: validatedData.bans,
         picks: validatedData.picks,
-        selectedChampion: null,
-        overridingPick: null,
-        overridingBan: null,
+        ...clearOverrides(),
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -510,110 +485,70 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   swapPicks: (team1: TeamIndex, pickIndex1: ActionIndex, team2: TeamIndex, pickIndex2: ActionIndex) => {
     set((state) => {
-      const newPicks: typeof state.picks = [
-        [...state.picks[0]] as FiveArray<string | null>,
-        [...state.picks[1]] as FiveArray<string | null>,
-      ];
+      const newPicks = createPickArrayCopies(state.picks);
 
       const temp = newPicks[team1][pickIndex1];
       newPicks[team1][pickIndex1] = newPicks[team2][pickIndex2];
       newPicks[team2][pickIndex2] = temp;
 
-      // Clear cache since picks have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
+      clearCaches();
 
       return {
         ...state,
         picks: newPicks,
-        overridingPick: null,
-        selectedChampion: null,
+        ...clearOverrides(),
       };
     });
   },
 
   swapBans: (team1: TeamIndex, banIndex1: ActionIndex, team2: TeamIndex, banIndex2: ActionIndex) => {
     set((state) => {
-      const newBans: typeof state.bans = [
-        [...state.bans[0]] as FiveArray<string | null>,
-        [...state.bans[1]] as FiveArray<string | null>,
-      ];
+      const newBans = createBanArrayCopies(state.bans);
 
       const temp = newBans[team1][banIndex1];
       newBans[team1][banIndex1] = newBans[team2][banIndex2];
       newBans[team2][banIndex2] = temp;
 
-      // Clear cache since bans have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
+      clearCaches();
 
       return {
         ...state,
         bans: newBans,
-        overridingBan: null,
-        selectedChampion: null,
+        ...clearOverrides(),
       };
     });
   },
 
-  swapBanWithPick: (banTeam: TeamIndex, banIndex: ActionIndex, pickTeam: TeamIndex, pickIndex: ActionIndex) => {
+  swapBetweenTypes: (
+    team1: TeamIndex,
+    index1: ActionIndex,
+    team2: TeamIndex,
+    index2: ActionIndex,
+    direction: "ban-to-pick" | "pick-to-ban"
+  ) => {
     set((state) => {
-      const newBans: typeof state.bans = [
-        [...state.bans[0]] as FiveArray<string | null>,
-        [...state.bans[1]] as FiveArray<string | null>,
-      ];
+      const newBans = createBanArrayCopies(state.bans);
+      const newPicks = createPickArrayCopies(state.picks);
 
-      const newPicks: typeof state.picks = [
-        [...state.picks[0]] as FiveArray<string | null>,
-        [...state.picks[1]] as FiveArray<string | null>,
-      ];
+      if (direction === "ban-to-pick") {
+        // team1/index1 is a ban, team2/index2 is a pick
+        const temp = newBans[team1][index1];
+        newBans[team1][index1] = newPicks[team2][index2];
+        newPicks[team2][index2] = temp;
+      } else {
+        // team1/index1 is a pick, team2/index2 is a ban
+        const temp = newPicks[team1][index1];
+        newPicks[team1][index1] = newBans[team2][index2];
+        newBans[team2][index2] = temp;
+      }
 
-      const temp = newBans[banTeam][banIndex];
-      newBans[banTeam][banIndex] = newPicks[pickTeam][pickIndex];
-      newPicks[pickTeam][pickIndex] = temp;
-
-      // Clear cache since both bans and picks have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
+      clearCaches();
 
       return {
         ...state,
         bans: newBans,
         picks: newPicks,
-        overridingBan: null,
-        overridingPick: null,
-        selectedChampion: null,
-      };
-    });
-  },
-
-  swapPickWithBan: (pickTeam: TeamIndex, pickIndex: ActionIndex, banTeam: TeamIndex, banIndex: ActionIndex) => {
-    set((state) => {
-      const newBans: typeof state.bans = [
-        [...state.bans[0]] as FiveArray<string | null>,
-        [...state.bans[1]] as FiveArray<string | null>,
-      ];
-
-      const newPicks: typeof state.picks = [
-        [...state.picks[0]] as FiveArray<string | null>,
-        [...state.picks[1]] as FiveArray<string | null>,
-      ];
-
-      const temp = newPicks[pickTeam][pickIndex];
-      newPicks[pickTeam][pickIndex] = newBans[banTeam][banIndex];
-      newBans[banTeam][banIndex] = temp;
-
-      // Clear cache since both bans and picks have changed
-      cachedUnavailableChampions = null;
-      cachedStateHash = null;
-
-      return {
-        ...state,
-        bans: newBans,
-        picks: newPicks,
-        overridingBan: null,
-        overridingPick: null,
-        selectedChampion: null,
+        ...clearOverrides(),
       };
     });
   },

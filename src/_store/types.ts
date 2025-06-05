@@ -56,8 +56,13 @@ export interface DraftActions {
   cancelAnyOverride: () => void;
   swapPicks: (team1: TeamIndex, pickIndex1: ActionIndex, team2: TeamIndex, pickIndex2: ActionIndex) => void;
   swapBans: (team1: TeamIndex, banIndex1: ActionIndex, team2: TeamIndex, banIndex2: ActionIndex) => void;
-  swapBanWithPick: (banTeam: TeamIndex, banIndex: ActionIndex, pickTeam: TeamIndex, pickIndex: ActionIndex) => void;
-  swapPickWithBan: (pickTeam: TeamIndex, pickIndex: ActionIndex, banTeam: TeamIndex, banIndex: ActionIndex) => void;
+  swapBetweenTypes: (
+    team1: TeamIndex,
+    index1: ActionIndex,
+    team2: TeamIndex,
+    index2: ActionIndex,
+    direction: "ban-to-pick" | "pick-to-ban"
+  ) => void;
   exportDraft: () => ExportData;
   importDraft: (data: any) => void;
 }

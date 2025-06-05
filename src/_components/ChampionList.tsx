@@ -14,16 +14,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
   const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
-  const picks = useDraftStore((state) => state.picks);
-  const bans = useDraftStore((state) => state.bans);
-  const overridingPick = useDraftStore((state) => state.overridingPick);
-  const overridingBan = useDraftStore((state) => state.overridingBan);
-
-  const isChampionAvailable = (championKey: string) => {
-    if (isDraftComplete && !isOverridingAny) return false;
-    const unavailableChampions = new Set([...picks.flat().filter(Boolean), ...bans.flat().filter(Boolean)]);
-    return !unavailableChampions.has(championKey);
-  };
+  const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
 
   let displayChampions = championsMap;
 
