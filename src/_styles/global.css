@@ -964,6 +964,12 @@ a {
   /* * {
     outline: 1px solid red;
   } */
+  #draft {
+    grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
+  }
+  .ban-row {
+    flex-wrap: wrap;
+  }
   #champion-controls {
     flex-direction: column;
     align-items: center;
