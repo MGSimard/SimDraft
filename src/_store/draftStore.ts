@@ -133,12 +133,14 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
         get().nextStep();
         const newState = get();
         if (!newState.isDraftComplete) {
-          postLockCallbacks.forEach((callback) => {
-            try {
-              callback();
-            } catch (error) {
-              console.error("Error in post-lock callback:", error);
-            }
+          requestAnimationFrame(() => {
+            postLockCallbacks.forEach((callback) => {
+              try {
+                callback();
+              } catch (error) {
+                console.error("Error in post-lock callback:", error);
+              }
+            });
           });
         }
       }
