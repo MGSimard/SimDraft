@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ACTION_TYPE } from "@/_store/constants";
 import { useDraftStore } from "@/_store/draftStore";
 import { BanRow } from "@/_components/BanRow";
 import { PickRow } from "@/_components/PickRow";
 import { PickSeparator } from "@/_components/PickSeparator";
-import { ScrollContainer } from "@/_components/ScrollContainer";
+import { ScrollContainer, type ScrollContainerRef } from "@/_components/ScrollContainer";
 import { ChampionList } from "@/_components/ChampionList";
 import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 import { DestructiveButtons } from "@/_components/DestructiveButtons";
@@ -50,9 +50,22 @@ function PageHome() {
   const isOverridingBan = useDraftStore((state) => state.isOverridingBan());
   const overridingBanData = useDraftStore((state) => state.getOverridingBanData());
   const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
+  const registerPostLockCallback = useDraftStore((state) => state.registerPostLockCallback);
   const [search, setSearch] = useState("");
   const [activeRoleFilters, setActiveRoleFilters] = useState<string[]>([]);
   const debouncedSearch = useDebounce(search, 100);
+  const scrollContainerRef = useRef<ScrollContainerRef>(null);
+
+  useEffect(() => {
+    const handlePostLock = () => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollToTop();
+        scrollContainerRef.current.focusFirstAvailableChampion();
+      }
+    };
+    const unregister = registerPostLockCallback(handlePostLock);
+    return unregister;
+  }, [registerPostLockCallback]);
 
   const mainThemeClass = isOverridingAny
     ? "theme-overriding"
@@ -150,7 +163,7 @@ function PageHome() {
             )}
           </div>
         </div>
-        <ScrollContainer>
+        <ScrollContainer ref={scrollContainerRef}>
           <ChampionList searchQuery={debouncedSearch} roleFilters={activeRoleFilters} />
         </ScrollContainer>
         <div id="center-footer">

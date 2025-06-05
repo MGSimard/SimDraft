@@ -47,6 +47,7 @@ export interface DraftActions {
   nextStep: () => void;
   undoStep: () => void;
   reset: () => void;
+  registerPostLockCallback: (callback: () => void) => () => void;
   startPickOverride: (team: TeamIndex, pickIndex: ActionIndex) => void;
   completePickOverride: (championKey: string) => void;
   cancelPickOverride: () => void;

@@ -37,8 +37,3 @@ Mail: [mgsimard.dev@gmail.com](mailto:mgsimard.dev@gmail.com)
 For more info, view my portfolio at [mgsimard.dev](https://mgsimard.dev).
 
 ---
-
-## Task List
-
-- [ ] Set focus back to start of champion list after locking or banning a champ (Except if draft is done?)
-- [ ] Scroll container up on lock/ban?

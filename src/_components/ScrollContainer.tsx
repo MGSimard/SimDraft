@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo, useImperativeHandle, forwardRef } from "react";
 
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -42,7 +42,12 @@ interface ScrollState {
   isScrolling: boolean;
 }
 
-export function ScrollContainer({ children }: ScrollContainerProps) {
+export interface ScrollContainerRef {
+  scrollToTop: () => void;
+  focusFirstAvailableChampion: () => void;
+}
+
+export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerProps>(({ children }, ref) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -312,6 +317,32 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
     scrollState.thumbHeight > 0 &&
     (clientDeviceType !== "touch" || scrollState.isScrolling);
 
+  const scrollToTop = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (viewport) {
+      viewport.scrollTop = 0;
+    }
+  }, []);
+
+  const focusFirstAvailableChampion = useCallback(() => {
+    const viewport = viewportRef.current;
+    if (viewport) {
+      const firstAvailableButton = viewport.querySelector("button:not([disabled])") as HTMLButtonElement;
+      if (firstAvailableButton) {
+        firstAvailableButton.focus();
+      }
+    }
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToTop,
+      focusFirstAvailableChampion,
+    }),
+    [scrollToTop, focusFirstAvailableChampion]
+  );
+
   return (
     <div
       ref={wrapperRef}
@@ -352,4 +383,4 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       )}
     </div>
   );
-}
+});
