@@ -31,36 +31,30 @@ const clearCaches = () => {
   cachedStepDetails = null;
 };
 
-// Helper function to clear override state
 const clearOverrides = () => ({
   overridingPick: null,
   overridingBan: null,
   selectedChampion: null,
 });
 
-// Helper function to create new ban array copies
 const createBanArrayCopies = (originalBans: typeof initialState.bans) =>
   [
     [...originalBans[0]] as FiveArray<string | null>,
     [...originalBans[1]] as FiveArray<string | null>,
   ] as typeof originalBans;
 
-// Helper function to create new pick array copies
 const createPickArrayCopies = (originalPicks: typeof initialState.picks) =>
   [
     [...originalPicks[0]] as FiveArray<string | null>,
     [...originalPicks[1]] as FiveArray<string | null>,
   ] as typeof originalPicks;
 
-// Helper function to convert team enum to index
 const teamToIndex = (team: Team): TeamIndex => (team === TEAM.BLUE ? 0 : 1);
 
-// Helper function to convert team index to enum
 const indexToTeam = (index: TeamIndex): Team => (index === 0 ? TEAM.BLUE : TEAM.RED);
 
 const filterNonNullChampions = (champion: string | null): champion is string => champion !== null;
 
-// Add callback type
 type PostLockCallback = () => void;
 
 export const useDraftStore = create<DraftStore>()((set, get) => {
