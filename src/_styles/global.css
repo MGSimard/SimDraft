@@ -312,12 +312,12 @@ a {
   &.pending-action {
     color: var(--clrGold4);
     border-color: var(--clrBlue3);
-    animation: glowIn 1s ease-out;
+    animation: glowInBlue 1s ease-out;
   }
   &.overriding {
     border-color: var(--clrGold4);
     color: var(--clrGold1);
-    animation: glowIn 1s ease-out;
+    animation: glowInGold 1s ease-out;
   }
 }
 #team-red .pick-row {
@@ -329,17 +329,27 @@ a {
   &.pending-action {
     border-color: var(--clrRed1);
     color: var(--clrGold4);
-    animation: glowIn 1s ease-out;
+    animation: glowInRed 1s ease-out;
   }
   &.overriding {
     border-color: var(--clrGold4);
     color: var(--clrGold1);
-    animation: glowIn 1s ease-out;
+    animation: glowInGold 1s ease-out;
   }
 }
-@keyframes glowIn {
+@keyframes glowInBlue {
   0% {
-    border-color: oklch(1 0 0);
+    border-color: oklch(from var(--clrBlue3) 1 0 h);
+  }
+}
+@keyframes glowInRed {
+  0% {
+    border-color: oklch(from var(--clrRed1) 1 0 h);
+  }
+}
+@keyframes glowInGold {
+  0% {
+    border-color: oklch(from var(--clrGold4) 1 0 h);
   }
 }
 .pick-row .cName {
