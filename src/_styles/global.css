@@ -125,28 +125,31 @@ header {
   justify-content: space-between;
   gap: 0.8rem;
   z-index: 100;
-  pointer-events: none;
 }
 #header-logo {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
 }
 header img {
   width: 3.2rem;
   height: 3.2rem;
   -webkit-user-drag: none;
-  opacity: 0.5;
+}
+#header-logo:hover,
+#header-logo:focus-visible {
+  opacity: 1;
 }
 header h1 {
   font-size: 1.6rem;
-  opacity: 0.5;
 }
 #header-controls {
   display: flex;
   align-items: center;
   gap: 1.6rem;
-  pointer-events: auto;
 }
 #header-controls > * {
   display: block;
@@ -216,6 +219,24 @@ a {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Standard property */
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 /**/
 /* DRAFT */

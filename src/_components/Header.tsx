@@ -1,13 +1,14 @@
+import { Link } from "@tanstack/react-router";
 import { DropdownFile } from "@/_components/DropdownFile";
 import { IconGithub } from "@/_components/Icons";
 
 export function Header() {
   return (
-    <header className="no-select">
-      <div id="header-logo">
+    <header>
+      <Link to="/" id="header-logo">
         <img src="/metadata/icon.svg" alt="Logo" />
         <h1>SimDraft</h1>
-      </div>
+      </Link>
       <div id="header-controls">
         <DropdownFile />
         <div id="info-popover-container">

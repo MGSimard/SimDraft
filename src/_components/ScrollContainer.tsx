@@ -317,7 +317,14 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       ref={wrapperRef}
       className={clientDeviceType === "touch" ? "scrollbarTrackTouch" : undefined}
       id="scrollbar-container">
-      <div id="champion-list" ref={viewportRef} tabIndex={7} onKeyDown={handleKeyDown} style={styles.viewport}>
+      <div
+        id="champion-list"
+        ref={viewportRef}
+        tabIndex={7}
+        onKeyDown={handleKeyDown}
+        style={styles.viewport}
+        role="listbox"
+        aria-label="Available champions">
         {children}
       </div>
       {shouldShowScrollbar && (

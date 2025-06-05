@@ -23,6 +23,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const idleVideoRef = useRef<HTMLVideoElement>(null);
   const outroVideoRef = useRef<HTMLVideoElement>(null);
   const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
+  const teamDisplayName = team === 0 ? "Blue team" : "Red team";
   const pick = picks[team][pickIndex];
   const pickTabIndex = team === 0 ? 3 : 5; // Blue picks = 3, Red picks = 5
 
@@ -77,7 +78,11 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     ? `/assets/champions/${pick}.png`
     : "/assets/champions/-1.png";
 
-  const displayImageAlt = showSelectedChampion ? selectedChampionName ?? selectedChampion : champName ?? "Empty slot";
+  const displayImageAlt = showSelectedChampion
+    ? selectedChampionName ?? selectedChampion
+    : pick
+    ? `Picked champion: ${champName}`
+    : "Empty pick slot";
 
   useEffect(() => {
     if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
@@ -130,6 +135,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             className="pick-row-video"
             muted
             playsInline
+            aria-hidden="true"
             onEnded={() => {
               if (introVideoRef.current) {
                 introVideoRef.current.style.display = "none";
@@ -145,7 +151,14 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
               type="video/webm"
             />
           </video>
-          <video ref={idleVideoRef} className="pick-row-video" muted playsInline loop style={{ display: "none" }}>
+          <video
+            ref={idleVideoRef}
+            className="pick-row-video"
+            muted
+            playsInline
+            loop
+            style={{ display: "none" }}
+            aria-hidden="true">
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-idle.webm`}
               type="video/webm"
@@ -157,6 +170,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             muted
             playsInline
             style={{ display: showOutro ? "block" : "none" }}
+            aria-hidden="true"
             onEnded={() => {
               setShowOutro(false);
               setActiveTeamColor(null);
@@ -176,7 +190,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? pickTabIndex : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName ?? pick}` : undefined}
+            aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>
@@ -191,7 +205,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             onKeyDown={pick ? handlePickKeyDown : undefined}
             tabIndex={pick ? pickTabIndex : -1}
             role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${champName ?? pick}` : undefined}
+            aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>
             <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
           </div>

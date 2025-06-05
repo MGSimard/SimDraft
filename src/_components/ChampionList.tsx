@@ -71,10 +71,13 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
             aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}${
               isOverridingAny ? " (Override Mode)" : ""
             }`}
+            role="option"
+            aria-selected={isSelected}
             tabIndex={8}>
             <img
               src={`/assets/champions/${champ.key}.png`}
-              alt={champ.name}
+              alt=""
+              aria-hidden="true"
               decoding="async"
               loading="eager"
               onError={handleImageError}

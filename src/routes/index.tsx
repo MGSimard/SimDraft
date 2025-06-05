@@ -8,10 +8,9 @@ import { PickSeparator } from "@/_components/PickSeparator";
 import { ScrollContainer } from "@/_components/ScrollContainer";
 import { ChampionList } from "@/_components/ChampionList";
 import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
-import { ButtonUndo } from "@/_components/ButtonUndo";
-import { ButtonReset } from "@/_components/ButtonReset";
-import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
 import { DestructiveButtons } from "@/_components/DestructiveButtons";
+import { DraftAnnouncer } from "@/_components/DraftAnnouncer";
+import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -85,7 +84,8 @@ function PageHome() {
 
   return (
     <main id="draft" className={mainThemeClass}>
-      <div id="team-blue">
+      <DraftAnnouncer />
+      <section id="team-blue" role="region" aria-label="Blue team">
         <BanRow team={0} />
         <PickSeparator />
         <PickRow team={0} pickIndex={0} label="B1" />
@@ -98,7 +98,7 @@ function PageHome() {
         <PickSeparator />
         <PickRow team={0} pickIndex={4} label="B5" />
         <PickSeparator />
-      </div>
+      </section>
 
       <div id="center">
         <div id="header">
@@ -109,18 +109,20 @@ function PageHome() {
             </p>
           )}
         </div>
-        <div id="champion-controls">
+        <div id="champion-controls" role="search" aria-label="Champion filters and search">
           <div id="role-filters">
             {ROLES.map((role) => {
               const IconComponent = ROLE_ICONS[role];
+              const isActive = activeRoleFilters.includes(role);
               return (
                 <div key={role} className="tooltip-detect">
                   <button
                     type="button"
                     aria-label={`Filter by ${role}`}
                     aria-describedby={`info-popover-${role}`}
+                    aria-pressed={isActive}
                     onClick={() => handleRoleFilterToggle(role)}
-                    className={activeRoleFilters.includes(role) ? "active" : undefined}
+                    className={isActive ? "active" : undefined}
                     tabIndex={6}>
                     <IconComponent />
                   </button>
@@ -157,7 +159,7 @@ function PageHome() {
         </div>
       </div>
 
-      <div id="team-red">
+      <div id="team-red" role="region" aria-label="Red team">
         <BanRow team={1} />
         <PickSeparator />
         <PickRow team={1} pickIndex={0} label="R1" />
