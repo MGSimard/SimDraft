@@ -268,10 +268,40 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   startPickOverride: (team: TeamIndex, pickIndex: ActionIndex) => {
     const state = get();
+
+    // If we're already overriding something, check if we should swap
+    if (state.overridingPick) {
+      const { team: overridingTeam, pickIndex: overridingPickIndex } = state.overridingPick;
+
+      // If clicking the same slot, cancel override
+      if (overridingTeam === team && overridingPickIndex === pickIndex) {
+        get().cancelPickOverride();
+        return;
+      }
+
+      // If there's a pick in the clicked slot, swap them
+      if (state.picks[team][pickIndex] !== null) {
+        get().swapPicks(overridingTeam, overridingPickIndex, team, pickIndex);
+        return;
+      }
+    }
+
+    // If we're overriding a ban and clicked a pick, try to swap
+    if (state.overridingBan) {
+      const { team: overridingTeam, banIndex: overridingBanIndex } = state.overridingBan;
+
+      // If there's a pick in the clicked slot, swap ban with pick
+      if (state.picks[team][pickIndex] !== null) {
+        get().swapBanWithPick(overridingTeam, overridingBanIndex, team, pickIndex);
+        return;
+      }
+    }
+
     // Only allow override if there's already a pick in that slot
     if (state.picks[team][pickIndex] !== null) {
       set({
         overridingPick: { team, pickIndex },
+        overridingBan: null, // Cancel any ban override
         selectedChampion: null,
       });
     }
@@ -332,6 +362,35 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   startBanOverride: (team: TeamIndex, banIndex: ActionIndex) => {
     const state = get();
+
+    // If we're already overriding something, check if we should swap
+    if (state.overridingBan) {
+      const { team: overridingTeam, banIndex: overridingBanIndex } = state.overridingBan;
+
+      // If clicking the same slot, cancel override
+      if (overridingTeam === team && overridingBanIndex === banIndex) {
+        get().cancelBanOverride();
+        return;
+      }
+
+      // If there's a ban in the clicked slot, swap them
+      if (state.bans[team][banIndex] !== null) {
+        get().swapBans(overridingTeam, overridingBanIndex, team, banIndex);
+        return;
+      }
+    }
+
+    // If we're overriding a pick and clicked a ban, try to swap
+    if (state.overridingPick) {
+      const { team: overridingTeam, pickIndex: overridingPickIndex } = state.overridingPick;
+
+      // If there's a ban in the clicked slot, swap pick with ban
+      if (state.bans[team][banIndex] !== null) {
+        get().swapPickWithBan(overridingTeam, overridingPickIndex, team, banIndex);
+        return;
+      }
+    }
+
     // Only allow override if there's already a ban in that slot
     if (state.bans[team][banIndex] !== null) {
       set({
@@ -447,5 +506,115 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
       }
       throw new Error("Invalid draft file format");
     }
+  },
+
+  swapPicks: (team1: TeamIndex, pickIndex1: ActionIndex, team2: TeamIndex, pickIndex2: ActionIndex) => {
+    set((state) => {
+      const newPicks: typeof state.picks = [
+        [...state.picks[0]] as FiveArray<string | null>,
+        [...state.picks[1]] as FiveArray<string | null>,
+      ];
+
+      const temp = newPicks[team1][pickIndex1];
+      newPicks[team1][pickIndex1] = newPicks[team2][pickIndex2];
+      newPicks[team2][pickIndex2] = temp;
+
+      // Clear cache since picks have changed
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+
+      return {
+        ...state,
+        picks: newPicks,
+        overridingPick: null,
+        selectedChampion: null,
+      };
+    });
+  },
+
+  swapBans: (team1: TeamIndex, banIndex1: ActionIndex, team2: TeamIndex, banIndex2: ActionIndex) => {
+    set((state) => {
+      const newBans: typeof state.bans = [
+        [...state.bans[0]] as FiveArray<string | null>,
+        [...state.bans[1]] as FiveArray<string | null>,
+      ];
+
+      const temp = newBans[team1][banIndex1];
+      newBans[team1][banIndex1] = newBans[team2][banIndex2];
+      newBans[team2][banIndex2] = temp;
+
+      // Clear cache since bans have changed
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+
+      return {
+        ...state,
+        bans: newBans,
+        overridingBan: null,
+        selectedChampion: null,
+      };
+    });
+  },
+
+  swapBanWithPick: (banTeam: TeamIndex, banIndex: ActionIndex, pickTeam: TeamIndex, pickIndex: ActionIndex) => {
+    set((state) => {
+      const newBans: typeof state.bans = [
+        [...state.bans[0]] as FiveArray<string | null>,
+        [...state.bans[1]] as FiveArray<string | null>,
+      ];
+
+      const newPicks: typeof state.picks = [
+        [...state.picks[0]] as FiveArray<string | null>,
+        [...state.picks[1]] as FiveArray<string | null>,
+      ];
+
+      const temp = newBans[banTeam][banIndex];
+      newBans[banTeam][banIndex] = newPicks[pickTeam][pickIndex];
+      newPicks[pickTeam][pickIndex] = temp;
+
+      // Clear cache since both bans and picks have changed
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+
+      return {
+        ...state,
+        bans: newBans,
+        picks: newPicks,
+        overridingBan: null,
+        overridingPick: null,
+        selectedChampion: null,
+      };
+    });
+  },
+
+  swapPickWithBan: (pickTeam: TeamIndex, pickIndex: ActionIndex, banTeam: TeamIndex, banIndex: ActionIndex) => {
+    set((state) => {
+      const newBans: typeof state.bans = [
+        [...state.bans[0]] as FiveArray<string | null>,
+        [...state.bans[1]] as FiveArray<string | null>,
+      ];
+
+      const newPicks: typeof state.picks = [
+        [...state.picks[0]] as FiveArray<string | null>,
+        [...state.picks[1]] as FiveArray<string | null>,
+      ];
+
+      const temp = newPicks[pickTeam][pickIndex];
+      newPicks[pickTeam][pickIndex] = newBans[banTeam][banIndex];
+      newBans[banTeam][banIndex] = temp;
+
+      // Clear cache since both bans and picks have changed
+      cachedUnavailableChampions = null;
+      cachedStateHash = null;
+
+      return {
+        ...state,
+        bans: newBans,
+        picks: newPicks,
+        overridingBan: null,
+        overridingPick: null,
+        selectedChampion: null,
+      };
+    });
   },
 }));
