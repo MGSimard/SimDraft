@@ -58,6 +58,8 @@ const teamToIndex = (team: Team): TeamIndex => (team === TEAM.BLUE ? 0 : 1);
 // Helper function to convert team index to enum
 const indexToTeam = (index: TeamIndex): Team => (index === 0 ? TEAM.BLUE : TEAM.RED);
 
+const filterNonNullChampions = (champion: string | null): champion is string => champion !== null;
+
 export const useDraftStore = create<DraftStore>()((set, get) => ({
   ...initialState,
 
@@ -197,12 +199,12 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   getAllBannedChampions: () => {
     const state = get();
-    return [...state.bans[0], ...state.bans[1]].filter((champion): champion is string => champion !== null);
+    return [...state.bans[0], ...state.bans[1]].filter(filterNonNullChampions);
   },
 
   getAllPickedChampions: () => {
     const state = get();
-    return [...state.picks[0], ...state.picks[1]].filter((champion): champion is string => champion !== null);
+    return [...state.picks[0], ...state.picks[1]].filter(filterNonNullChampions);
   },
 
   getUnavailableChampions: () => {
@@ -242,12 +244,12 @@ export const useDraftStore = create<DraftStore>()((set, get) => ({
 
   getTeamBans: (teamIndex: TeamIndex) => {
     const state = get();
-    return state.bans[teamIndex].filter((champion): champion is string => champion !== null);
+    return state.bans[teamIndex].filter(filterNonNullChampions);
   },
 
   getTeamPicks: (teamIndex: TeamIndex) => {
     const state = get();
-    return state.picks[teamIndex].filter((champion): champion is string => champion !== null);
+    return state.picks[teamIndex].filter(filterNonNullChampions);
   },
 
   getCurrentStepInfo: () => {
