@@ -7,10 +7,12 @@ export function ButtonDraftAction() {
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const lockIn = useDraftStore((state) => state.lockIn);
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
-  const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
   const reset = useDraftStore((state) => state.reset);
   const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
   const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
+
+  // Subscribe to the actual state that affects champion availability
+  const unavailableChampions = useDraftStore((state) => state.getUnavailableChampions());
 
   const buttonLabel = isOverridingAny
     ? "CANCEL"
@@ -28,7 +30,7 @@ export function ButtonDraftAction() {
     ? false
     : !selectedChampion
     ? true
-    : !isChampionAvailable(selectedChampion);
+    : unavailableChampions.has(selectedChampion);
 
   const handleClick = () => {
     if (isOverridingAny) {

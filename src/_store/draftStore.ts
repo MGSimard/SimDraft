@@ -245,7 +245,8 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
     isChampionAvailable: (championKey: string) => {
       const state = get();
       if (state.isDraftComplete && !state.overridingPick && !state.overridingBan) return false;
-      return !state.getUnavailableChampions().has(championKey);
+      const unavailableChampions = state.getUnavailableChampions();
+      return !unavailableChampions.has(championKey);
     },
 
     getCurrentTeam: () => {

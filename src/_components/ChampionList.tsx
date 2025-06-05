@@ -14,7 +14,9 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
   const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
-  const isChampionAvailable = useDraftStore((state) => state.isChampionAvailable);
+
+  // Subscribe to the actual state that affects champion availability
+  const unavailableChampions = useDraftStore((state) => state.getUnavailableChampions());
 
   let displayChampions = championsMap;
 
@@ -31,7 +33,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
     const button = e.currentTarget;
     const championKey = button.dataset.championKey;
     if (!championKey || typeof championKey !== "string") return;
-    if (!isChampionAvailable(championKey)) {
+    if (unavailableChampions.has(championKey)) {
       return;
     }
     selectChampion(championKey);
@@ -57,7 +59,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
   return (
     <>
       {displayChampions.map((champ: Champion) => {
-        const isAvailable = isChampionAvailable(champ.key);
+        const isAvailable = isDraftComplete && !isOverridingAny ? false : !unavailableChampions.has(champ.key);
         const isSelected = selectedChampion === champ.key;
 
         return (
