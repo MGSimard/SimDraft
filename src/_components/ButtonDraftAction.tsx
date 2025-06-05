@@ -49,6 +49,7 @@ export function ButtonDraftAction() {
       onClick={handleClick}
       disabled={isDisabled}
       className={clsx("btn-primary-action", isOverridingAny && "override-mode")}
+      tabIndex={9}
       aria-describedby={isDisabled ? "draft-button-tooltip" : undefined}>
       <span>{buttonLabel}</span>
     </button>

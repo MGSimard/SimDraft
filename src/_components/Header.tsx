@@ -11,7 +11,7 @@ export function Header() {
       <div id="header-controls">
         <DropdownFile />
         <div id="info-popover-container">
-          <button type="button" aria-label="Info" aria-describedby="info-popover">
+          <button type="button" aria-label="Info" aria-describedby="info-popover" tabIndex={1}>
             <span aria-hidden="true">?</span>
           </button>
           <div role="tooltip" id="info-popover">
@@ -42,7 +42,7 @@ export function Header() {
             </div>
           </div>
         </div>
-        <a href="https://github.com/MGSimard/simdraft" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/MGSimard/simdraft" target="_blank" rel="noopener noreferrer" tabIndex={1}>
           <IconGithub aria-hidden="true" />
         </a>
       </div>

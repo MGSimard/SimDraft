@@ -32,7 +32,8 @@ export function ButtonReset() {
       aria-label="Reset"
       title="Reset"
       onClick={handleClick}
-      disabled={!hasProgressToReset}>
+      disabled={!hasProgressToReset}
+      tabIndex={10}>
       <IconTrash aria-hidden="true" />
     </button>
   );

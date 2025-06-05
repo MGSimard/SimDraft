@@ -24,6 +24,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const outroVideoRef = useRef<HTMLVideoElement>(null);
   const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
   const pick = picks[team][pickIndex];
+  const pickTabIndex = team === 0 ? 3 : 5; // Blue picks = 3, Red picks = 5
 
   const isPicking =
     !isOverridingAny &&
@@ -173,7 +174,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             className={clsx("pick-row-image-wrapper", pick && "swappable")}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
-            tabIndex={pick ? 1 : -1}
+            tabIndex={pick ? pickTabIndex : -1}
             role={pick ? "button" : undefined}
             aria-label={pick ? `Override ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>
@@ -188,7 +189,7 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             className={clsx("pick-row-image-wrapper", pick && "swappable")}
             onClick={pick ? handlePickClick : undefined}
             onKeyDown={pick ? handlePickKeyDown : undefined}
-            tabIndex={pick ? 2 : -1}
+            tabIndex={pick ? pickTabIndex : -1}
             role={pick ? "button" : undefined}
             aria-label={pick ? `Override ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>

@@ -15,7 +15,8 @@ export function ButtonUndo() {
       aria-label="Undo"
       title="Undo"
       onClick={undoStep}
-      disabled={!canUndo}>
+      disabled={!canUndo}
+      tabIndex={10}>
       <IconUndo aria-hidden="true" />
     </button>
   );

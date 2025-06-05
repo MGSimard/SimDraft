@@ -14,6 +14,7 @@ export function BanRow({ team }: BanRowProps) {
 
   const teamBans = bans[team];
   const banOrder = team === 0 ? teamBans : [...teamBans].reverse();
+  const banTabIndex = team === 0 ? 2 : 4; // Blue bans = 2, Red bans = 4
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = "/assets/champions/-1.png";
@@ -47,7 +48,7 @@ export function BanRow({ team }: BanRowProps) {
             className={clsx("ban-slot", ban && "swappable", isBeingOverridden && "overriding")}
             onClick={ban ? () => handleBanClick(actualIndex) : undefined}
             onKeyDown={ban ? (e) => handleBanKeyDown(e, actualIndex) : undefined}
-            tabIndex={ban ? 4 : -1}
+            tabIndex={ban ? banTabIndex : -1}
             role={ban ? "button" : undefined}
             aria-label={ban ? `Override ${banName ?? ban}` : undefined}>
             <img

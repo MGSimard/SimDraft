@@ -121,7 +121,7 @@ function PageHome() {
                     aria-describedby={`info-popover-${role}`}
                     onClick={() => handleRoleFilterToggle(role)}
                     className={activeRoleFilters.includes(role) ? "active" : undefined}
-                    tabIndex={3}>
+                    tabIndex={6}>
                     <IconComponent />
                   </button>
                   <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
@@ -139,10 +139,10 @@ function PageHome() {
               value={search}
               onChange={handleSearchChange}
               aria-label="Search champions"
-              tabIndex={3}
+              tabIndex={6}
             />
             {search && (
-              <button type="button" aria-label="Clear search" onClick={() => setSearch("")} tabIndex={3}>
+              <button type="button" aria-label="Clear search" onClick={() => setSearch("")} tabIndex={6}>
                 <IconClose aria-hidden="true" />
               </button>
             )}

@@ -317,7 +317,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
       ref={wrapperRef}
       className={clientDeviceType === "touch" ? "scrollbarTrackTouch" : undefined}
       id="scrollbar-container">
-      <div id="champion-list" ref={viewportRef} tabIndex={0} onKeyDown={handleKeyDown} style={styles.viewport}>
+      <div id="champion-list" ref={viewportRef} tabIndex={7} onKeyDown={handleKeyDown} style={styles.viewport}>
         {children}
       </div>
       {shouldShowScrollbar && (
@@ -332,7 +332,7 @@ export function ScrollContainer({ children }: ScrollContainerProps) {
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Champion list scrollbar"
-          tabIndex={0}
+          tabIndex={7}
           onKeyDown={handleKeyDown}>
           <div
             id="scrollbar-thumb"

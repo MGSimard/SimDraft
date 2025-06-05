@@ -79,6 +79,7 @@ export function DropdownFile() {
         aria-haspopup="menu"
         aria-expanded={isExpanded}
         aria-controls="dropdown-menu"
+        tabIndex={1}
         onFocus={() => setIsExpanded(true)}
         onBlur={(e) => {
           if (!containerRef.current?.contains(e.relatedTarget as Node)) {
@@ -95,6 +96,7 @@ export function DropdownFile() {
               type="button"
               role="menuitem"
               className="dropdown-item"
+              tabIndex={isExpanded ? 1 : -1}
               onClick={() => {
                 item.action();
                 setIsExpanded(false);
