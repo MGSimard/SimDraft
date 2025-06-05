@@ -481,8 +481,7 @@ a {
 }
 .tooltip-detect:hover .tooltip,
 .tooltip-detect button:hover ~ .tooltip,
-.tooltip-detect button:focus-visible ~ .tooltip,
-.tooltip-detect:focus-within .tooltip {
+.tooltip-detect button:focus-visible ~ .tooltip {
   visibility: visible;
 }
 #search-wrapper {
