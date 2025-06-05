@@ -437,6 +437,9 @@ a {
   position: relative;
 }
 .tooltip-detect button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 3.2rem;
   height: 3.2rem;
   padding: 0.4rem;
@@ -969,6 +972,11 @@ a {
   }
   .ban-row {
     flex-wrap: wrap;
+  }
+  .tooltip-detect button {
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0.2rem;
   }
   #champion-controls {
     flex-direction: column;
