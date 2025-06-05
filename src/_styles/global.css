@@ -234,6 +234,9 @@ a {
   gap: 0.8rem;
   padding: 1.6rem;
 }
+.ban-row > * {
+  flex-shrink: 0;
+}
 #team-red .ban-row {
   justify-content: flex-end;
 }
@@ -262,6 +265,7 @@ a {
   font-size: 1.4rem;
 }
 .pick-row-image-wrapper {
+  flex-shrink: 0;
   width: 6.4rem;
   height: 6.4rem;
   border: 0.2rem solid var(--clrTextMuted);
@@ -415,8 +419,17 @@ a {
   flex-shrink: 0;
   display: flex;
   align-items: stretch;
+  justify-content: space-between;
   gap: 1.6rem;
   padding: 1.6rem 3.2rem 0.4rem 3.2rem;
+}
+#role-filters {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+#role-filters > * {
+  flex-shrink: 0;
 }
 .tooltip-detect {
   flex-shrink: 0;
@@ -433,10 +446,6 @@ a {
       filter: grayscale(1) brightness(1);
     }
   }
-}
-#champion-controls svg {
-  width: 100%;
-  height: 100%;
 }
 .tooltip {
   visibility: hidden;
@@ -479,7 +488,6 @@ a {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: auto;
 }
 #search-wrapper > svg {
   position: absolute;
@@ -489,7 +497,7 @@ a {
   pointer-events: none;
   z-index: 1;
 }
-#champion-controls input {
+#search-wrapper input {
   width: 20rem;
   height: 100%;
   padding: 0.4rem 3.2rem;
@@ -541,7 +549,6 @@ a {
   border: 1px solid var(--clrTextMuted);
   background: var(--clrBg);
   &:disabled {
-    /* TODO Add a little thing on the bottom later */
     filter: grayscale(1) brightness(0.5);
   }
   &:not(:disabled):hover::before,
@@ -681,6 +688,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 1.6rem;
   padding-block: 1.6rem 3.2rem;
 }
 .btn-primary-action {
@@ -875,7 +883,6 @@ a {
   pointer-events: none;
   z-index: 2;
 }
-
 /* FILE DROPDOWN */
 #dropdown-container {
   flex-shrink: 0;
@@ -950,4 +957,38 @@ a {
 .dropdown-label {
   font-family: var(--fontBeaufort);
   font-weight: 400;
+}
+
+/* RESPONSIVE */
+@media only screen and (max-width: 1200px) {
+  /* * {
+    outline: 1px solid red;
+  } */
+  #champion-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  #role-filters {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+  #search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  #search-wrapper input {
+    width: 100%;
+  }
+  #champion-list {
+    grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+  }
+  #center-footer {
+    display: flex;
+    flex-direction: column;
+  }
+  #bottom-controls {
+    position: static;
+  }
 }

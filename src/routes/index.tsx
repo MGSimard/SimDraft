@@ -110,25 +110,27 @@ function PageHome() {
           )}
         </div>
         <div id="champion-controls">
-          {ROLES.map((role) => {
-            const IconComponent = ROLE_ICONS[role];
-            return (
-              <div key={role} className="tooltip-detect">
-                <button
-                  type="button"
-                  aria-label={`Filter by ${role}`}
-                  aria-describedby={`info-popover-${role}`}
-                  onClick={() => handleRoleFilterToggle(role)}
-                  className={activeRoleFilters.includes(role) ? "active" : undefined}
-                  tabIndex={3}>
-                  <IconComponent />
-                </button>
-                <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
-                  <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
+          <div id="role-filters">
+            {ROLES.map((role) => {
+              const IconComponent = ROLE_ICONS[role];
+              return (
+                <div key={role} className="tooltip-detect">
+                  <button
+                    type="button"
+                    aria-label={`Filter by ${role}`}
+                    aria-describedby={`info-popover-${role}`}
+                    onClick={() => handleRoleFilterToggle(role)}
+                    className={activeRoleFilters.includes(role) ? "active" : undefined}
+                    tabIndex={3}>
+                    <IconComponent />
+                  </button>
+                  <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
+                    <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
           <div id="search-wrapper">
             <IconSearch />
             <input
