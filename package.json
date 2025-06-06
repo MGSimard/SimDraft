@@ -1,6 +1,6 @@
 {
   "name": "SimDraft",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "author": "MGSimard <mgsimard.dev@gmail.com> (https://mgsimard.dev)",
   "description": "League of Legends Draft Simulator",
