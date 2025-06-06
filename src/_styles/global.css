@@ -82,12 +82,12 @@ body::after {
   z-index: -1;
 }
 body::before {
-  background: radial-gradient(ellipse 30vw 30rem at center top, oklch(from var(--clrRed4) l c h / 0.5), transparent),
+  background: radial-gradient(ellipse 50dvw 30rem at center top, oklch(from var(--clrRed4) l c h / 0.5), transparent),
     radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.5), transparent),
     radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrRed4) l c h / 0.5), transparent);
 }
 body::after {
-  background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
+  background: radial-gradient(ellipse 50dvw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
     radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
     radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrBlue3) l c h / 0.2), transparent);
 }
@@ -100,7 +100,7 @@ body:has(.theme-picking)::after {
 body:has(.theme-overriding)::before,
 body:has(.theme-overriding)::after {
   opacity: 0;
-  background: radial-gradient(ellipse 50vw 30rem at center top, oklch(from var(--clrGold4) l c h / 0.3), transparent),
+  background: radial-gradient(ellipse 50dvw 30rem at center top, oklch(from var(--clrGold4) l c h / 0.3), transparent),
     radial-gradient(ellipse 30dvw 100dvh at left center, oklch(from var(--clrGold4) l c h / 0.2), transparent),
     radial-gradient(ellipse 30dvw 100dvh at right center, oklch(from var(--clrGold4) l c h / 0.2), transparent);
 }
@@ -244,6 +244,7 @@ a {
   display: grid;
   grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   gap: 1.6rem;
+  height: 100%;
 }
 #team-blue,
 #team-red {
@@ -1090,19 +1091,18 @@ a {
   #header h2 {
     font-size: 4vw;
   }
-  .tooltip-detect button {
-    width: 2.4rem;
-    height: 2.4rem;
-    padding: 0.2rem;
-  }
   #champion-controls {
     flex-direction: column;
-    align-items: center;
   }
   #role-filters {
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+  }
+  .tooltip-detect button {
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0.2rem;
   }
   #search-wrapper {
     position: relative;
@@ -1125,18 +1125,44 @@ a {
 }
 
 @media only screen and (max-width: 768px) {
+  body::before {
+    background: radial-gradient(ellipse 0 0 at center top, oklch(from var(--clrRed4) l c h / 0.5), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.5), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at right center, oklch(from var(--clrRed4) l c h / 0.5), transparent);
+  }
+  body::after {
+    background: radial-gradient(ellipse 80dvw 30rem at center top, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at left center, oklch(from var(--clrBlue3) l c h / 0.2), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at right center, oklch(from var(--clrBlue3) l c h / 0.2), transparent);
+  }
+  body:has(.theme-overriding)::before,
+  body:has(.theme-overriding)::after {
+    background: radial-gradient(ellipse 80dvw 30rem at center top, oklch(from var(--clrGold4) l c h / 0.3), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at left center, oklch(from var(--clrGold4) l c h / 0.2), transparent),
+      radial-gradient(ellipse 40dvw 100dvh at right center, oklch(from var(--clrGold4) l c h / 0.2), transparent);
+  }
   #draft {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  #team-blue {
+    margin-top: 2.4rem;
   }
   #team-blue,
   #team-red {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 0;
   }
   #team-blue .ban-row,
   #team-red .ban-row {
     grid-column: 1 / -1;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  #team-red .ban-row {
+    direction: rtl;
   }
   .pick-separator {
     display: none;
@@ -1158,8 +1184,36 @@ a {
   .cName {
     font-size: 1.2rem;
   }
-
+  #team-red .pick-row span {
+    text-align: center;
+  }
+  .pick-row > div span:not(.doing):not(.cName) {
+    position: absolute;
+    top: -2.4rem;
+    left: calc(50% + 1.2rem);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0.4rem;
+    font-size: 1.2rem;
+    font-family: var(--fontBeaufort);
+    border: 1px solid var(--clrTextMuted);
+    border-radius: 999rem;
+    background: var(--clrGrey3);
+    z-index: 5;
+    overflow: hidden;
+  }
+  #team-red .pick-row > div span:not(.doing):not(.cName) {
+    left: calc(50% + 1.2rem);
+  }
   #center {
     order: 1;
+  }
+  .ban-row .ban-slot {
+    place-self: center;
+    direction: ltr;
   }
 }
