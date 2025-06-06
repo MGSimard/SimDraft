@@ -192,7 +192,9 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             role={pick ? "button" : undefined}
             aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>
-            <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
+            <div>
+              <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
+            </div>
           </div>
           <div>{renderContent()}</div>
         </>
@@ -207,7 +209,9 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             role={pick ? "button" : undefined}
             aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
             aria-disabled={!pick}>
-            <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
+            <div>
+              <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
+            </div>
           </div>
         </>
       )}

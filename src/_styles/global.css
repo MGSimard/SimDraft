@@ -292,11 +292,58 @@ a {
   flex-shrink: 0;
   width: 6.4rem;
   height: 6.4rem;
-  border: 0.2rem solid var(--clrTextMuted);
+  padding: 0.2rem;
+  background: var(--clrTextMuted); /* Fallback */
   border-radius: 999rem;
-  background: var(--clrBg);
-  overflow: hidden;
   outline: none;
+}
+#team-blue .pick-row-image-wrapper {
+  background: linear-gradient(to bottom, var(--clrBlue4), var(--clrBlue5));
+}
+#team-blue .pending-action .pick-row-image-wrapper {
+  background: linear-gradient(to bottom, var(--clrBlue3), var(--clrBlue4));
+}
+#team-red .pick-row-image-wrapper {
+  background: linear-gradient(to bottom, var(--clrRed4), var(--clrRed5));
+}
+#team-red .pending-action .pick-row-image-wrapper {
+  background: linear-gradient(to bottom, var(--clrRed3), var(--clrRed4));
+}
+.theme-overriding #team-blue .pending-action .pick-row-image-wrapper,
+.theme-overriding #team-red .pending-action .pick-row-image-wrapper {
+  background: linear-gradient(to bottom, var(--clrGold3), var(--clrGold4));
+}
+.pick-row-image-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: -0.8rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  z-index: 1;
+  animation: spin 2s linear infinite;
+}
+#team-blue .pending-action .pick-row-image-wrapper::before {
+  background-image: url("/assets/spinner_blue.png");
+}
+#team-red .pending-action .pick-row-image-wrapper::before {
+  background-image: url("/assets/spinner_red.png");
+}
+.theme-overriding #team-blue .pending-action .pick-row-image-wrapper::before,
+.theme-overriding #team-red .pending-action .pick-row-image-wrapper::before {
+  background-image: url("/assets/spinner_gold.png");
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.pick-row-image-wrapper > div {
+  border-radius: 999rem;
+  overflow: hidden;
 }
 .pick-row img {
   width: 100%;
@@ -898,10 +945,12 @@ a {
 }
 .swappable {
   cursor: pointer;
+}
+.swappable > div {
   position: relative;
 }
-.swappable:hover::after,
-.swappable:focus-visible::after {
+.swappable:hover > div::after,
+.swappable:focus-visible > div::after {
   position: absolute;
   content: "";
   inset: 0;
@@ -909,8 +958,8 @@ a {
   pointer-events: none;
   z-index: 1;
 }
-.swappable:hover::before,
-.swappable:focus-visible::before {
+.swappable:hover > div::before,
+.swappable:focus-visible > div::before {
   position: absolute;
   content: "";
   inset: 20%;
@@ -1035,7 +1084,7 @@ a {
     border: 1px solid var(--clrTextMuted);
     border-radius: 999rem;
     background: var(--clrGrey3);
-    z-index: 1;
+    z-index: 5;
     overflow: hidden;
   }
   #team-red .pick-row > div span:not(.doing):not(.cName) {
