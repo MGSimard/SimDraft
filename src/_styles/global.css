@@ -1052,42 +1052,6 @@ a {
   #draft {
     grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   }
-  .pick-row {
-    gap: 0.8rem;
-    text-align: center;
-  }
-  #team-red .pick-row {
-    flex-direction: column-reverse;
-  }
-  #team-blue .pick-row {
-    flex-direction: column;
-  }
-  .pick-row > div {
-    position: relative;
-    align-items: center;
-  }
-  .pick-row > div span:not(.doing):not(.cName) {
-    position: absolute;
-    top: -2.4rem;
-    left: calc(50% + 2.4rem);
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
-    padding: 0.4rem;
-    font-size: 1.2rem;
-    font-family: var(--fontBeaufort);
-    border: 1px solid var(--clrTextMuted);
-    border-radius: 999rem;
-    background: var(--clrGrey3);
-    z-index: 5;
-    overflow: hidden;
-  }
-  #team-red .pick-row > div span:not(.doing):not(.cName) {
-    left: calc(50% - 2.4rem);
-  }
   #header h2 {
     font-size: 4vw;
   }
@@ -1123,7 +1087,6 @@ a {
     position: static;
   }
 }
-
 @media only screen and (max-width: 768px) {
   :root {
     --sitePadding: 0.8rem;
@@ -1173,7 +1136,15 @@ a {
   }
   .pick-row {
     padding: 0;
+    gap: 0.8rem;
+    text-align: center;
     border: none !important;
+  }
+  #team-red .pick-row {
+    flex-direction: column-reverse;
+  }
+  #team-blue .pick-row {
+    flex-direction: column;
   }
   video {
     display: none !important;
@@ -1185,18 +1156,46 @@ a {
   .pick-row-image-wrapper::before {
     inset: -0.3rem;
   }
-  .cName {
-    font-size: 1.2rem;
+  .pick-row > div {
+    position: relative;
+    align-items: center;
   }
   #team-red .pick-row span {
     text-align: center;
   }
+  .cName {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+  }
+  .doing {
+    position: absolute;
+    top: -5.5rem;
+    left: calc(50% + 0.3em);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+  }
   .pick-row > div span:not(.doing):not(.cName) {
+    position: absolute;
+    top: -2.4rem;
     left: calc(50% + 1.2rem);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 2rem;
     height: 2rem;
     padding: 0;
+    font-family: var(--fontBeaufort);
     font-size: 1rem;
+    border: 1px solid var(--clrTextMuted);
+    border-radius: 999rem;
+    background: var(--clrGrey3);
+    z-index: 5;
+    overflow: hidden;
   }
   #team-red .pick-row > div span:not(.doing):not(.cName) {
     left: calc(50% + 1.2rem);
