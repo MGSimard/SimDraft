@@ -114,7 +114,7 @@ function PageHome() {
         <PickSeparator />
       </section>
 
-      <div id="center">
+      <section id="center">
         <div id="header">
           <h2>{actionText}</h2>
           {isOverridingAny && (
@@ -171,9 +171,9 @@ function PageHome() {
           <ButtonDraftAction />
           <DestructiveButtons />
         </div>
-      </div>
+      </section>
 
-      <div id="team-red" role="region" aria-label="Red team">
+      <section id="team-red" role="region" aria-label="Red team">
         <BanRow team={1} />
         <PickSeparator />
         <PickRow team={1} pickIndex={0} label="R1" />
@@ -186,7 +186,7 @@ function PageHome() {
         <PickSeparator />
         <PickRow team={1} pickIndex={4} label="R5" />
         <PickSeparator />
-      </div>
+      </section>
     </main>
   );
 }
