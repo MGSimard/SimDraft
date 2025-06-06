@@ -1125,6 +1125,9 @@ a {
 }
 
 @media only screen and (max-width: 768px) {
+  :root {
+    --sitePadding: 0.8rem;
+  }
   body::before {
     background: radial-gradient(ellipse 0 0 at center top, oklch(from var(--clrRed4) l c h / 0.5), transparent),
       radial-gradient(ellipse 40dvw 100dvh at left center, oklch(from var(--clrRed4) l c h / 0.5), transparent),
@@ -1142,7 +1145,7 @@ a {
       radial-gradient(ellipse 40dvw 100dvh at right center, oklch(from var(--clrGold4) l c h / 0.2), transparent);
   }
   #root {
-    padding: 0.8rem;
+    padding: var(--sitePadding);
   }
   #draft {
     grid-template-columns: 1fr;
