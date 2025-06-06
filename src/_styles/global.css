@@ -1157,9 +1157,7 @@ a {
   #team-blue .ban-row,
   #team-red .ban-row {
     grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.8rem;
+    justify-content: center;
   }
   #team-red .ban-row {
     direction: rtl;
