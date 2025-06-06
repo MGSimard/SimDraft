@@ -1131,6 +1131,10 @@ a {
   #team-red .ban-row {
     direction: rtl;
   }
+  .ban-slot {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
   .pick-separator {
     display: none;
   }
@@ -1172,7 +1176,7 @@ a {
   }
   .doing {
     position: absolute;
-    top: -5.5rem;
+    top: -5.7rem;
     left: calc(50% + 0.3em);
     transform: translateX(-50%);
     display: flex;
