@@ -51,9 +51,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const thumbTopTarget = useRef(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const animationFrameRef = useRef<number | null>(null);
 
   const [scrollState, setScrollState] = useState<ScrollState>({
     thumbHeight: 0,
@@ -106,57 +104,18 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
     const newThumbTop = (scrollTop / (scrollHeight - clientHeight)) * (clientHeight - height) || 0;
     const newScrollRatio = scrollTop / (scrollHeight - clientHeight) || 0;
 
-    if (clientDeviceType === "touch") {
-      thumbTopTarget.current = newThumbTop;
-    }
-
     setScrollState((prev) => ({
       ...prev,
       thumbHeight: height,
-      thumbTop: clientDeviceType === "touch" ? prev.thumbTop : newThumbTop,
+      thumbTop: newThumbTop,
       scrollRatio: newScrollRatio,
       showScrollbar: clientDeviceType !== "touch" ? true : prev.showScrollbar,
     }));
   }, [clientDeviceType]);
 
-  // Update scrollbar when children change (due to filtering)
   useEffect(() => {
     updateThumb();
   }, [children, updateThumb]);
-
-  useEffect(() => {
-    if (clientDeviceType !== "touch") return;
-
-    const viewport = viewportRef.current;
-    if (viewport) {
-      (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = "touch";
-    }
-
-    function animate() {
-      setScrollState((prev) => {
-        const target = thumbTopTarget.current;
-        const next = prev.thumbTop + (target - prev.thumbTop) * 0.2;
-        if (Math.abs(next - target) < 0.5) {
-          return { ...prev, thumbTop: target };
-        }
-        animationFrameRef.current = requestAnimationFrame(animate);
-        return { ...prev, thumbTop: next };
-      });
-    }
-
-    if (scrollState.isScrolling) {
-      animationFrameRef.current = requestAnimationFrame(animate);
-    }
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (viewport) {
-        (viewport.style as ExtendedCSSProperties).WebkitOverflowScrolling = undefined;
-      }
-    };
-  }, [clientDeviceType, scrollState.isScrolling]);
 
   useEffect(() => {
     const viewport = viewportRef.current;

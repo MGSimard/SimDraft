@@ -619,7 +619,6 @@ a {
   align-content: start;
   padding: 1.6rem 0;
   text-align: center;
-  white-space: nowrap;
   border-top: 1px solid var(--clrBorderGoldIdle);
   border-bottom: 1px solid var(--clrBorderGoldIdle);
   scrollbar-width: none;
@@ -735,10 +734,11 @@ a {
 }
 #champion-list button span {
   position: absolute;
-  bottom: 0;
+  bottom: -0.4rem;
   left: 50%;
   transform: translate(-50%, 100%);
   font-size: 1.4rem;
+  line-height: 0.8;
 }
 #scrollbar-container {
   position: relative;
@@ -1141,6 +1141,9 @@ a {
       radial-gradient(ellipse 40dvw 100dvh at left center, oklch(from var(--clrGold4) l c h / 0.2), transparent),
       radial-gradient(ellipse 40dvw 100dvh at right center, oklch(from var(--clrGold4) l c h / 0.2), transparent);
   }
+  #root {
+    padding: 0.8rem;
+  }
   #draft {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
@@ -1210,8 +1213,10 @@ a {
   #center {
     order: 1;
   }
-  .ban-row .ban-slot {
-    place-self: center;
-    direction: ltr;
+  #champion-controls {
+    padding: 1.6rem 1.6rem 0.4rem 1.6rem;
+  }
+  #scrollbar-container {
+    padding: 0 1.6rem;
   }
 }
