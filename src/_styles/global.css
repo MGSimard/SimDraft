@@ -252,6 +252,7 @@ a {
 .ban-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.8rem;
   padding: 1.6rem 0;
 }
@@ -1002,8 +1003,41 @@ a {
   #draft {
     grid-template-columns: minmax(0, 30rem) minmax(0, auto) minmax(0, 30rem);
   }
-  .ban-row {
-    flex-wrap: wrap;
+  .pick-row {
+    gap: 0.8rem;
+    text-align: center;
+  }
+  #team-red .pick-row {
+    flex-direction: column-reverse;
+  }
+  #team-blue .pick-row {
+    flex-direction: column;
+  }
+  .pick-row > div {
+    position: relative;
+    align-items: center;
+  }
+  .pick-row > div span:not(.doing):not(.cName) {
+    position: absolute;
+    top: -2.4rem;
+    left: calc(50% + 2.4rem);
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0.4rem;
+    font-size: 1.2rem;
+    font-family: var(--fontBeaufort);
+    border: 1px solid var(--clrTextMuted);
+    border-radius: 999rem;
+    background: var(--clrGrey3);
+    z-index: 1;
+    overflow: hidden;
+  }
+  #team-red .pick-row > div span:not(.doing):not(.cName) {
+    left: calc(50% - 2.4rem);
   }
   .tooltip-detect button {
     width: 2.4rem;
