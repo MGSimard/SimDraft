@@ -538,10 +538,11 @@ a {
   position: absolute;
   top: 0;
   left: 50%;
+  max-width: calc(100dvw - var(--sitePadding) * 2);
+  width: max-content;
   padding: 0.2rem;
   transform: translate(-50%, calc(-100% - 0.8rem));
   text-align: center;
-  white-space: nowrap;
   background: linear-gradient(to bottom, var(--clrGold6), var(--clrGold5));
   z-index: 1;
   pointer-events: none;
@@ -556,7 +557,7 @@ a {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: calc(50% + var(--arrow-offset, 0px));
   width: 1rem;
   height: 1rem;
   transform: translate(-50%, 50%) rotate(45deg) skew(10deg, 10deg);
@@ -904,7 +905,8 @@ a {
   position: absolute;
   top: calc(100% + 0.8rem);
   right: -0.2rem;
-  width: 40rem;
+  width: clamp(20rem, 80dvw, 40rem);
+  max-width: calc(100dvw - var(--sitePadding) * 2);
   padding: 0.2rem;
   color: var(--clrText);
   background: linear-gradient(to top, var(--clrGold6), var(--clrGold5));

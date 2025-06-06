@@ -11,6 +11,7 @@ import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
 import { DestructiveButtons } from "@/_components/DestructiveButtons";
 import { DraftAnnouncer } from "@/_components/DraftAnnouncer";
 import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
+import { SmartTooltip } from "@/_components/SmartTooltip";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
@@ -128,7 +129,10 @@ function PageHome() {
               const IconComponent = ROLE_ICONS[role];
               const isActive = activeRoleFilters.includes(role);
               return (
-                <div key={role} className="tooltip-detect">
+                <SmartTooltip
+                  key={role}
+                  tooltip={`Show the most commonly-picked champions at ${role} during the previous patch.`}
+                  id={`info-popover-${role}`}>
                   <button
                     type="button"
                     aria-label={`Filter by ${role}`}
@@ -139,10 +143,7 @@ function PageHome() {
                     tabIndex={6}>
                     <IconComponent />
                   </button>
-                  <div role="tooltip" id={`info-popover-${role}`} className="tooltip">
-                    <span>Show the most commonly-picked champions at {role} during the previous patch.</span>
-                  </div>
-                </div>
+                </SmartTooltip>
               );
             })}
           </div>
