@@ -17,7 +17,7 @@ https://simdraft.pages.dev/
 
 ## Bug Reports
 
-This app was an excuse for me to try out letting AI go wild with the logic setup. It's entirely possible bugs were introduced, if you happen to use this tool and run into issues you can either DM me on [X/Twitter](https://x.com/MGSimard) or [file an issue on GitHub](https://github.com/MGSimard/simdraft/issues).
+This app was an excuse for me to test the new Claude 4 model in Cursor. It's entirely possible bugs were introduced, if you happen to use this tool and run into issues you can either DM me on [X/Twitter](https://x.com/MGSimard) or [file an issue on GitHub](https://github.com/MGSimard/simdraft/issues).
 
 ## Disclaimer
 
