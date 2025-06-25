@@ -950,9 +950,12 @@ a {
 .swappable {
   cursor: pointer;
 }
+.ban-slot.swappable,
 .swappable > div {
   position: relative;
 }
+.ban-slot.swappable:hover::after,
+.ban-slot.swappable:focus-visible::after,
 .swappable:hover > div::after,
 .swappable:focus-visible > div::after {
   position: absolute;
@@ -962,6 +965,8 @@ a {
   pointer-events: none;
   z-index: 1;
 }
+.ban-slot.swappable:hover::before,
+.ban-slot.swappable:focus-visible::before,
 .swappable:hover > div::before,
 .swappable:focus-visible > div::before {
   position: absolute;
