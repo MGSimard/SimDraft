@@ -133,15 +133,17 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
           <video
             ref={introVideoRef}
             className="pick-row-video"
-            muted
-            playsInline
+            muted={true}
+            playsInline={true}
+            loop={false}
+            preload="auto"
             aria-hidden="true"
             onEnded={() => {
               if (introVideoRef.current) {
-                introVideoRef.current.style.display = "none";
+                introVideoRef.current.style.opacity = "0";
               }
               if (idleVideoRef.current) {
-                idleVideoRef.current.style.display = "block";
+                idleVideoRef.current.style.opacity = "1";
                 idleVideoRef.current.currentTime = 0;
                 idleVideoRef.current.play().catch(console.error);
               }
@@ -154,17 +156,12 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
           <video
             ref={idleVideoRef}
             className="pick-row-video"
-            muted
-            playsInline
+            muted={true}
+            playsInline={true}
+            loop={true}
             preload="auto"
-            style={{ display: "none" }}
-            aria-hidden="true"
-            onEnded={() => {
-              if (idleVideoRef.current) {
-                idleVideoRef.current.currentTime = 0;
-                idleVideoRef.current.play().catch(console.error);
-              }
-            }}>
+            style={{ opacity: 0 }}
+            aria-hidden="true">
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-idle.webm`}
               type="video/webm"
@@ -173,9 +170,10 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
           <video
             ref={outroVideoRef}
             className="pick-row-video"
-            muted
-            playsInline
-            style={{ display: showOutro ? "block" : "none" }}
+            muted={true}
+            playsInline={true}
+            loop={false}
+            style={{ opacity: showOutro ? 1 : 0 }}
             aria-hidden="true"
             onEnded={() => {
               setShowOutro(false);
