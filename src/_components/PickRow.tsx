@@ -156,9 +156,15 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
             className="pick-row-video"
             muted
             playsInline
-            loop
+            preload="auto"
             style={{ display: "none" }}
-            aria-hidden="true">
+            aria-hidden="true"
+            onEnded={() => {
+              if (idleVideoRef.current) {
+                idleVideoRef.current.currentTime = 0;
+                idleVideoRef.current.play().catch(console.error);
+              }
+            }}>
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-idle.webm`}
               type="video/webm"
