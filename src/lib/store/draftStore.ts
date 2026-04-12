@@ -439,7 +439,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
-          const errorMessages = error.errors.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ");
+          const errorMessages = error.issues.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ");
           throw new Error(`Invalid draft file: ${errorMessages}`);
         }
         throw new Error("Invalid draft file format");
