@@ -1,5 +1,5 @@
-import { useDraftStore } from "@/_store/draftStore";
-import { searchChampions, championsMap, type Champion } from "@/_datasets/championPreprocessed";
+import { useDraftStore } from "@/lib/store/draftStore";
+import { searchChampions, championsMap, type Champion } from "@/datasets/championPreprocessed";
 import { useEffect } from "react";
 import { clsx } from "clsx";
 

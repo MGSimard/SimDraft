@@ -2,10 +2,10 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { PageError } from "@/_components/Error";
-import { PageNotFound } from "@/_components/NotFound";
-import "@/_styles/global.css";
-import "@/_styles/fonts.css";
+import { PageError } from "@/components/Error";
+import { PageNotFound } from "@/components/NotFound";
+import "@/css/global.css";
+import "@/css/fonts.css";
 
 // Create a new router instance
 const router = createRouter({

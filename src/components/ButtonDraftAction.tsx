@@ -1,5 +1,5 @@
-import { useDraftStore } from "@/_store/draftStore";
-import { ACTION_TYPE } from "@/_store/constants";
+import { useDraftStore } from "@/lib/store/draftStore";
+import { ACTION_TYPE } from "@/lib/store/constants";
 import { clsx } from "clsx";
 
 export function ButtonDraftAction() {

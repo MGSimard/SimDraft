@@ -1,7 +1,7 @@
-import { useDraftStore } from "@/_store/draftStore";
-import { ACTION_TYPE, TEAM } from "@/_store/constants";
-import type { TeamIndex, ActionIndex, PickLabel } from "@/_store/types";
-import { championByKey } from "@/_datasets/championPreprocessed";
+import { useDraftStore } from "@/lib/store/draftStore";
+import { ACTION_TYPE, TEAM } from "@/lib/store/constants";
+import type { TeamIndex, ActionIndex, PickLabel } from "@/lib/store/types";
+import { championByKey } from "@/datasets/championPreprocessed";
 import React, { useRef, useEffect, useState } from "react";
 import { clsx } from "clsx";
 

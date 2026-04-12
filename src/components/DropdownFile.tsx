@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { IconDownload } from "@/_components/Icons";
-import { useDraftStore } from "@/_store/draftStore";
+import { IconDownload } from "@/components/Icons";
+import { useDraftStore } from "@/lib/store/draftStore";
 
 export function DropdownFile() {
   const [isExpanded, setIsExpanded] = useState(false);

@@ -1,6 +1,6 @@
-import { useDraftStore } from "@/_store/draftStore";
-import type { TeamIndex, ActionIndex } from "@/_store/types";
-import { championByKey } from "@/_datasets/championPreprocessed";
+import { useDraftStore } from "@/lib/store/draftStore";
+import type { TeamIndex, ActionIndex } from "@/lib/store/types";
+import { championByKey } from "@/datasets/championPreprocessed";
 import { clsx } from "clsx";
 
 interface BanRowProps {

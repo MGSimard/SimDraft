@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDraftStore } from "@/_store/draftStore";
-import { ACTION_TYPE, TEAM } from "@/_store/constants";
+import { useDraftStore } from "@/lib/store/draftStore";
+import { ACTION_TYPE, TEAM } from "@/lib/store/constants";
 
 export function DraftAnnouncer() {
   const [announcement, setAnnouncement] = useState("");

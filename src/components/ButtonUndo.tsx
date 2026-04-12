@@ -1,5 +1,5 @@
-import { IconUndo } from "@/_components/Icons";
-import { useDraftStore } from "@/_store/draftStore";
+import { IconUndo } from "@/components/Icons";
+import { useDraftStore } from "@/lib/store/draftStore";
 
 export function ButtonUndo() {
   const undoStep = useDraftStore((state) => state.undoStep);

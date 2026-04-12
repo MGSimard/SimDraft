@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { DropdownFile } from "@/_components/DropdownFile";
-import { IconGithub } from "@/_components/Icons";
+import { DropdownFile } from "@/components/DropdownFile";
+import { IconGithub } from "@/components/Icons";
 
 export function Header() {
   return (

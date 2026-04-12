@@ -1,5 +1,5 @@
-import { IconTrash } from "@/_components/Icons";
-import { useDraftStore } from "@/_store/draftStore";
+import { IconTrash } from "@/components/Icons";
+import { useDraftStore } from "@/lib/store/draftStore";
 
 export function ButtonReset() {
   const reset = useDraftStore((state) => state.reset);

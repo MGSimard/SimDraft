@@ -1,5 +1,5 @@
-import championDataset from "@/_datasets/champion.json";
-import playratesData from "@/_datasets/playrates.json";
+import championDataset from "@/datasets/champion.json";
+import playratesData from "@/datasets/playrates.json";
 
 export interface Champion {
   key: string;

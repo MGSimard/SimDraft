@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
-import { ACTION_TYPE } from "@/_store/constants";
-import { useDraftStore } from "@/_store/draftStore";
-import { BanRow } from "@/_components/BanRow";
-import { PickRow } from "@/_components/PickRow";
-import { PickSeparator } from "@/_components/PickSeparator";
-import { ScrollContainer, type ScrollContainerRef } from "@/_components/ScrollContainer";
-import { ChampionList } from "@/_components/ChampionList";
-import { ButtonDraftAction } from "@/_components/ButtonDraftAction";
-import { DestructiveButtons } from "@/_components/DestructiveButtons";
-import { DraftAnnouncer } from "@/_components/DraftAnnouncer";
-import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/_components/Icons";
-import { SmartTooltip } from "@/_components/SmartTooltip";
+import { ACTION_TYPE } from "@/lib/store/constants";
+import { useDraftStore } from "@/lib/store/draftStore";
+import { BanRow } from "@/components/BanRow";
+import { PickRow } from "@/components/PickRow";
+import { PickSeparator } from "@/components/PickSeparator";
+import { ScrollContainer, type ScrollContainerRef } from "@/components/ScrollContainer";
+import { ChampionList } from "@/components/ChampionList";
+import { ButtonDraftAction } from "@/components/ButtonDraftAction";
+import { DestructiveButtons } from "@/components/DestructiveButtons";
+import { DraftAnnouncer } from "@/components/DraftAnnouncer";
+import { IconTop, IconJungle, IconMiddle, IconBottom, IconSupport, IconSearch, IconClose } from "@/components/Icons";
+import { SmartTooltip } from "@/components/SmartTooltip";
 
 export const Route = createFileRoute("/")({
   component: PageHome,
