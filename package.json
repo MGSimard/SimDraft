@@ -13,16 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/MGSimard/simdraft.git"
   },
-  "keywords": [
-    "SimDraft",
-    "League of Legends",
-    "Draft",
-    "React",
-    "Vite",
-    "TypeScript",
-    "TanStack Router",
-    "Zustand"
-  ],
+  "keywords": ["SimDraft", "League of Legends", "Drafting Simulator"],
   "bugs": {
     "url": "https://github.com/MGSimard/simdraft/issues"
   },
