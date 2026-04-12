@@ -4,7 +4,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 
-export default defineConfig({
+const config = defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
@@ -18,3 +18,5 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
   ],
 });
+
+export default config;
