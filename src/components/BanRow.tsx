@@ -15,7 +15,6 @@ export function BanRow({ team }: BanRowProps) {
   const teamDisplayName = team === 0 ? "Blue team" : "Red team";
   const teamBans = bans[team];
   const banOrder = team === 0 ? teamBans : [...teamBans].reverse();
-  const banTabIndex = team === 0 ? 2 : 4; // Blue bans = 2, Red bans = 4
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = "/assets/champions/-1.png";
@@ -28,37 +27,39 @@ export function BanRow({ team }: BanRowProps) {
     }
   };
 
-  const handleBanKeyDown = (e: React.KeyboardEvent, actualIndex: ActionIndex) => {
-    const ban = teamBans[actualIndex];
-    if (ban && (e.key === "Enter" || e.key === " ")) {
-      e.preventDefault();
-      startBanOverride(team, actualIndex);
-    }
-  };
-
   return (
     <div className="ban-row">
       {banOrder.map((ban: string | null, i: number) => {
         const actualIndex = (team === 0 ? i : teamBans.length - 1 - i) as ActionIndex;
         const isBeingOverridden = overridingBanData?.team === team && overridingBanData?.banIndex === actualIndex;
         const banName = ban ? championByKey.get(ban)?.name : null;
+        const className = clsx("ban-slot", ban && "swappable", isBeingOverridden && "overriding");
+        const image = (
+          <img
+            src={ban ? `/assets/champions/${ban}.png` : "/assets/ban_placeholder.svg"}
+            alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}
+            decoding="async"
+            onError={handleImageError}
+          />
+        );
+
+        if (!ban) {
+          return (
+            <div key={`${team}-${actualIndex}`} className={className}>
+              {image}
+            </div>
+          );
+        }
 
         return (
-          <div
+          <button
             key={`${team}-${actualIndex}`}
-            className={clsx("ban-slot", ban && "swappable", isBeingOverridden && "overriding")}
-            onClick={ban ? () => handleBanClick(actualIndex) : undefined}
-            onKeyDown={ban ? (e) => handleBanKeyDown(e, actualIndex) : undefined}
-            tabIndex={ban ? banTabIndex : -1}
-            role={ban ? "button" : undefined}
-            aria-label={ban ? `Override ${banName ?? ban} for ${teamDisplayName}` : undefined}>
-            <img
-              src={ban ? `/assets/champions/${ban}.png` : "/assets/ban_placeholder.svg"}
-              alt={ban ? `Banned champion ${ban}` : "Empty ban slot"}
-              decoding="async"
-              onError={handleImageError}
-            />
-          </div>
+            type="button"
+            className={className}
+            onClick={() => handleBanClick(actualIndex)}
+            aria-label={`Override ${banName ?? ban} for ${teamDisplayName}`}>
+            {image}
+          </button>
         );
       })}
     </div>

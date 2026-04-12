@@ -27,9 +27,5 @@ export function DraftAnnouncer() {
 
   if (!announcement) return null;
 
-  return (
-    <div role="status" aria-live="polite" aria-atomic="true" className="sr-only" tabIndex={-1}>
-      {announcement}
-    </div>
-  );
+  return <div role="status" className="sr-only">{announcement}</div>;
 }

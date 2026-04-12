@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { z } from "zod";
 import { TEAM, ACTION_TYPE, draftOrder } from "./constants";
 import { DraftSchema } from "./schemas";
-import type { FiveArray, TeamIndex, ActionIndex, DraftState, DraftStore, Team } from "./types";
+import type { ActionIndex, DraftState, DraftStore, FiveArray, StepDetails, Team, TeamIndex } from "./types";
 
 export const initialState: DraftState = {
   currentStepIndex: 0,
@@ -22,7 +22,7 @@ export const initialState: DraftState = {
 
 let cachedUnavailableChampions: Set<string> | null = null;
 let cachedStateHash: string | null = null;
-let cachedStepDetails: { stepIndex: number; details: any } | null = null;
+let cachedStepDetails: { stepIndex: number; details: StepDetails | null } | null = null;
 
 // Helper function to clear all caches
 const clearCaches = () => {
@@ -58,7 +58,7 @@ const filterNonNullChampions = (champion: string | null): champion is string => 
 type PostLockCallback = () => void;
 
 export const useDraftStore = create<DraftStore>()((set, get) => {
-  let postLockCallbacks: PostLockCallback[] = [];
+  let postLockCallbacks: Array<PostLockCallback> = [];
   return {
     ...initialState,
     registerPostLockCallback: (callback: PostLockCallback) => {
@@ -85,36 +85,41 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
     },
 
     lockIn: () => {
-      const state = get();
-      if (state.isDraftComplete || !state.selectedChampion) {
-        return;
-      }
-      const currentStep = state.getCurrentStepDetails();
-      if (!currentStep) return;
-      const wasSuccessfulLock = (() => {
-        set((state) => {
-          const teamIndex = teamToIndex(currentStep.team);
-          if (currentStep.type === ACTION_TYPE.BAN) {
-            const newBans = createBanArrayCopies(state.bans);
-            newBans[teamIndex][currentStep.actionIndex] = state.selectedChampion;
-            return {
-              ...state,
-              bans: newBans,
-              selectedChampion: null,
-            };
-          } else {
-            const newPicks = createPickArrayCopies(state.picks);
-            newPicks[teamIndex][currentStep.actionIndex] = state.selectedChampion;
-            return {
-              ...state,
-              picks: newPicks,
-              selectedChampion: null,
-            };
-          }
-        });
-        return true;
-      })();
-      if (!state.isDraftComplete && wasSuccessfulLock) {
+      let wasSuccessfulLock = false;
+
+      set((state) => {
+        if (state.isDraftComplete || !state.selectedChampion) {
+          return state;
+        }
+
+        const currentStep = draftOrder[state.currentStepIndex] ?? null;
+        if (!currentStep) {
+          return state;
+        }
+
+        const teamIndex = teamToIndex(currentStep.team);
+        wasSuccessfulLock = true;
+
+        if (currentStep.type === ACTION_TYPE.BAN) {
+          const newBans = createBanArrayCopies(state.bans);
+          newBans[teamIndex][currentStep.actionIndex] = state.selectedChampion;
+          return {
+            ...state,
+            bans: newBans,
+            selectedChampion: null,
+          };
+        }
+
+        const newPicks = createPickArrayCopies(state.picks);
+        newPicks[teamIndex][currentStep.actionIndex] = state.selectedChampion;
+        return {
+          ...state,
+          picks: newPicks,
+          selectedChampion: null,
+        };
+      });
+
+      if (wasSuccessfulLock) {
         get().nextStep();
         const newState = get();
         if (!newState.isDraftComplete) {
@@ -426,7 +431,7 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
       };
     },
 
-    importDraft: (data: any) => {
+    importDraft: (data: unknown) => {
       try {
         const validatedData = DraftSchema.parse(data);
         clearCaches();
@@ -439,7 +444,9 @@ export const useDraftStore = create<DraftStore>()((set, get) => {
         });
       } catch (error) {
         if (error instanceof z.ZodError) {
-          const errorMessages = error.issues.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ");
+          const errorMessages = error.issues
+            .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+            .join(", ");
           throw new Error(`Invalid draft file: ${errorMessages}`);
         }
         throw new Error("Invalid draft file format");

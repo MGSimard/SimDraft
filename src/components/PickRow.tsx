@@ -2,7 +2,7 @@ import { useDraftStore } from "@/lib/store/draftStore";
 import { ACTION_TYPE, TEAM } from "@/lib/store/constants";
 import type { TeamIndex, ActionIndex, PickLabel } from "@/lib/store/types";
 import { championByKey } from "@/datasets/championPreprocessed";
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { clsx } from "clsx";
 
 interface PickRowProps {
@@ -27,7 +27,6 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const teamName = team === 0 ? TEAM.BLUE : TEAM.RED;
   const teamDisplayName = team === 0 ? "Blue team" : "Red team";
   const pick = picks[team][pickIndex];
-  const pickTabIndex = team === 0 ? 3 : 5; // Blue picks = 3, Red picks = 5
 
   const isPicking =
     !isOverridingAny &&
@@ -48,13 +47,6 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
 
   const handlePickClick = () => {
     if (pick) {
-      startPickOverride(team, pickIndex);
-    }
-  };
-
-  const handlePickKeyDown = (e: React.KeyboardEvent) => {
-    if (pick && (e.key === "Enter" || e.key === " ")) {
-      e.preventDefault();
       startPickOverride(team, pickIndex);
     }
   };
@@ -147,6 +139,28 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     </>
   );
 
+  const renderImageWrapper = () => {
+    const image = <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />;
+
+    if (!pick) {
+      return (
+        <div className="pick-row-image-wrapper">
+          <div>{image}</div>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        type="button"
+        className={clsx("pick-row-image-wrapper", "swappable")}
+        onClick={handlePickClick}
+        aria-label={`Override ${teamDisplayName} ${champName ?? pick}`}>
+        <div>{image}</div>
+      </button>
+    );
+  };
+
   return (
     <div
       className={clsx(
@@ -206,35 +220,13 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
       )}
       {team === 0 ? (
         <>
-          <div
-            className={clsx("pick-row-image-wrapper", pick && "swappable")}
-            onClick={pick ? handlePickClick : undefined}
-            onKeyDown={pick ? handlePickKeyDown : undefined}
-            tabIndex={pick ? pickTabIndex : -1}
-            role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
-            aria-disabled={!pick}>
-            <div>
-              <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
-            </div>
-          </div>
+          {renderImageWrapper()}
           <div>{renderContent()}</div>
         </>
       ) : (
         <>
           <div>{renderContent()}</div>
-          <div
-            className={clsx("pick-row-image-wrapper", pick && "swappable")}
-            onClick={pick ? handlePickClick : undefined}
-            onKeyDown={pick ? handlePickKeyDown : undefined}
-            tabIndex={pick ? pickTabIndex : -1}
-            role={pick ? "button" : undefined}
-            aria-label={pick ? `Override ${teamDisplayName} ${champName ?? pick}` : undefined}
-            aria-disabled={!pick}>
-            <div>
-              <img src={displayImageSrc} alt={displayImageAlt} decoding="async" />
-            </div>
-          </div>
+          {renderImageWrapper()}
         </>
       )}
     </div>

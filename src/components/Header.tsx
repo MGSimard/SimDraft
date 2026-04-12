@@ -6,13 +6,13 @@ export function Header() {
   return (
     <header>
       <Link to="/" id="header-logo">
-        <img src="/metadata/icon.svg" alt="Logo" />
+        <img src="/metadata/icon.svg" alt="" />
         <h1>SimDraft</h1>
       </Link>
       <div id="header-controls">
         <DropdownFile />
         <div id="info-popover-container">
-          <button type="button" aria-label="Info" aria-describedby="info-popover" tabIndex={1}>
+          <button type="button" aria-label="Info" aria-describedby="info-popover">
             <span aria-hidden="true">?</span>
           </button>
           <div role="tooltip" id="info-popover">
@@ -43,7 +43,7 @@ export function Header() {
             </div>
           </div>
         </div>
-        <a href="https://github.com/MGSimard/simdraft" target="_blank" rel="noopener noreferrer" tabIndex={1}>
+        <a href="https://github.com/MGSimard/simdraft" target="_blank" rel="noopener noreferrer">
           <IconGithub aria-hidden="true" />
         </a>
       </div>

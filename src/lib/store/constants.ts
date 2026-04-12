@@ -19,7 +19,7 @@ export const ACTION_TYPE = {
 } as const;
 
 // DRAFT ORDER - Complete champion draft sequence
-export const draftOrder: readonly StepDetails[] = [
+export const draftOrder: ReadonlyArray<StepDetails> = [
   // BAN_PHASE_1 (6 bans, 3 per team)
   { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.BLUE, type: ACTION_TYPE.BAN, actionIndex: 0 },
   { phase: DRAFT_PHASE.BAN_PHASE_1, team: TEAM.RED, type: ACTION_TYPE.BAN, actionIndex: 0 },

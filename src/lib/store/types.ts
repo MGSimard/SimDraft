@@ -65,19 +65,19 @@ export interface DraftActions {
     direction: "ban-to-pick" | "pick-to-ban"
   ) => void;
   exportDraft: () => ExportData;
-  importDraft: (data: any) => void;
+  importDraft: (data: unknown) => void;
 }
 
 export interface DraftSelectors {
   getCurrentStepDetails: () => StepDetails | null;
-  getAllBannedChampions: () => string[];
-  getAllPickedChampions: () => string[];
+  getAllBannedChampions: () => Array<string>;
+  getAllPickedChampions: () => Array<string>;
   getUnavailableChampions: () => Set<string>;
   isChampionAvailable: (championKey: string) => boolean;
   getCurrentTeam: () => TeamIndex | null;
   getCurrentActionType: () => ActionType | null;
-  getTeamBans: (teamIndex: TeamIndex) => string[];
-  getTeamPicks: (teamIndex: TeamIndex) => string[];
+  getTeamBans: (teamIndex: TeamIndex) => Array<string>;
+  getTeamPicks: (teamIndex: TeamIndex) => Array<string>;
   getCurrentStepInfo: () => {
     stepDetails: StepDetails | null;
     currentTeam: TeamIndex | null;

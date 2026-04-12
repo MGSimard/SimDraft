@@ -1,18 +1,24 @@
 import { useDraftStore } from "@/lib/store/draftStore";
 import { ACTION_TYPE } from "@/lib/store/constants";
 import { clsx } from "clsx";
+import { useShallow } from "zustand/react/shallow";
 
 export function ButtonDraftAction() {
-  const actionType = useDraftStore((state) => state.getCurrentActionType());
-  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
-  const lockIn = useDraftStore((state) => state.lockIn);
-  const selectedChampion = useDraftStore((state) => state.selectedChampion);
-  const reset = useDraftStore((state) => state.reset);
-  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
-  const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
-
-  // Subscribe to the actual state that affects champion availability
-  const unavailableChampions = useDraftStore((state) => state.getUnavailableChampions());
+  const { actionType, cancelAnyOverride, isDraftComplete, isOverridingAny, lockIn, reset, selectedChampion, unavailableChampions } =
+    useDraftStore(
+      useShallow(
+      (state) => ({
+        actionType: state.getCurrentActionType(),
+        cancelAnyOverride: state.cancelAnyOverride,
+        isDraftComplete: state.isDraftComplete,
+        isOverridingAny: state.isOverridingAny(),
+        lockIn: state.lockIn,
+        reset: state.reset,
+        selectedChampion: state.selectedChampion,
+        unavailableChampions: state.getUnavailableChampions(),
+      })
+      )
+    );
 
   const buttonLabel = isOverridingAny
     ? "CANCEL"
@@ -51,7 +57,6 @@ export function ButtonDraftAction() {
       onClick={handleClick}
       disabled={isDisabled}
       className={clsx("btn-primary-action", isOverridingAny && "override-mode")}
-      tabIndex={9}
       aria-describedby={isDisabled ? "draft-button-tooltip" : undefined}>
       <span>{buttonLabel}</span>
     </button>

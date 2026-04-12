@@ -1,3 +1,3 @@
 export function PickSeparator() {
-  return <div className="pick-separator" role="separator" aria-hidden="true" />;
+  return <div className="pick-separator" aria-hidden="true" />;
 }

@@ -13,10 +13,8 @@ export function ButtonUndo() {
       type="button"
       className="bottom-control"
       aria-label="Undo"
-      title="Undo"
       onClick={undoStep}
-      disabled={!canUndo}
-      tabIndex={10}>
+      disabled={!canUndo}>
       <IconUndo aria-hidden="true" />
     </button>
   );

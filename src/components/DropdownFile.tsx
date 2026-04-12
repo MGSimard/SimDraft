@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconDownload } from "@/components/Icons";
 import { useDraftStore } from "@/lib/store/draftStore";
 
@@ -6,9 +6,19 @@ export function DropdownFile() {
   const [isExpanded, setIsExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const activeImportIdRef = useRef(0);
+  const activeReaderRef = useRef<FileReader | null>(null);
 
   const exportDraft = useDraftStore((state) => state.exportDraft);
   const importDraft = useDraftStore((state) => state.importDraft);
+
+  useEffect(() => {
+    return () => {
+      if (activeReaderRef.current?.readyState === FileReader.LOADING) {
+        activeReaderRef.current.abort();
+      }
+    };
+  }, []);
 
   const handleExport = () => {
     try {
@@ -39,10 +49,28 @@ export function DropdownFile() {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    activeImportIdRef.current += 1;
+    const importId = activeImportIdRef.current;
+
+    if (activeReaderRef.current?.readyState === FileReader.LOADING) {
+      activeReaderRef.current.abort();
+    }
+
     const reader = new FileReader();
-    reader.onload = (e) => {
+    activeReaderRef.current = reader;
+
+    reader.onload = () => {
+      if (importId !== activeImportIdRef.current) {
+        return;
+      }
+
       try {
-        const jsonData = JSON.parse(e.target?.result as string);
+        const rawContents = reader.result;
+        if (typeof rawContents !== "string") {
+          throw new Error("Imported draft must be a text-based JSON file.");
+        }
+
+        const jsonData: unknown = JSON.parse(rawContents);
         importDraft(jsonData);
         console.log("Draft imported successfully");
         alert("Draft imported successfully!");
@@ -55,9 +83,19 @@ export function DropdownFile() {
         }
       }
     };
+
+    reader.onerror = () => {
+      if (importId !== activeImportIdRef.current) {
+        return;
+      }
+
+      console.error("Failed to import draft:", reader.error);
+      alert("Failed to read draft file. Please try again.");
+    };
+
     reader.readAsText(file);
 
-    // Reset the input so the same file can bbe imported again
+    // Reset the input so the same file can be imported again.
     event.target.value = "";
   };
 
@@ -75,28 +113,25 @@ export function DropdownFile() {
       <button
         type="button"
         id="dropdown-trigger"
-        aria-label="File Menu"
-        aria-haspopup="menu"
+        aria-label="File"
         aria-expanded={isExpanded}
         aria-controls="dropdown-menu"
-        tabIndex={1}
         onFocus={() => setIsExpanded(true)}
         onBlur={(e) => {
           if (!containerRef.current?.contains(e.relatedTarget as Node)) {
             setIsExpanded(false);
           }
         }}>
-        <IconDownload />
+        <IconDownload aria-hidden="true" />
       </button>
-      <div role="menu" id="dropdown-menu" aria-labelledby="dropdown-trigger">
+      <div id="dropdown-menu" aria-labelledby="dropdown-trigger">
         <div>
           {menuItems.map((item, index) => (
             <button
               key={index}
               type="button"
-              role="menuitem"
               className="dropdown-item"
-              tabIndex={isExpanded ? 1 : -1}
+              tabIndex={isExpanded ? 0 : -1}
               onClick={() => {
                 item.action();
                 setIsExpanded(false);

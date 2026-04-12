@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { ACTION_TYPE } from "@/lib/store/constants";
 import { useDraftStore } from "@/lib/store/draftStore";
 import { BanRow } from "@/components/BanRow";
@@ -44,16 +45,31 @@ const ROLE_ICONS = {
 } as const;
 
 function PageHome() {
-  const actionType = useDraftStore((state) => state.getCurrentActionType());
-  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
-  const isOverridingPick = useDraftStore((state) => state.isOverridingPick());
-  const overridingPickData = useDraftStore((state) => state.getOverridingPickData());
-  const isOverridingBan = useDraftStore((state) => state.isOverridingBan());
-  const overridingBanData = useDraftStore((state) => state.getOverridingBanData());
-  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
-  const registerPostLockCallback = useDraftStore((state) => state.registerPostLockCallback);
+  const {
+    actionType,
+    isDraftComplete,
+    isOverridingAny,
+    isOverridingBan,
+    isOverridingPick,
+    overridingBanData,
+    overridingPickData,
+    registerPostLockCallback,
+  } = useDraftStore(
+    useShallow(
+    (state) => ({
+      actionType: state.getCurrentActionType(),
+      isDraftComplete: state.isDraftComplete,
+      isOverridingAny: state.isOverridingAny(),
+      isOverridingBan: state.isOverridingBan(),
+      isOverridingPick: state.isOverridingPick(),
+      overridingBanData: state.getOverridingBanData(),
+      overridingPickData: state.getOverridingPickData(),
+      registerPostLockCallback: state.registerPostLockCallback,
+    })
+    )
+  );
   const [search, setSearch] = useState("");
-  const [activeRoleFilters, setActiveRoleFilters] = useState<string[]>([]);
+  const [activeRoleFilters, setActiveRoleFilters] = useState<Array<string>>([]);
   const debouncedSearch = useDebounce(search, 100);
   const scrollContainerRef = useRef<ScrollContainerRef>(null);
 
@@ -99,7 +115,7 @@ function PageHome() {
   return (
     <main id="draft" className={mainThemeClass}>
       <DraftAnnouncer />
-      <section id="team-blue" role="region" aria-label="Blue team">
+      <section id="team-blue" aria-label="Blue team">
         <BanRow team={0} />
         <PickSeparator />
         <PickRow team={0} pickIndex={0} label="B1" />
@@ -118,7 +134,7 @@ function PageHome() {
         <div id="header">
           <h2>{actionText}</h2>
           {isOverridingAny && (
-            <p className="override-hint" role="status" aria-live="polite" aria-atomic="true">
+            <p className="override-hint" role="status">
               Select a champion, ESC to cancel.
             </p>
           )}
@@ -139,8 +155,7 @@ function PageHome() {
                     aria-describedby={`info-popover-${role}`}
                     aria-pressed={isActive}
                     onClick={() => handleRoleFilterToggle(role)}
-                    className={isActive ? "active" : undefined}
-                    tabIndex={6}>
+                    className={isActive ? "active" : undefined}>
                     <IconComponent />
                   </button>
                 </SmartTooltip>
@@ -155,10 +170,9 @@ function PageHome() {
               value={search}
               onChange={handleSearchChange}
               aria-label="Search champions"
-              tabIndex={6}
             />
             {search && (
-              <button type="button" aria-label="Clear search" onClick={() => setSearch("")} tabIndex={6}>
+              <button type="button" aria-label="Clear search" onClick={() => setSearch("")}>
                 <IconClose aria-hidden="true" />
               </button>
             )}
@@ -173,7 +187,7 @@ function PageHome() {
         </div>
       </section>
 
-      <section id="team-red" role="region" aria-label="Red team">
+      <section id="team-red" aria-label="Red team">
         <BanRow team={1} />
         <PickSeparator />
         <PickRow team={1} pickIndex={0} label="R1" />

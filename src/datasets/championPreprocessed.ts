@@ -4,26 +4,39 @@ import playratesData from "@/datasets/playrates.json";
 export interface Champion {
   key: string;
   name: string;
-  roles: string[];
+  roles: Array<string>;
+  normalizedName: string;
 }
 
-// Function to determine which roles a champion belongs to
-function getChampionRoles(championKey: string): string[] {
-  const roles: string[] = [];
-  for (const [roleName, champions] of Object.entries(playratesData)) {
-    if (championKey in champions) {
-      roles.push(roleName);
+function normalizeChampionSearchTerm(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/['\s]/g, "");
+}
+
+const championRolesByKey = new Map<string, Array<string>>();
+
+for (const [roleName, champions] of Object.entries(playratesData)) {
+  for (const championKey of Object.keys(champions)) {
+    const existingRoles = championRolesByKey.get(championKey);
+    if (existingRoles) {
+      existingRoles.push(roleName);
+    } else {
+      championRolesByKey.set(championKey, [roleName]);
     }
   }
-  return roles;
 }
 
-export const championsMap: Champion[] = Object.values(championDataset.data)
+export const championsMap: Array<Champion> = Object.values(championDataset.data)
   .map((champInfo) => {
     const champion: Champion = {
       key: champInfo.key,
       name: champInfo.name,
-      roles: getChampionRoles(champInfo.key),
+      roles: championRolesByKey.get(champInfo.key) ?? [],
+      normalizedName: normalizeChampionSearchTerm(champInfo.name),
     };
     return champion;
   })
@@ -35,23 +48,9 @@ export const championByName = new Map<string, Champion>(championsMap.map((champ)
 
 export const CHAMPION_COUNT = championsMap.length;
 
-export function searchChampions(query: string): Champion[] {
-  if (!query.trim()) return championsMap;
+export function searchChampions(query: string): Array<Champion> {
+  const normalizedSearch = normalizeChampionSearchTerm(query);
+  if (!normalizedSearch) return championsMap;
 
-  const normalizedSearch = query
-    .trim()
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/['\s]/g, "");
-
-  return championsMap.filter((champion) => {
-    const normalizedName = champion.name
-      .toLowerCase()
-      .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/['\s]/g, "");
-
-    return normalizedName.includes(normalizedSearch);
-  });
+  return championsMap.filter((champion) => champion.normalizedName.includes(normalizedSearch));
 }

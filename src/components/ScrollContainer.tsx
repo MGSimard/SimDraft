@@ -1,16 +1,16 @@
 import { useRef, useEffect, useState, useCallback, useMemo, useImperativeHandle, forwardRef, useLayoutEffect } from "react";
 
-function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout | undefined;
-  return function (this: any, ...args: Parameters<T>) {
+function debounce<T extends (...args: Array<unknown>) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  return (...args: Parameters<T>) => {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
     timeoutId = setTimeout(() => {
-      func.apply(this, args);
+      func(...args);
       timeoutId = undefined;
     }, delay);
-  };
+  }
 }
 
 function getDeviceType(): "touch" | "pointer" | "mouse" {
@@ -51,7 +51,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [scrollState, setScrollState] = useState<ScrollState>({
     thumbHeight: 0,
@@ -115,7 +115,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
 
   useLayoutEffect(() => {
     updateThumb();
-  }, [children, updateThumb]);
+  }, [updateThumb]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -129,6 +129,13 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
     window.addEventListener("resize", debouncedUpdateThumb);
     const resizeObserver = new ResizeObserver(updateThumb);
     resizeObserver.observe(viewport);
+    const mutationObserver = new MutationObserver(debouncedUpdateThumb);
+    mutationObserver.observe(viewport, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+    });
     return () => {
       viewport.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", debouncedUpdateThumb);
@@ -136,6 +143,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
         clearTimeout(scrollTimeoutRef.current);
       }
       resizeObserver.disconnect();
+      mutationObserver.disconnect();
     };
   }, [updateThumb, handleScrollStart]);
 
@@ -309,11 +317,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
       <div
         id="champion-list"
         ref={viewportRef}
-        tabIndex={7}
-        onKeyDown={handleKeyDown}
-        style={styles.viewport}
-        role="listbox"
-        aria-label="Available champions">
+        style={styles.viewport}>
         {children}
       </div>
       {shouldShowScrollbar && (
@@ -328,7 +332,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Champion list scrollbar"
-          tabIndex={7}
+          tabIndex={0}
           onKeyDown={handleKeyDown}>
           <div
             id="scrollbar-thumb"

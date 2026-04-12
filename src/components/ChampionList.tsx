@@ -1,32 +1,39 @@
 import { useDraftStore } from "@/lib/store/draftStore";
-import { searchChampions, championsMap, type Champion } from "@/datasets/championPreprocessed";
-import { useEffect, useEffectEvent } from "react";
+import { championsMap, searchChampions, type Champion } from "@/datasets/championPreprocessed";
+import { useEffect, useEffectEvent, useMemo } from "react";
 import { clsx } from "clsx";
+import { useShallow } from "zustand/react/shallow";
 
 interface ChampionListProps {
   searchQuery: string;
-  roleFilters: string[];
+  roleFilters: Array<string>;
 }
 
 export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
-  const selectChampion = useDraftStore((state) => state.selectChampion);
-  const selectedChampion = useDraftStore((state) => state.selectedChampion);
-  const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
-  const isOverridingAny = useDraftStore((state) => state.isOverridingAny());
-  const cancelAnyOverride = useDraftStore((state) => state.cancelAnyOverride);
+  const { cancelAnyOverride, isDraftComplete, isOverridingAny, selectChampion, selectedChampion, unavailableChampions } =
+    useDraftStore(
+      useShallow(
+      (state) => ({
+        cancelAnyOverride: state.cancelAnyOverride,
+        isDraftComplete: state.isDraftComplete,
+        isOverridingAny: state.isOverridingAny(),
+        selectChampion: state.selectChampion,
+        selectedChampion: state.selectedChampion,
+        unavailableChampions: state.getUnavailableChampions(),
+      })
+      )
+    );
 
-  // Subscribe to the actual state that affects champion availability
-  const unavailableChampions = useDraftStore((state) => state.getUnavailableChampions());
+  const roleFilterSet = useMemo(() => new Set(roleFilters), [roleFilters]);
 
-  let displayChampions = championsMap;
+  const displayChampions = useMemo(() => {
+    const baseChampions = searchQuery.trim() ? searchChampions(searchQuery) : championsMap;
+    if (roleFilterSet.size === 0) {
+      return baseChampions;
+    }
 
-  if (searchQuery.trim()) {
-    displayChampions = searchChampions(searchQuery);
-  }
-
-  if (roleFilters.length > 0) {
-    displayChampions = displayChampions.filter((champion) => champion.roles.some((role) => roleFilters.includes(role)));
-  }
+    return baseChampions.filter((champion) => champion.roles.some((role) => roleFilterSet.has(role)));
+  }, [roleFilterSet, searchQuery]);
 
   const handleChampionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (isDraftComplete && !isOverridingAny) return;
@@ -63,7 +70,7 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
 
   return (
     <>
-      {displayChampions.map((champ: Champion) => {
+      {displayChampions.map((champ: Champion, index: number) => {
         const isAvailable = isDraftComplete && !isOverridingAny ? false : !unavailableChampions.has(champ.key);
         const isSelected = selectedChampion === champ.key;
 
@@ -77,16 +84,12 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
             className={clsx(isSelected && "selected", isOverridingAny && "override-mode")}
             aria-label={`${isSelected ? "Selected" : "Select"} ${champ.name}${
               isOverridingAny ? " (Override Mode)" : ""
-            }`}
-            role="option"
-            aria-selected={isSelected}
-            tabIndex={8}>
+            }`}>
             <img
               src={`/assets/champions/${champ.key}.png`}
               alt=""
-              aria-hidden="true"
               decoding="async"
-              loading="eager"
+              loading={index < 24 ? "eager" : "lazy"}
               onError={handleImageError}
             />
             <span>{champ.name}</span>
