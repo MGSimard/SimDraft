@@ -1,21 +1,20 @@
 import { defineConfig } from "vite";
-import viteReact from "@vitejs/plugin-react";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
-import { resolve } from "node:path";
+import { devtools } from "@tanstack/devtools-vite";
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import babel from "@rolldown/plugin-babel";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-    },
+    tsconfigPaths: true,
   },
   plugins: [
-    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
-    viteReact({
-      babel: {
-        plugins: [["babel-plugin-react-compiler", { target: "19" }]],
-      },
+    devtools(),
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
     }),
+    react(), 
+    babel({ presets: [reactCompilerPreset()] }),
   ],
 });

@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "azizziy.oklch-as",
+    "coderabbit.coderabbit-vscode",
+    "GitHub.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "oxc.oxc-vscode",
+    "YoavBls.pretty-ts-errors"
+  ]
+}

@@ -8,8 +8,8 @@ export default defineConfig({
   singleQuote: false,
   trailingComma: "es5",
   bracketSameLine: true,
-  experimentalTailwindcss: {
-    stylesheet: "./src/css/global.css",
-    functions: ["clsx", "cn", "cva", "tw"],
-  },
+  // experimentalTailwindcss: {
+  //   stylesheet: "./src/css/global.css",
+  //   functions: ["clsx", "cn", "cva", "tw"],
+  // },
 });

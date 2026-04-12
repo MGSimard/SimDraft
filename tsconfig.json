@@ -1,46 +1,41 @@
-/* https://aka.ms/tsconfig */
 {
-  "include": ["eslint.config.mjs", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.js"],
-  "exclude": ["node_modules"],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    /* Projects */
-    "incremental": true /* Save .tsbuildinfo files to allow for incremental compilation of projects. */,
+    "target": "ESNext", // Set the JavaScript language version for emitted JavaScript and include compatible library declarations.
+    "jsx": "react-jsx", // Specify what JSX code is generated.
+    "module": "ESNext", // Specify what module code is generated.
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // Specify a set of bundled library declaration files that describe the target runtime environment.
+    "types": ["vite/client"], // Specify type package names to be included without being referenced in a source file.
 
-    /* Language and Environment */
-    "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ESNext"
-    ] /* Specify a set of bundled library declaration files that describe the target runtime environment. */,
-    "jsx": "preserve" /* Specify what JSX code is generated. */,
-    "moduleDetection": "force" /* Control what method is used to detect module-format JS files. */,
+    "paths": {
+      // Specify a set of entries that re-map imports to additional lookup locations.
+      "#/*": ["./src/*"], // Node subpath imports (package.json `imports`)
+      "@/*": ["./src/*"] // App shortcut
+    },
 
-    /* Modules */
-    "module": "ESNext" /* Specify what module code is generated. */,
-    "moduleResolution": "Bundler" /* Specify how TypeScript looks up a file from a given module specifier. */,
-    "baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
-    "paths": { "@/*": ["./src/*"] } /* Specify a set of entries that re-map imports to additional lookup locations. */,
-    "resolveJsonModule": true /* Enable importing .json files. */,
+    /* Bundler mode */
+    "moduleResolution": "bundler", // Specify how TypeScript looks up a file from a given module specifier.
+    "allowImportingTsExtensions": true, // Allow imports to include TypeScript file extensions. Requires `--moduleResolution bundler` and either `--noEmit` or `--emitDeclarationOnly` to be set.
+    "verbatimModuleSyntax": false, // Do not transform or elide any imports or exports not marked as type-only, ensuring they are written in the output file's format based on the `module` setting.
+    "noEmit": true, // Disable emitting files from a compilation.
+    "isolatedModules": true, // Ensure that each file can be safely transpiled without relying on other imports.
+    "resolveJsonModule": true, // Enable importing .json files.
+    "allowJs": true, // Allow JavaScript files to be a part of your program. Use the `checkJs` option to get errors from these files.
+    "checkJs": true, // Enable error reporting in type-checked JavaScript files.
+    "moduleDetection": "force", // Control what method is used to detect module-format JS files.
+    "esModuleInterop": true, // Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility.
 
-    /* JavaScript Support */
-    "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
-    "checkJs": true /* Enable error reporting in type-checked JavaScript files. */,
+    /* Linting */
+    "erasableSyntaxOnly": true, // Do not allow runtime constructs that are not part of ECMAScript.
 
-    /* Emit */
-    "noEmit": true /* Disable emitting files from a compilation. */,
-
-    /* Interop Constraints */
-    "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
-    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
-
-    /* Type Checking */
-    "strict": true /* Enable all strict type-checking options. */,
-    "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
-    "useUnknownInCatchVariables": true /* Default catch clause variables as 'unknown' instead of 'any'. */,
-    "noUncheckedIndexedAccess": true /* Add 'undefined' to a type when accessed using an index. */,
-
-    /* Completeness */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true, // Skip type checking all .d.ts files.
+    "strict": true, // Enable all strict type-checking options.
+    "noUnusedLocals": true, // Enable error reporting when local variables aren't read.
+    "noUnusedParameters": true, // Raise an error when a function parameter isn't read.
+    "noFallthroughCasesInSwitch": true, // Enable error reporting for fallthrough cases in switch statements.
+    "noUncheckedIndexedAccess": true, // Add `undefined` to a type when accessed using an index.
+    "noUncheckedSideEffectImports": true, // Check side effect imports.
+    "useUnknownInCatchVariables": true // Default catch clause variables as `unknown` instead of `any`.
   }
 }
