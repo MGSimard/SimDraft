@@ -74,6 +74,8 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const [activeTeamColor, setActiveTeamColor] = useState<string | null>(null);
   const teamColor = isBeingOverridden ? "gold" : team === 0 ? "blue" : "red";
 
+  isPendingActionRef.current = isPendingAction;
+
   const displayImageSrc = showSelectedChampion
     ? `/assets/champions/${selectedChampion}.png`
     : pick
@@ -97,10 +99,6 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     video.currentTime = 0;
     video.play().catch(() => console.warn("Video play failed"));
   };
-
-  useEffect(() => {
-    isPendingActionRef.current = isPendingAction;
-  }, [isPendingAction]);
 
   useEffect(() => {
     if (isPendingAction && !wasPendingRef.current) {

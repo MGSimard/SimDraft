@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback, useMemo, useImperativeHandle, forwardRef } from "react";
+import { useRef, useEffect, useState, useCallback, useMemo, useImperativeHandle, forwardRef, useLayoutEffect } from "react";
 
 function debounce<T extends (...args: any[]) => void>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timeoutId: NodeJS.Timeout | undefined;
@@ -113,7 +113,7 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
     }));
   }, [clientDeviceType]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateThumb();
   }, [children, updateThumb]);
 
@@ -125,7 +125,6 @@ export const ScrollContainer = forwardRef<ScrollContainerRef, ScrollContainerPro
       handleScrollStart();
     };
     const debouncedUpdateThumb = debounce(updateThumb, 150);
-    updateThumb();
     viewport.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", debouncedUpdateThumb);
     const resizeObserver = new ResizeObserver(updateThumb);

@@ -1,31 +1,29 @@
-import { useEffect, useState } from "react";
 import { useDraftStore } from "@/lib/store/draftStore";
 import { ACTION_TYPE, TEAM } from "@/lib/store/constants";
 
 export function DraftAnnouncer() {
-  const [announcement, setAnnouncement] = useState("");
-  const currentStepIndex = useDraftStore((state) => state.currentStepIndex);
   const isDraftComplete = useDraftStore((state) => state.isDraftComplete);
   const stepDetails = useDraftStore((state) => state.getCurrentStepDetails());
 
-  useEffect(() => {
-    if (isDraftComplete) {
-      setAnnouncement("Draft complete");
-      return;
-    }
+  const announcement = (() => {
+    if (isDraftComplete) return "Draft complete";
 
-    if (!stepDetails) return;
+    if (!stepDetails) return "";
 
     const teamName = stepDetails.team === TEAM.BLUE ? "Blue team" : "Red team";
 
     if (stepDetails.type === ACTION_TYPE.PICK) {
       const pickNumber = stepDetails.actionIndex + 1;
-      setAnnouncement(`${teamName} pick ${pickNumber}`);
-    } else if (stepDetails.type === ACTION_TYPE.BAN) {
-      const banNumber = stepDetails.actionIndex + 1;
-      setAnnouncement(`${teamName} ban ${banNumber}`);
+      return `${teamName} pick ${pickNumber}`;
     }
-  }, [currentStepIndex, isDraftComplete, stepDetails]);
+
+    if (stepDetails.type === ACTION_TYPE.BAN) {
+      const banNumber = stepDetails.actionIndex + 1;
+      return `${teamName} ban ${banNumber}`;
+    }
+
+    return "";
+  })();
 
   if (!announcement) return null;
 

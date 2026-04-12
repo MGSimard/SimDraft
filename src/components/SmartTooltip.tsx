@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from "react";
 
 interface SmartTooltipProps {
   children: React.ReactNode;
@@ -9,11 +9,10 @@ interface SmartTooltipProps {
 export function SmartTooltip({ children, tooltip, id }: SmartTooltipProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0, arrowOffset: 0 });
 
-  const calculatePosition = () => {
+  const calculatePosition = useCallback(() => {
     if (!containerRef.current || !tooltipRef.current) return;
 
     const container = containerRef.current;
@@ -41,54 +40,49 @@ export function SmartTooltip({ children, tooltip, id }: SmartTooltipProps) {
       left: actualLeft,
       arrowOffset: arrowOffset,
     });
-  };
+  }, []);
 
   const showTooltip = () => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-    }
-
     setIsVisible(true);
-    animationRef.current = requestAnimationFrame(() => {
-      calculatePosition();
-      animationRef.current = null;
-    });
   };
 
   const hideTooltip = () => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
-    }
     setIsVisible(false);
   };
 
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
+  useLayoutEffect(() => {
+    if (!isVisible) return;
+
+    calculatePosition();
+  }, [isVisible, tooltip, calculatePosition]);
+
+  const onResize = useEffectEvent(() => {
+    if (isVisible) {
+      calculatePosition();
+    }
+  });
 
   useEffect(() => {
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: number | undefined;
 
     const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        if (isVisible) {
-          calculatePosition();
-        }
+      if (resizeTimeout !== undefined) {
+        window.clearTimeout(resizeTimeout);
+      }
+
+      resizeTimeout = window.setTimeout(() => {
+        onResize();
       }, 100);
     };
 
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-      clearTimeout(resizeTimeout);
+      if (resizeTimeout !== undefined) {
+        window.clearTimeout(resizeTimeout);
+      }
     };
-  }, [isVisible, calculatePosition]);
+  }, []);
 
   return (
     <div

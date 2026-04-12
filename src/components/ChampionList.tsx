@@ -1,6 +1,6 @@
 import { useDraftStore } from "@/lib/store/draftStore";
 import { searchChampions, championsMap, type Champion } from "@/datasets/championPreprocessed";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { clsx } from "clsx";
 
 interface ChampionListProps {
@@ -46,15 +46,20 @@ export function ChampionList({ searchQuery, roleFilters }: ChampionListProps) {
     }
   };
 
+  const onDocumentKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (e.key === "Escape" && isOverridingAny) {
+      cancelAnyOverride();
+    }
+  });
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOverridingAny) {
-        cancelAnyOverride();
-      }
+      onDocumentKeyDown(e);
     };
+
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOverridingAny, cancelAnyOverride]);
+  }, []);
 
   return (
     <>
