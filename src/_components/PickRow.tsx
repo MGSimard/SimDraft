@@ -11,6 +11,8 @@ interface PickRowProps {
   label: PickLabel;
 }
 
+type VideoPhase = "hidden" | "intro" | "idle" | "outro";
+
 export function PickRow({ team, pickIndex, label }: PickRowProps) {
   const stepDetails = useDraftStore((state) => state.getCurrentStepDetails());
   const selectedChampion = useDraftStore((state) => state.selectedChampion);
@@ -66,9 +68,9 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
   })();
 
   const isPendingAction = isPicking || isBanning || isBeingOverridden;
-  const shouldShowIntroVideo = isPendingAction;
-  const [showOutro, setShowOutro] = useState(false);
+  const [videoPhase, setVideoPhase] = useState<VideoPhase>("hidden");
   const wasPendingRef = useRef(false);
+  const isPendingActionRef = useRef(isPendingAction);
   const [activeTeamColor, setActiveTeamColor] = useState<string | null>(null);
   const teamColor = isBeingOverridden ? "gold" : team === 0 ? "blue" : "red";
 
@@ -84,33 +86,60 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
     ? `Picked champion: ${champName}`
     : "Empty pick slot";
 
+  const stopVideo = (video: HTMLVideoElement | null) => {
+    if (!video) return;
+    video.pause();
+    video.currentTime = 0;
+  };
+
+  const playVideo = (video: HTMLVideoElement | null) => {
+    if (!video) return;
+    video.currentTime = 0;
+    video.play().catch(() => console.warn("Video play failed"));
+  };
+
   useEffect(() => {
-    if (isPendingAction && !wasPendingRef.current && introVideoRef.current) {
+    isPendingActionRef.current = isPendingAction;
+  }, [isPendingAction]);
+
+  useEffect(() => {
+    if (isPendingAction && !wasPendingRef.current) {
       setActiveTeamColor(teamColor);
-      introVideoRef.current.currentTime = 0;
-      introVideoRef.current.play().catch(() => console.warn("Video play failed"));
-      setShowOutro(false);
+      setVideoPhase("intro");
     }
     if (wasPendingRef.current && !isPendingAction) {
-      setShowOutro(true);
+      setVideoPhase("outro");
     }
     wasPendingRef.current = isPendingAction;
   }, [isPendingAction, teamColor]);
 
   useEffect(() => {
-    if (showOutro) {
-      requestAnimationFrame(() => {
-        if (idleVideoRef.current) {
-          idleVideoRef.current.style.display = "none";
-        }
-
-        if (outroVideoRef.current) {
-          outroVideoRef.current.currentTime = 0;
-          outroVideoRef.current.play().catch(() => console.warn("Video play failed"));
-        }
-      });
+    if (videoPhase === "hidden") {
+      stopVideo(introVideoRef.current);
+      stopVideo(idleVideoRef.current);
+      stopVideo(outroVideoRef.current);
+      setActiveTeamColor(null);
+      return;
     }
-  }, [showOutro]);
+
+    if (videoPhase === "intro") {
+      stopVideo(idleVideoRef.current);
+      stopVideo(outroVideoRef.current);
+      playVideo(introVideoRef.current);
+      return;
+    }
+
+    if (videoPhase === "idle") {
+      stopVideo(introVideoRef.current);
+      stopVideo(outroVideoRef.current);
+      playVideo(idleVideoRef.current);
+      return;
+    }
+
+    stopVideo(introVideoRef.current);
+    stopVideo(idleVideoRef.current);
+    playVideo(outroVideoRef.current);
+  }, [videoPhase]);
 
   const renderContent = () => (
     <>
@@ -128,25 +157,18 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
         showSelectedChampion && "selected-champ-frame",
         isBeingOverridden && "overriding"
       )}>
-      {(shouldShowIntroVideo || showOutro) && (
+      {videoPhase !== "hidden" && (
         <>
           <video
             ref={introVideoRef}
-            className="pick-row-video"
+            className={clsx("pick-row-video", videoPhase === "intro" && "is-visible")}
             muted={true}
             playsInline={true}
             loop={false}
             preload="auto"
             aria-hidden="true"
             onEnded={() => {
-              if (introVideoRef.current) {
-                introVideoRef.current.style.opacity = "0";
-              }
-              if (idleVideoRef.current) {
-                idleVideoRef.current.style.opacity = "1";
-                idleVideoRef.current.currentTime = 0;
-                idleVideoRef.current.play().catch(console.error);
-              }
+              setVideoPhase(isPendingActionRef.current ? "idle" : "outro");
             }}>
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-intro.webm`}
@@ -155,12 +177,11 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
           </video>
           <video
             ref={idleVideoRef}
-            className="pick-row-video"
+            className={clsx("pick-row-video", videoPhase === "idle" && "is-visible")}
             muted={true}
             playsInline={true}
             loop={true}
             preload="auto"
-            style={{ opacity: 0 }}
             aria-hidden="true">
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-idle.webm`}
@@ -169,15 +190,14 @@ export function PickRow({ team, pickIndex, label }: PickRowProps) {
           </video>
           <video
             ref={outroVideoRef}
-            className="pick-row-video"
+            className={clsx("pick-row-video", videoPhase === "outro" && "is-visible")}
             muted={true}
             playsInline={true}
             loop={false}
-            style={{ opacity: showOutro ? 1 : 0 }}
+            preload="auto"
             aria-hidden="true"
             onEnded={() => {
-              setShowOutro(false);
-              setActiveTeamColor(null);
+              setVideoPhase("hidden");
             }}>
             <source
               src={`/assets/animations/magic-action-${activeTeamColor || teamColor}-outro.webm`}

@@ -416,6 +416,12 @@ a {
   object-fit: cover;
   z-index: -1;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s linear;
+  will-change: opacity;
+}
+.pick-row-video.is-visible {
+  opacity: 1;
 }
 #team-blue .pick-row-video {
   left: 0;
