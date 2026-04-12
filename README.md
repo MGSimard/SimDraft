@@ -15,10 +15,6 @@ https://simdraft.pages.dev/
 - Import & Export draft as JSON
 - Local assets from [CommunityDragon](https://communitydragon.org/) and self-produced
 
-## Bug Reports
-
-This app was an excuse for me to test the new Claude 4 model in Cursor. It's entirely possible bugs were introduced, if you happen to use this tool and run into issues you can either DM me on [X/Twitter](https://x.com/MGSimard) or [file an issue on GitHub](https://github.com/MGSimard/simdraft/issues).
-
 ## Disclaimer
 
 SimDraft is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
@@ -35,3 +31,8 @@ GitHub: [@MGSimard](https://github.com/MGSimard)
 Mail: [mgsimard.dev@gmail.com](mailto:mgsimard.dev@gmail.com)
 
 For more info, view my portfolio at [mgsimard.dev](https://mgsimard.dev).
+
+---
+
+## TASK LIST:
+- [ ] Pre-emptively fix canonical URL by extracting it from app shell and moving to index route
