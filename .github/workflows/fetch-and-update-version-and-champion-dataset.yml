@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
@@ -42,5 +42,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
           git add src/_datasets/*.json  # Add all JSON files
-          git commit -m "GHA: Update datasets (v${{ env.patchVer }})" || echo "No changes to commit"
+          git commit -m "GHA: Update datasets (v$patchVer)" || echo "No changes to commit"
           git push
